@@ -97,17 +97,17 @@
   .photo-link-block {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     aspect-ratio: 1; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 1.1rem;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
     border: 3px dashed var(--border);
     background-color: var(--warm-white);
   }
   .photo-link-block:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    z-index: 2;
   }
-  .photo-link-block.xile-theme { color: var(--xile-deep); border-color: var(--xile-color); background: var(--xile-pale); }
-  .photo-link-block.ping-theme { color: var(--ping-deep); border-color: var(--ping-color); background: var(--ping-pale); }
-  .photo-emoji { font-size: 3rem; margin-bottom: 12px; }
+  .photo-link-block.xile-theme { border-color: var(--xile-color); background: var(--xile-pale); }
+  .photo-link-block.ping-theme { border-color: var(--ping-color); background: var(--ping-pale); }
   
   .drive-link-text {
     display: block; text-align: right; margin-top: 10px; margin-bottom: 40px; font-weight: 900;
@@ -185,7 +185,6 @@
     <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()">顯示全部紀錄 ↓</button>
   </div>
 
-  <!-- 新增的照片牆區塊 -->
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container">
     <!-- 內容會由 JS 動態生成 -->
@@ -210,6 +209,14 @@ let pingData = [
   ["02/27","1","","","",""],["02/26","1","","","",""]
 ];
 
+// ⚠️ 警告：這把鑰匙現在全世界都看得到了，自己小心點！
+const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
+
+const folderIds = {
+  xile: "1g4KbCbxMsPKdwgi3MqoLZ_tsgpBEqFyc",
+  ping: "1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY"
+};
+
 const driveLinks = {
   xile: "https://drive.google.com/drive/folders/1g4KbCbxMsPKdwgi3MqoLZ_tsgpBEqFyc?usp=sharing",
   ping: "https://drive.google.com/drive/folders/1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY?usp=sharing"
@@ -227,35 +234,56 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('history-label').className = 'cat-log-label ' + cat;
   
-  // 更新照片牆連結
   renderPhotoWall(cat);
   renderHistory();
 }
 
-function renderPhotoWall(cat) {
+async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
   const directLink = document.getElementById('drive-direct-link');
-  const linkUrl = driveLinks[cat];
-  const themeClass = cat === 'xile' ? 'xile-theme' : 'ping-theme';
   const catName = cat === 'xile' ? '喜樂' : '平安';
   
-  container.innerHTML = `
-    <a href="${linkUrl}" target="_blank" class="photo-link-block ${themeClass}">
-      <div class="photo-emoji">📸</div>
-      <div>查看 ${catName} 最新萌照</div>
-    </a>
-    <a href="${linkUrl}" target="_blank" class="photo-link-block ${themeClass}">
-      <div class="photo-emoji">😻</div>
-      <div>吸一口 ${catName}</div>
-    </a>
-    <a href="${linkUrl}" target="_blank" class="photo-link-block ${themeClass}">
-      <div class="photo-emoji">📂</div>
-      <div>開啟 Drive 相簿</div>
-    </a>
-  `;
+  // 顯示載入中動畫
+  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 900; color: var(--ink-light);">🐈 正在向 Google 討 ${catName} 的萌照中...</div>`;
   
-  directLink.href = linkUrl;
+  directLink.href = driveLinks[cat];
   directLink.textContent = `🔗 點我直接開啟 ${catName} 的 Google Drive 完整相簿 ↗`;
+
+  // 找圖魔法陣：只要圖片檔、不要在垃圾桶裡的、照時間排最新的5張
+  const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
+  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+
+  try {
+    const res = await fetch(fetchUrl);
+    const data = await res.json();
+
+    if (data.error) {
+      console.error("API 炸了：", data.error);
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">💣 翻車啦！去檢查你的金鑰或權限：<br>${data.error.message}</div>`;
+      return;
+    }
+
+    if (data.files && data.files.length > 0) {
+      const themeClass = cat === 'xile' ? 'xile-theme' : 'ping-theme';
+      let html = '';
+      data.files.forEach(file => {
+        // 利用 id 產生 Google Drive 的縮圖網址 (sz=w500 表示寬度 500px) 跟預覽網址
+        const imgSrc = `https://drive.google.com/thumbnail?id=${file.id}&sz=w500`;
+        const viewLink = `https://drive.google.com/file/d/${file.id}/view`;
+        
+        html += `
+          <a href="${viewLink}" target="_blank" class="photo-link-block ${themeClass}" style="padding:0; overflow:hidden;" title="${file.name}">
+            <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${file.name}">
+          </a>
+        `;
+      });
+      container.innerHTML = html;
+    } else {
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; font-weight: 900; color: var(--ink-light);">🤷‍♂️ 資料夾空空如也，你是不是忘記上傳照片了？</div>`;
+    }
+  } catch (e) {
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">🔌 連線失敗，是不是你家的網路線被貓咬斷了？</div>`;
+  }
 }
 
 function rc(val, type) {
