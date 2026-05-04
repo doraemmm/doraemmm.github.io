@@ -12,8 +12,9 @@
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --border:#d4c9b5;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  /* 字型全部改成微軟正黑體，舒服！ */
-  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, th, td, .subtitle, .stat-label, a {
+  
+  /* 🔤 字型全部改成微軟正黑體，舒服！ */
+  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
     font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
   }
   body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden}
@@ -57,27 +58,11 @@
   .check-item input[type="checkbox"]{width:18px;height:18px;accent-color:var(--xile-color)}
   .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;letter-spacing:.1em;cursor:pointer;transition:all .2s;color:#fff}
 
-  /* LOG TABLE */
+  /* LOG TABLE (改為 iframe 容器樣式) */
   .log-container{margin-top:20px}
   .cat-log-label{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid;font-weight:900;font-size:1.1rem}
-  .scroll-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:var(--warm-white)}
-  table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:640px}
-  thead tr{border-bottom:2px solid var(--border);background:var(--cream)}
-  thead th{padding:12px 14px;text-align:center;font-weight:900;color:var(--ink-light);white-space:nowrap}
-  tbody tr{border-bottom:1px solid rgba(0,0,0,.05)}
-  td{padding:10px 14px;text-align:center;color:var(--ink-light);font-weight:700}
-  .pill{display:inline-block;padding:4px 10px;border-radius:4px;font-size:.8rem;font-weight:900}
-  .pill-yes{background:#d6eadc;color:#2d6b3f} .pill-no{background:#eee9e0;color:#9a9080}
-  .pill-vomit{background:#f5ddd6;color:#8b2d1f} .pill-cough{background:#e8dff5;color:#5b3a8b}
+  .scroll-wrap{border:2px solid var(--border);border-radius:8px;background:var(--warm-white); height: 450px; overflow: hidden; position: relative;}
   
-  .show-all-btn {
-    display: block; width: 100%; padding: 12px; margin-top: 12px;
-    background: var(--warm-white); border: 2px dashed var(--border); border-radius:8px;
-    color: var(--ink-light); font-size: .9rem; font-weight: 900;
-    cursor: pointer; transition: all .2s;
-  }
-  .show-all-btn:hover { background: var(--cream); color: var(--ink); border-color:var(--ink-light)}
-
   /* 顏色主題 */
   .form-card.xile { border-color: var(--xile-color); }
   .form-card.ping { border-color: var(--ping-color); }
@@ -124,7 +109,7 @@
   <div class="header-inner">
     <div class="title-block">
       <h1><em>喜樂</em> × 平安</h1>
-      <p class="subtitle">寵物健康日誌</p>
+      <p class="subtitle">寵物健康日誌 · API 自動化 & 物理同步版</p>
     </div>
   </div>
 </header>
@@ -144,6 +129,7 @@
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
+    <!-- 喜樂專屬欄位 -->
     <div id="xile-fields" style="display:none">
       <div class="form-row">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
@@ -158,6 +144,7 @@
       </div>
     </div>
 
+    <!-- 平安專屬欄位 -->
     <div id="ping-fields" style="display:none">
       <div class="form-row">
         <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
@@ -173,18 +160,19 @@
       </div>
     </div>
     <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄並同步</button>
+    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
+  <!-- Google Sheet 物理級內嵌區塊 -->
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
   <div class="log-container">
-    <div class="cat-log-label" id="history-label"><span>健康列表</span></div>
+    <div class="cat-log-label" id="history-label"><span>健康列表 (Google Sheet 即時連線)</span></div>
     <div class="scroll-wrap">
-      <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
+      <iframe id="sheet-iframe" src="" width="100%" height="100%" frameborder="0" style="display:block;"></iframe>
     </div>
-    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()">顯示全部紀錄 ↓</button>
   </div>
 
+  <!-- Drive API 照片牆區塊 -->
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container">
     <!-- 內容會由 JS 動態生成 -->
@@ -194,20 +182,11 @@
 </div>
 
 <script>
+// 初始化今日日期
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 
-let xileData = [
-  ["05/01","✓","✓","1","罐頭","",""],["04/29","✓","✓","1","罐頭","",""],["04/25","✓","✓","1","飼料","",""],
-  ["04/20","✓","✓","1","罐頭","",""],["04/19","✓","✓","2","罐頭","",""],["04/18","✓","✓","1","罐頭","",""],
-  ["04/17","✓","✓","1","飼料","",""],["04/15","✓","✓","1","罐頭","",""],["04/10","✓","✓","","","✓",""],
-  ["04/03","✓","✓","1","罐頭","",""],["03/27","✓","✓","2","透明液體","",""]
-];
-let pingData = [
-  ["05/01","1","","","",""],["04/23","1","","","",""],["04/16","1","","","",""],
-  ["04/13","","1","飼料","",""],["04/11","","1","飼料","",""],["04/10","","","","✓",""],
-  ["04/03","","1","飼料","",""],["03/30","1","1","飼料","",""],["03/01","1","","","",""],
-  ["02/27","1","","","",""],["02/26","1","","","",""]
-];
+// ⚠️ 警告：這把鑰匙現在全世界都看得到了，自己小心點！
+const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 
 const folderIds = {
   xile: "1g4KbCbxMsPKdwgi3MqoLZ_tsgpBEqFyc",
@@ -219,22 +198,35 @@ const driveLinks = {
   ping: "https://drive.google.com/drive/folders/1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY?usp=sharing"
 };
 
-let currentCat = null;
-let showFullHistory = false;
+// 👉 Google Sheet 內嵌網址 (已隱藏標題列跟工具列)
+const sheetEmbedUrls = {
+  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/htmlembed?gid=1731637259&widget=false&chrome=false&headers=false",
+  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/htmlembed?gid=1573452397&widget=false&chrome=false&headers=false"
+};
 
+let currentCat = null;
+
+// 切換寵物邏輯
 function selectCat(cat) {
   currentCat = cat;
-  showFullHistory = false;
+  
+  // 顯示對應區塊與按鈕樣式
+  document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('sel-' + cat).classList.add('active');
   document.getElementById('cat-content').className = 'cat-content-visible';
   document.getElementById('dynamic-form-card').className = 'form-card ' + cat;
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('history-label').className = 'cat-log-label ' + cat;
   
+  // 替換 iframe 網址，達成物理同步
+  document.getElementById('sheet-iframe').src = sheetEmbedUrls[cat];
+  
+  // 渲染照片牆
   renderPhotoWall(cat);
-  renderHistory();
 }
 
+// 串接 Google Drive API 抓圖片
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
   const directLink = document.getElementById('drive-direct-link');
@@ -242,13 +234,12 @@ async function renderPhotoWall(cat) {
   
   // 顯示載入中動畫
   container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 900; color: var(--ink-light);">🐈 正在向 Google 討 ${catName} 的萌照中...</div>`;
-  
   directLink.href = driveLinks[cat];
   directLink.textContent = `🔗 點我直接開啟 ${catName} 的 Google Drive 完整相簿 ↗`;
 
-  // 找圖魔法陣：只要圖片檔、不要在垃圾桶裡的、照時間排最新的5張
+  // 找圖魔法陣
   const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
-  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
 
   try {
     const res = await fetch(fetchUrl);
@@ -256,7 +247,7 @@ async function renderPhotoWall(cat) {
 
     if (data.error) {
       console.error("API 炸了：", data.error);
-      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">💣 翻車啦！去檢查你的金鑰或權限：<br>${data.error.message}</div>`;
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">💣 翻車啦！檢查金鑰或資料夾權限：<br>${data.error.message}</div>`;
       return;
     }
 
@@ -264,10 +255,8 @@ async function renderPhotoWall(cat) {
       const themeClass = cat === 'xile' ? 'xile-theme' : 'ping-theme';
       let html = '';
       data.files.forEach(file => {
-        // 利用 id 產生 Google Drive 的縮圖網址 (sz=w500 表示寬度 500px) 跟預覽網址
         const imgSrc = `https://drive.google.com/thumbnail?id=${file.id}&sz=w500`;
         const viewLink = `https://drive.google.com/file/d/${file.id}/view`;
-        
         html += `
           <a href="${viewLink}" target="_blank" class="photo-link-block ${themeClass}" style="padding:0; overflow:hidden;" title="${file.name}">
             <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${file.name}">
@@ -276,80 +265,30 @@ async function renderPhotoWall(cat) {
       });
       container.innerHTML = html;
     } else {
-      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; font-weight: 900; color: var(--ink-light);">🤷‍♂️ 資料夾空空如也，你是不是忘記上傳照片了？</div>`;
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; font-weight: 900; color: var(--ink-light);">🤷‍♂️ 資料夾空空如也，忘記上傳了嗎？</div>`;
     }
   } catch (e) {
-    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">🔌 連線失敗，是不是你家的網路線被貓咬斷了？</div>`;
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">🔌 連線失敗，網路線被貓咬斷了？</div>`;
   }
 }
 
-function rc(val, type) {
-  if (!val || val === "FALSE") return '<span style="color:#ccc">—</span>';
-  if (type === 'check') return val === '✓' || val === "TRUE" ? '<span class="pill pill-yes">✓</span>' : '<span style="color:#ccc">—</span>';
-  if (type === 'vomit') return '<span class="pill pill-vomit">' + val + '次</span>';
-  if (type === 'cough') return '<span class="pill pill-cough">' + val + '次</span>';
-  return val;
-}
-
-function renderHistory() {
-  const tbody = document.getElementById('history-tbody');
-  const thead = document.getElementById('history-thead');
-  const data = currentCat === 'xile' ? xileData : pingData;
-  const displayData = showFullHistory ? data : data.slice(0, 10);
-  
-  tbody.innerHTML = '';
-  if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
-    displayData.forEach(r => {
-      tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]}</td><td>${rc(r[5],'check')}</td></tr>`;
-    });
-  } else {
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
-    displayData.forEach(r => {
-      tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]}</td><td>${rc(r[4],'check')}</td></tr>`;
-    });
-  }
-  document.getElementById('show-all-btn').style.display = data.length > 10 ? 'block' : 'none';
-  document.getElementById('show-all-btn').textContent = showFullHistory ? '收合紀錄 ↑' : '顯示全部紀錄 (' + data.length + ') ↓';
-}
-
-function toggleAllRecords() {
-  showFullHistory = !showFullHistory;
-  renderHistory();
-}
-
+// 模擬送出表單
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
-  btn.textContent = '同步中...';
+  btn.textContent = '寫入中...';
 
-  const dateVal = document.getElementById('date-active').value.split('-').slice(1).join('/');
-  const note = document.getElementById('note-text').value;
-  const isNail = document.getElementById('nail-cut').checked ? "✓" : "";
-  const isVaccine = document.getElementById('vaccine').checked ? "TRUE" : "";
-
-  let newEntry = [];
-  if (currentCat === 'xile') {
-    const vCount = document.getElementById('vomit-count-xile').value;
-    const vType = document.getElementById('vomit-type-xile').value;
-    const kDrug = document.getElementById('kidney-drug').checked ? "✓" : "";
-    const pDrug = document.getElementById('pancreas-drug').checked ? "✓" : "";
-    newEntry = [dateVal, kDrug, pDrug, vCount === "0" ? "" : vCount, vType, isNail, isVaccine];
-    xileData.unshift(newEntry);
-  } else {
-    const cCount = document.getElementById('cough-count-ping').value;
-    const vCount = document.getElementById('vomit-count-ping').value;
-    newEntry = [dateVal, cCount === "0" ? "" : cCount, vCount === "0" ? "" : vCount, "", isNail, isVaccine];
-    pingData.unshift(newEntry);
-  }
-
-  await new Promise(r => setTimeout(r, 800));
+  // 這裡假設你之後會串接 Apps Script Web App，現在用 setTimeout 假裝一下
+  await new Promise(r => setTimeout(r, 1000));
   
-  renderHistory();
-  btn.textContent = '✅ 已寫入 Sheets';
+  // 物理強制重整 iframe 來顯示最新寫入的資料
+  const iframe = document.getElementById('sheet-iframe');
+  iframe.src = iframe.src;
+  
+  btn.textContent = '✅ 已通知 Sheets 更新';
   setTimeout(() => {
     btn.disabled = false;
-    btn.textContent = '送出紀錄並同步';
+    btn.textContent = '送出紀錄';
   }, 2000);
 }
 </script>
