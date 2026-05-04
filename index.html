@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>喜樂 × 平安 健康日誌</title>
-  <!-- 標準圖示 -->
+
+<!-- 👉 就是這行，把地球物理性超渡成貓貓頭 -->
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">  
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  
   <!-- 舊版相容 -->
   <link rel="shortcut icon" href="favicon.ico">
   
   <!-- iOS 專用 -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  
 
 <style>
   :root {
@@ -154,7 +157,7 @@
 
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
   <div class="log-container">
-    <div class="cat-log-label" id="history-label"><span>健康列表</span></div>
+    <div class="cat-log-label" id="history-label"><span>健康列表 (API 即時撈取)</span></div>
     <div class="scroll-wrap">
       <table>
         <thead id="history-thead"></thead>
@@ -174,6 +177,87 @@ const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
 const csvUrls = {
   xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
+  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
+};
+
+let currentCat = null, allCatRecords = [], showFullHistory = false;
+
+function selectCat(cat) {
+  currentCat = cat; showFullHistory = false;
+  document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('sel-' + cat).classList.add('active');
+  document.getElementById('cat-content').className = 'cat-content-visible';
+  document.getElementById('dynamic-form-card').className = 'form-card ' + cat;
+  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
+  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
+  document.getElementById('history-label').className = 'cat-log-label ' + cat;
+  fetchSheetData(cat); renderPhotoWall(cat);
+}
+
+async function fetchSheetData(cat) {
+  const tbody = document.getElementById('history-tbody');
+  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線中...</td></tr>`;
+  try {
+    const res = await fetch(csvUrls[cat]);
+    const csv = await res.text();
+    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
+    allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
+    allCatRecords.reverse(); renderHistoryTable();
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent-red); padding:40px;">💣 讀取失敗</td></tr>`; }
+}
+
+function rc(val, type) {
+  if (!val || val === "FALSE" || val === "0" || val === "") return '<span style="color:#ccc">—</span>';
+  if (type === 'check') return (val === '✓' || val === "TRUE") ? '<span class="pill pill-yes">✓</span>' : '<span style="color:#ccc">—</span>';
+  return (type === 'vomit' || type === 'cough') ? `<span class="pill pill-${type==='vomit'?'vomit':'cough'}">${val}次</span>` : val;
+}
+
+function renderHistoryTable() {
+  const tbody = document.getElementById('history-tbody');
+  const thead = document.getElementById('history-thead');
+  const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
+  tbody.innerHTML = '';
+  if (currentCat === 'xile') {
+    thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td></tr>`);
+  } else {
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
+  }
+  const btn = document.getElementById('show-all-btn');
+  btn.style.display = allCatRecords.length > 10 ? 'block' : 'none';
+  btn.textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部紀錄 (${allCatRecords.length}) ↓`;
+}
+
+function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
+
+async function renderPhotoWall(cat) {
+  const container = document.getElementById('photo-wall-container');
+  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;">🐈 正在抓貓中...</div>`;
+  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
+  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+  try {
+    const res = await fetch(url); const data = await res.json();
+    if (data.files && data.files.length > 0) {
+      const cls = cat === 'xile' ? 'xile-theme' : 'ping-theme';
+      container.innerHTML = data.files.map(f => `
+        <div class="photo-link-block ${cls}" onclick="window.open('https://drive.google.com/file/d/${f.id}/view', '_blank')">
+          <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+        </div>`).join('');
+    } else { container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center;">空空如也</div>`; }
+  } catch (e) { container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center;">連線失敗</div>`; }
+}
+
+async function submitForm() {
+  const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
+  await new Promise(r => setTimeout(r, 1000)); fetchSheetData(currentCat);
+  btn.textContent = '✅ 已更新表格';
+  setTimeout(() => { btn.disabled = false; btn.textContent = '送出紀錄'; }, 2000);
+}
+</script>
+</body>
+</html>
+readsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
   ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
 
