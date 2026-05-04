@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>喜樂 × 平安 健康日誌</title>
+  <!-- 標準圖示 -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  
+  <!-- 舊版相容 -->
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <!-- iOS 專用 -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
 <style>
   :root {
     --cream:#f5f0e8; --warm-white:#faf7f2; --ink:#1a1410; --ink-light:#3d3228;
@@ -13,25 +23,22 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   
-  /* 🔤 字型全部改成微軟正黑體，舒服！ */
+  /* 🔤 全面套用微軟正黑體 */
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
     font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
   }
   body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden}
   
-  /* HEADER */
   header{padding:60px 48px 40px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both}
   .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
   .title-block h1{font-size:clamp(2.5rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
   .title-block h1 em{font-style:italic;color:var(--xile-color)}
   .title-block .subtitle{margin-top:12px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
   
-  /* SECTION HEAD */
   .section-head{max-width:1100px;margin:48px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
   .section-head h2{font-size:1.5rem;font-weight:900}
   .section-head .line{flex:1;height:1px;background:var(--border)}
 
-  /* SELECTOR */
   .selector-wrap{max-width:1100px;margin:28px auto 0;padding:0 48px}
   .selector-inner{display:flex;align-items:center;gap:20px;background:var(--warm-white);border:1px solid var(--border);border-radius:4px;padding:20px 28px}
   .selector-label{font-size:.9rem;font-weight:900;letter-spacing:.1em;color:var(--ink-light);white-space:nowrap}
@@ -40,41 +47,24 @@
   .sel-btn.sel-xile:hover,.sel-btn.sel-xile.active{background:var(--xile-pale);border-color:var(--xile-color);color:var(--xile-deep)}
   .sel-btn.sel-ping:hover,.sel-btn.sel-ping.active{background:var(--ping-pale);border-color:var(--ping-color);color:var(--ping-deep)}
 
-  /* FORM */
-  .cat-content-hidden{display:none}
-  .cat-content-visible{display:block;max-width:1100px;margin:32px auto 0;padding:0 48px;animation:fadeUp .35s ease both}
   .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px}
   .form-card h3{font-size:1.3rem;color:var(--ink);margin-bottom:20px;font-weight:900}
   .form-field{margin-bottom:16px}
   .form-field label{display:block;font-size:.9rem;font-weight:900;color:var(--ink-light);margin-bottom:6px}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);
-    border-radius:4px;font-size:.9rem;color:var(--ink);font-weight:700;
-    outline:none;transition:border-color .2s;}
-  .form-field textarea{resize:vertical;min-height:64px}
+    border-radius:4px;font-size:.9rem;color:var(--ink);font-weight:700;outline:none;transition:border-color .2s;}
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .check-row{display:flex;gap:20px;flex-wrap:wrap}
   .check-item{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-light);cursor:pointer;font-weight:700}
   .check-item input[type="checkbox"]{width:18px;height:18px;accent-color:var(--xile-color)}
   .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;letter-spacing:.1em;cursor:pointer;transition:all .2s;color:#fff}
 
-  /* LOG TABLE (魔法表格區) */
   .log-container{margin-top:20px}
   .cat-log-label{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid;font-weight:900;font-size:1.1rem}
-  
-  /* 設定固定高度並允許捲動，這是凍結標題的先決條件 */
   .scroll-wrap{max-height: 400px; overflow-y: auto; border: 2px solid var(--border); border-radius: 8px; background: var(--warm-white); position: relative;}
-  
   table{width:100%;border-collapse:separate; border-spacing: 0; font-size:.9rem; min-width:640px}
-  
-  /* 凍結標題列的核心 CSS */
-  thead th{
-    position: sticky; top: 0; z-index: 10; 
-    background: #e6e0d3; /* 給標題一個微深的底色蓋過下方資料 */
-    padding:12px 14px;text-align:center;font-weight:900;color:var(--ink-light);white-space:nowrap;
-    box-shadow: 0 2px 0 var(--border); /* 取代 border-bottom，避免跟 sticky 衝突 */
-  }
-  
+  thead th{position: sticky; top: 0; z-index: 10; background: #e6e0d3; padding:12px 14px;text-align:center;font-weight:900;color:var(--ink-light);white-space:nowrap;box-shadow: 0 2px 0 var(--border);}
   tbody tr td { border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; color:var(--ink-light); font-weight:700; }
   
   .pill{display:inline-block;padding:4px 10px;border-radius:4px;font-size:.8rem;font-weight:900}
@@ -89,7 +79,6 @@
   }
   .show-all-btn:hover { background: var(--cream); color: var(--ink); border-color:var(--ink-light)}
 
-  /* 顏色主題 */
   .form-card.xile { border-color: var(--xile-color); }
   .form-card.ping { border-color: var(--ping-color); }
   .xile .btn-submit { background: var(--xile-color); }
@@ -97,21 +86,8 @@
   #history-label.xile { border-color: var(--xile-color); color: var(--xile-deep);}
   #history-label.ping { border-color: var(--ping-color); color: var(--ping-deep);}
 
-  /* 照片牆樣式 */
-  .photo-wall {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px; margin-top: 20px; margin-bottom: 20px;
-  }
-  
-  /* 把原本的 a 標籤改成 div 樣式 */
-  .photo-link-block {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    aspect-ratio: 1; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 1.1rem;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
-    border: 3px dashed var(--border); background-color: var(--warm-white);
-    cursor: pointer; /* 讓滑鼠移過去還是會有手指游標 */
-  }
+  .photo-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; margin-bottom: 20px; }
+  .photo-link-block { display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1; border-radius: 12px; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s; border: 3px dashed var(--border); background-color: var(--warm-white); cursor: pointer; }
   .photo-link-block:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; }
   .photo-link-block.xile-theme { border-color: var(--xile-color); background: var(--xile-pale); }
   .photo-link-block.ping-theme { border-color: var(--ping-color); background: var(--ping-pale); }
@@ -124,8 +100,8 @@
 <header>
   <div class="header-inner">
     <div class="title-block">
-      <h1><em>喜樂</em> × 平安</h1>
-      <p class="subtitle">寵物健康日誌 · API 自動化 & 終極潔癖版</p>
+      <h1>喜樂 × 平安</h1>
+      <p class="subtitle">寵物健康日誌</p>
     </div>
   </div>
 </header>
@@ -180,7 +156,6 @@
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
   <div class="log-container">
     <div class="cat-log-label" id="history-label"><span>健康列表 (API 即時撈取)</span></div>
-    
     <div class="scroll-wrap">
       <table>
         <thead id="history-thead"></thead>
@@ -191,38 +166,22 @@
   </div>
 
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
-  <div class="photo-wall" id="photo-wall-container">
-    <!-- 內容會由 JS 動態生成 -->
-  </div>
-  <!-- 礙眼的直接開啟相簿連結已被小G物理性超渡 -->
-
+  <div class="photo-wall" id="photo-wall-container"></div>
 </div>
 
 <script>
-// 初始化今日日期
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
-
-// ⚠️ 金鑰持續裸奔中
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
-
-const folderIds = {
-  xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK",
-  ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO"
-};
-
+const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
 const csvUrls = {
   xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
   ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
 
-let currentCat = null;
-let allCatRecords = [];
-let showFullHistory = false;
+let currentCat = null, allCatRecords = [], showFullHistory = false;
 
 function selectCat(cat) {
-  currentCat = cat;
-  showFullHistory = false;
-  
+  currentCat = cat; showFullHistory = false;
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
   document.getElementById('sel-' + cat).classList.add('active');
   document.getElementById('cat-content').className = 'cat-content-visible';
@@ -230,133 +189,68 @@ function selectCat(cat) {
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('history-label').className = 'cat-log-label ' + cat;
-  
-  fetchSheetData(cat);
-  renderPhotoWall(cat);
+  fetchSheetData(cat); renderPhotoWall(cat);
 }
 
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
-  const thead = document.getElementById('history-thead');
-  
-  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線 Google 總部偷撈資料中...</td></tr>`;
-  
+  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線中...</td></tr>`;
   try {
-    const response = await fetch(csvUrls[cat]);
-    if (!response.ok) throw new Error("網路連線錯誤");
-    const csvText = await response.text();
-    
-    const rows = csvText.split('\n').map(row => row.trim()).filter(row => row);
-    
-    allCatRecords = rows.slice(1).map(line => {
-      return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
-    }).filter(cols => cols[0]);
-
-    allCatRecords.reverse();
-    
-    renderHistoryTable();
-  } catch (error) {
-    console.error(error);
-    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent-red); padding:40px;">💣 資料讀取失敗，你的 Google 表格是不是沒設成「公開」？</td></tr>`;
-  }
+    const res = await fetch(csvUrls[cat]);
+    const csv = await res.text();
+    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
+    allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
+    allCatRecords.reverse(); renderHistoryTable();
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent-red); padding:40px;">💣 讀取失敗</td></tr>`; }
 }
 
 function rc(val, type) {
   if (!val || val === "FALSE" || val === "0" || val === "") return '<span style="color:#ccc">—</span>';
   if (type === 'check') return (val === '✓' || val === "TRUE") ? '<span class="pill pill-yes">✓</span>' : '<span style="color:#ccc">—</span>';
-  if (type === 'vomit') return '<span class="pill pill-vomit">' + val + '次</span>';
-  if (type === 'cough') return '<span class="pill pill-cough">' + val + '次</span>';
-  return val;
+  return (type === 'vomit' || type === 'cough') ? `<span class="pill pill-${type==='vomit'?'vomit':'cough'}">${val}次</span>` : val;
 }
 
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
   const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
-  
   tbody.innerHTML = '';
-  
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
-    displayData.forEach(r => {
-      tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[5],'check')}</td></tr>`;
-    });
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td></tr>`);
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
-    displayData.forEach(r => {
-      tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[4],'check')}</td></tr>`;
-    });
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
   }
-
   const btn = document.getElementById('show-all-btn');
-  if (allCatRecords.length > 10) {
-    btn.style.display = 'block';
-    btn.textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部紀錄 (${allCatRecords.length}) ↓`;
-  } else {
-    btn.style.display = 'none';
-  }
+  btn.style.display = allCatRecords.length > 10 ? 'block' : 'none';
+  btn.textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部紀錄 (${allCatRecords.length}) ↓`;
 }
 
-function toggleAllRecords() {
-  showFullHistory = !showFullHistory;
-  renderHistoryTable();
-}
+function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  const catName = cat === 'xile' ? '喜樂' : '平安';
-  
-  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 900; color: var(--ink-light);">🐈 正在向 Google 討 ${catName} 的萌照中...</div>`;
-
-  const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
-  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
-
+  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;">🐈 正在抓貓中...</div>`;
+  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
+  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
-    const res = await fetch(fetchUrl);
-    const data = await res.json();
-
-    if (data.error) {
-      console.error("API 炸了：", data.error);
-      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">💣 翻車啦！檢查金鑰或資料夾權限：<br>${data.error.message}</div>`;
-      return;
-    }
-
+    const res = await fetch(url); const data = await res.json();
     if (data.files && data.files.length > 0) {
-      const themeClass = cat === 'xile' ? 'xile-theme' : 'ping-theme';
-      let html = '';
-      data.files.forEach(file => {
-        const imgSrc = `https://drive.google.com/thumbnail?id=${file.id}&sz=w500`;
-        const viewLink = `https://drive.google.com/file/d/${file.id}/view`;
-        // 👉 黑魔法在這裡：把 <a> 標籤換成 <div>，並用 onclick 觸發新分頁，徹底消滅左下角網址！
-        html += `
-          <div class="photo-link-block ${themeClass}" style="padding:0; overflow:hidden;" title="${file.name}" onclick="window.open('${viewLink}', '_blank')">
-            <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${file.name}">
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    } else {
-      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; font-weight: 900; color: var(--ink-light);">🤷‍♂️ 資料夾空空如也，忘記上傳了嗎？</div>`;
-    }
-  } catch (e) {
-    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--accent-red); font-weight: 900;">🔌 連線失敗，網路線被貓咬斷了？</div>`;
-  }
+      const cls = cat === 'xile' ? 'xile-theme' : 'ping-theme';
+      container.innerHTML = data.files.map(f => `
+        <div class="photo-link-block ${cls}" onclick="window.open('https://drive.google.com/file/d/${f.id}/view', '_blank')">
+          <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+        </div>`).join('');
+    } else { container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center;">空空如也</div>`; }
+  } catch (e) { container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center;">連線失敗</div>`; }
 }
 
 async function submitForm() {
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = '寫入中...';
-
-  await new Promise(r => setTimeout(r, 1000));
-  
-  fetchSheetData(currentCat);
-  
-  btn.textContent = '✅ 已通知 Sheets 並更新表格';
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.textContent = '送出紀錄';
-  }, 2000);
+  const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
+  await new Promise(r => setTimeout(r, 1000)); fetchSheetData(currentCat);
+  btn.textContent = '✅ 已更新表格';
+  setTimeout(() => { btn.disabled = false; btn.textContent = '送出紀錄'; }, 2000);
 }
 </script>
 </body>
