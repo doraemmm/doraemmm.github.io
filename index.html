@@ -58,11 +58,37 @@
   .check-item input[type="checkbox"]{width:18px;height:18px;accent-color:var(--xile-color)}
   .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;letter-spacing:.1em;cursor:pointer;transition:all .2s;color:#fff}
 
-  /* LOG TABLE (改為 iframe 容器樣式) */
+  /* LOG TABLE (魔法表格區) */
   .log-container{margin-top:20px}
   .cat-log-label{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid;font-weight:900;font-size:1.1rem}
-  .scroll-wrap{border:2px solid var(--border);border-radius:8px;background:var(--warm-white); height: 450px; overflow: hidden; position: relative;}
   
+  /* 設定固定高度並允許捲動，這是凍結標題的先決條件 */
+  .scroll-wrap{max-height: 400px; overflow-y: auto; border: 2px solid var(--border); border-radius: 8px; background: var(--warm-white); position: relative;}
+  
+  table{width:100%;border-collapse:separate; border-spacing: 0; font-size:.9rem; min-width:640px}
+  
+  /* 凍結標題列的核心 CSS */
+  thead th{
+    position: sticky; top: 0; z-index: 10; 
+    background: #e6e0d3; /* 給標題一個微深的底色蓋過下方資料 */
+    padding:12px 14px;text-align:center;font-weight:900;color:var(--ink-light);white-space:nowrap;
+    box-shadow: 0 2px 0 var(--border); /* 取代 border-bottom，避免跟 sticky 衝突 */
+  }
+  
+  tbody tr td { border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; color:var(--ink-light); font-weight:700; }
+  
+  .pill{display:inline-block;padding:4px 10px;border-radius:4px;font-size:.8rem;font-weight:900}
+  .pill-yes{background:#d6eadc;color:#2d6b3f} .pill-no{background:#eee9e0;color:#9a9080}
+  .pill-vomit{background:#f5ddd6;color:#8b2d1f} .pill-cough{background:#e8dff5;color:#5b3a8b}
+  
+  .show-all-btn {
+    display: block; width: 100%; padding: 12px; margin-top: 12px;
+    background: var(--warm-white); border: 2px dashed var(--border); border-radius:8px;
+    color: var(--ink-light); font-size: .9rem; font-weight: 900;
+    cursor: pointer; transition: all .2s;
+  }
+  .show-all-btn:hover { background: var(--cream); color: var(--ink); border-color:var(--ink-light)}
+
   /* 顏色主題 */
   .form-card.xile { border-color: var(--xile-color); }
   .form-card.ping { border-color: var(--ping-color); }
@@ -75,22 +101,15 @@
   .photo-wall {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    gap: 16px; margin-top: 20px; margin-bottom: 20px;
   }
   .photo-link-block {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     aspect-ratio: 1; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 1.1rem;
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
-    border: 3px dashed var(--border);
-    background-color: var(--warm-white);
+    border: 3px dashed var(--border); background-color: var(--warm-white);
   }
-  .photo-link-block:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    z-index: 2;
-  }
+  .photo-link-block:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; }
   .photo-link-block.xile-theme { border-color: var(--xile-color); background: var(--xile-pale); }
   .photo-link-block.ping-theme { border-color: var(--ping-color); background: var(--ping-pale); }
   
@@ -109,7 +128,7 @@
   <div class="header-inner">
     <div class="title-block">
       <h1><em>喜樂</em> × 平安</h1>
-      <p class="subtitle">寵物健康日誌 · API 自動化 & 物理同步版</p>
+      <p class="subtitle">寵物健康日誌 · API 自動化 & 完美 HTML 渲染版</p>
     </div>
   </div>
 </header>
@@ -129,7 +148,6 @@
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
-    <!-- 喜樂專屬欄位 -->
     <div id="xile-fields" style="display:none">
       <div class="form-row">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
@@ -144,7 +162,6 @@
       </div>
     </div>
 
-    <!-- 平安專屬欄位 -->
     <div id="ping-fields" style="display:none">
       <div class="form-row">
         <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
@@ -163,16 +180,20 @@
     <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
-  <!-- Google Sheet 物理級內嵌區塊 -->
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
   <div class="log-container">
-    <div class="cat-log-label" id="history-label"><span>健康列表 (Google Sheet 即時連線)</span></div>
+    <div class="cat-log-label" id="history-label"><span>健康列表 (API 即時撈取)</span></div>
+    
+    <!-- 重新復活的 HTML 表格，支援凍結標題與顯示全部 -->
     <div class="scroll-wrap">
-      <iframe id="sheet-iframe" src="" width="100%" height="100%" frameborder="0" style="display:block;"></iframe>
+      <table>
+        <thead id="history-thead"></thead>
+        <tbody id="history-tbody"></tbody>
+      </table>
     </div>
+    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部紀錄 ↓</button>
   </div>
 
-  <!-- Drive API 照片牆區塊 -->
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container">
     <!-- 內容會由 JS 動態生成 -->
@@ -185,7 +206,7 @@
 // 初始化今日日期
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 
-// ⚠️ 警告：這把鑰匙現在全世界都看得到了，自己小心點！
+// ⚠️ 警告：這把鑰匙現在全世界都看得到了，小心被盜刷！
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 
 const folderIds = {
@@ -198,19 +219,20 @@ const driveLinks = {
   ping: "https://drive.google.com/drive/folders/1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY?usp=sharing"
 };
 
-// 👉 Google Sheet 內嵌網址 (已隱藏標題列跟工具列)
-const sheetEmbedUrls = {
-  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/htmlembed?gid=1731637259&widget=false&chrome=false&headers=false",
-  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/htmlembed?gid=1573452397&widget=false&chrome=false&headers=false"
+// 👉 Google Sheet CSV 輸出網址 (不用寫 Apps Script 也能跨網域撈資料的密技)
+const csvUrls = {
+  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
+  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
 
 let currentCat = null;
+let allCatRecords = [];
+let showFullHistory = false;
 
-// 切換寵物邏輯
 function selectCat(cat) {
   currentCat = cat;
+  showFullHistory = false;
   
-  // 顯示對應區塊與按鈕樣式
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
   document.getElementById('sel-' + cat).classList.add('active');
   document.getElementById('cat-content').className = 'cat-content-visible';
@@ -219,11 +241,84 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('history-label').className = 'cat-log-label ' + cat;
   
-  // 替換 iframe 網址，達成物理同步
-  document.getElementById('sheet-iframe').src = sheetEmbedUrls[cat];
-  
-  // 渲染照片牆
+  // 觸發兩大 API 拉取動作
+  fetchSheetData(cat);
   renderPhotoWall(cat);
+}
+
+// 讀取 Google Sheet CSV 魔法
+async function fetchSheetData(cat) {
+  const tbody = document.getElementById('history-tbody');
+  const thead = document.getElementById('history-thead');
+  
+  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線 Google 總部偷撈資料中...</td></tr>`;
+  
+  try {
+    const response = await fetch(csvUrls[cat]);
+    if (!response.ok) throw new Error("網路連線錯誤");
+    const csvText = await response.text();
+    
+    // 簡易 CSV 解析 (避開逗號在引號內的陷阱)
+    const rows = csvText.split('\n').map(row => row.trim()).filter(row => row);
+    
+    // 捨棄第 1 列的標題，留下實際資料
+    allCatRecords = rows.slice(1).map(line => {
+      return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
+    }).filter(cols => cols[0]); // 過濾掉沒有日期的空白列
+
+    // 🔥 將陣列反轉，讓最新填寫的日期排在最上面！
+    allCatRecords.reverse();
+    
+    renderHistoryTable();
+  } catch (error) {
+    console.error(error);
+    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent-red); padding:40px;">💣 資料讀取失敗，你的 Google 表格是不是沒設成「公開」？</td></tr>`;
+  }
+}
+
+function rc(val, type) {
+  if (!val || val === "FALSE" || val === "0" || val === "") return '<span style="color:#ccc">—</span>';
+  if (type === 'check') return (val === '✓' || val === "TRUE") ? '<span class="pill pill-yes">✓</span>' : '<span style="color:#ccc">—</span>';
+  if (type === 'vomit') return '<span class="pill pill-vomit">' + val + '次</span>';
+  if (type === 'cough') return '<span class="pill pill-cough">' + val + '次</span>';
+  return val;
+}
+
+// 渲染表格 (10筆限制 & 顯示全部邏輯)
+function renderHistoryTable() {
+  const tbody = document.getElementById('history-tbody');
+  const thead = document.getElementById('history-thead');
+  const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
+  
+  tbody.innerHTML = '';
+  
+  if (currentCat === 'xile') {
+    thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    displayData.forEach(r => {
+      // 依照 Google Sheet 欄位：A=日期(0), B=腎(1), C=胰(2), D=嘔吐次數(3), E=嘔吐物(4), F=剪甲(5)
+      tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[5],'check')}</td></tr>`;
+    });
+  } else {
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    displayData.forEach(r => {
+      // 依照 Google Sheet 欄位：A=日期(0), B=咳嗽次數(1), C=嘔吐次數(2), D=嘔吐物(3), E=剪甲(4)
+      tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[4],'check')}</td></tr>`;
+    });
+  }
+
+  // 控制【顯示全部】按鈕的隱藏與文字
+  const btn = document.getElementById('show-all-btn');
+  if (allCatRecords.length > 10) {
+    btn.style.display = 'block';
+    btn.textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部紀錄 (${allCatRecords.length}) ↓`;
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function toggleAllRecords() {
+  showFullHistory = !showFullHistory;
+  renderHistoryTable();
 }
 
 // 串接 Google Drive API 抓圖片
@@ -232,12 +327,10 @@ async function renderPhotoWall(cat) {
   const directLink = document.getElementById('drive-direct-link');
   const catName = cat === 'xile' ? '喜樂' : '平安';
   
-  // 顯示載入中動畫
   container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 900; color: var(--ink-light);">🐈 正在向 Google 討 ${catName} 的萌照中...</div>`;
   directLink.href = driveLinks[cat];
   directLink.textContent = `🔗 點我直接開啟 ${catName} 的 Google Drive 完整相簿 ↗`;
 
-  // 找圖魔法陣
   const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
 
@@ -278,14 +371,13 @@ async function submitForm() {
   btn.disabled = true;
   btn.textContent = '寫入中...';
 
-  // 這裡假設你之後會串接 Apps Script Web App，現在用 setTimeout 假裝一下
+  // 模擬寫入時間
   await new Promise(r => setTimeout(r, 1000));
   
-  // 物理強制重整 iframe 來顯示最新寫入的資料
-  const iframe = document.getElementById('sheet-iframe');
-  iframe.src = iframe.src;
+  // 寫入完畢後，重新拉取最新資料更新表格
+  fetchSheetData(currentCat);
   
-  btn.textContent = '✅ 已通知 Sheets 更新';
+  btn.textContent = '✅ 已通知 Sheets 並更新表格';
   setTimeout(() => {
     btn.disabled = false;
     btn.textContent = '送出紀錄';
