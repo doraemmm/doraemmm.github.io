@@ -184,7 +184,6 @@
   <div class="log-container">
     <div class="cat-log-label" id="history-label"><span>健康列表 (API 即時撈取)</span></div>
     
-    <!-- 重新復活的 HTML 表格，支援凍結標題與顯示全部 -->
     <div class="scroll-wrap">
       <table>
         <thead id="history-thead"></thead>
@@ -206,20 +205,21 @@
 // 初始化今日日期
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 
-// ⚠️ 警告：這把鑰匙現在全世界都看得到了，小心被盜刷！
+// ⚠️ 警告：金鑰依然裸奔中
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 
+// 👉 更新的資料夾 IDs
 const folderIds = {
-  xile: "1g4KbCbxMsPKdwgi3MqoLZ_tsgpBEqFyc",
-  ping: "1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY"
+  xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK",
+  ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO"
 };
 
+// 👉 更新的 Drive 連結
 const driveLinks = {
-  xile: "https://drive.google.com/drive/folders/1g4KbCbxMsPKdwgi3MqoLZ_tsgpBEqFyc?usp=sharing",
-  ping: "https://drive.google.com/drive/folders/1H1Fb1i9jyTW_qyZOoKfZnJupGp1FKvKY?usp=sharing"
+  xile: "https://drive.google.com/drive/folders/1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK",
+  ping: "https://drive.google.com/drive/folders/1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO"
 };
 
-// 👉 Google Sheet CSV 輸出網址 (不用寫 Apps Script 也能跨網域撈資料的密技)
 const csvUrls = {
   xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
   ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
@@ -241,12 +241,10 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('history-label').className = 'cat-log-label ' + cat;
   
-  // 觸發兩大 API 拉取動作
   fetchSheetData(cat);
   renderPhotoWall(cat);
 }
 
-// 讀取 Google Sheet CSV 魔法
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
@@ -258,15 +256,12 @@ async function fetchSheetData(cat) {
     if (!response.ok) throw new Error("網路連線錯誤");
     const csvText = await response.text();
     
-    // 簡易 CSV 解析 (避開逗號在引號內的陷阱)
     const rows = csvText.split('\n').map(row => row.trim()).filter(row => row);
     
-    // 捨棄第 1 列的標題，留下實際資料
     allCatRecords = rows.slice(1).map(line => {
       return line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
-    }).filter(cols => cols[0]); // 過濾掉沒有日期的空白列
+    }).filter(cols => cols[0]);
 
-    // 🔥 將陣列反轉，讓最新填寫的日期排在最上面！
     allCatRecords.reverse();
     
     renderHistoryTable();
@@ -284,7 +279,6 @@ function rc(val, type) {
   return val;
 }
 
-// 渲染表格 (10筆限制 & 顯示全部邏輯)
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
@@ -295,18 +289,15 @@ function renderHistoryTable() {
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
     displayData.forEach(r => {
-      // 依照 Google Sheet 欄位：A=日期(0), B=腎(1), C=胰(2), D=嘔吐次數(3), E=嘔吐物(4), F=剪甲(5)
       tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'vomit')}</td><td>${r[4]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[5],'check')}</td></tr>`;
     });
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
     displayData.forEach(r => {
-      // 依照 Google Sheet 欄位：A=日期(0), B=咳嗽次數(1), C=嘔吐次數(2), D=嘔吐物(3), E=剪甲(4)
       tbody.innerHTML += `<tr><td>${r[0]||''}</td><td>${rc(r[1],'cough')}</td><td>${rc(r[2],'vomit')}</td><td>${r[3]||'<span style="color:#ccc">—</span>'}</td><td>${rc(r[4],'check')}</td></tr>`;
     });
   }
 
-  // 控制【顯示全部】按鈕的隱藏與文字
   const btn = document.getElementById('show-all-btn');
   if (allCatRecords.length > 10) {
     btn.style.display = 'block';
@@ -321,7 +312,6 @@ function toggleAllRecords() {
   renderHistoryTable();
 }
 
-// 串接 Google Drive API 抓圖片
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
   const directLink = document.getElementById('drive-direct-link');
@@ -365,16 +355,13 @@ async function renderPhotoWall(cat) {
   }
 }
 
-// 模擬送出表單
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
   btn.textContent = '寫入中...';
 
-  // 模擬寫入時間
   await new Promise(r => setTimeout(r, 1000));
   
-  // 寫入完畢後，重新拉取最新資料更新表格
   fetchSheetData(currentCat);
   
   btn.textContent = '✅ 已通知 Sheets 並更新表格';
