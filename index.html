@@ -103,21 +103,18 @@
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px; margin-top: 20px; margin-bottom: 20px;
   }
+  
+  /* 把原本的 a 標籤改成 div 樣式 */
   .photo-link-block {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     aspect-ratio: 1; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 1.1rem;
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s;
     border: 3px dashed var(--border); background-color: var(--warm-white);
+    cursor: pointer; /* 讓滑鼠移過去還是會有手指游標 */
   }
   .photo-link-block:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; }
   .photo-link-block.xile-theme { border-color: var(--xile-color); background: var(--xile-pale); }
   .photo-link-block.ping-theme { border-color: var(--ping-color); background: var(--ping-pale); }
-  
-  .drive-link-text {
-    display: block; text-align: right; margin-top: 10px; margin-bottom: 40px; font-weight: 900;
-    color: var(--ink-light); text-decoration: none; font-size: 0.95rem;
-  }
-  .drive-link-text:hover { color: var(--ink); text-decoration: underline; }
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -127,8 +124,8 @@
 <header>
   <div class="header-inner">
     <div class="title-block">
-      <h1>喜樂 × 平安</h1>
-      <p class="subtitle">寵物健康日誌</p>
+      <h1><em>喜樂</em> × 平安</h1>
+      <p class="subtitle">寵物健康日誌 · API 自動化 & 終極潔癖版</p>
     </div>
   </div>
 </header>
@@ -197,7 +194,7 @@
   <div class="photo-wall" id="photo-wall-container">
     <!-- 內容會由 JS 動態生成 -->
   </div>
-  <a id="drive-direct-link" class="drive-link-text" href="#" target="_blank">🔗 點我直接開啟 Google Drive 完整相簿 ↗</a>
+  <!-- 礙眼的直接開啟相簿連結已被小G物理性超渡 -->
 
 </div>
 
@@ -205,19 +202,12 @@
 // 初始化今日日期
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 
-// ⚠️ 警告：金鑰依然裸奔中
+// ⚠️ 金鑰持續裸奔中
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 
-// 👉 更新的資料夾 IDs
 const folderIds = {
   xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK",
   ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO"
-};
-
-// 👉 更新的 Drive 連結
-const driveLinks = {
-  xile: "https://drive.google.com/drive/folders/1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK",
-  ping: "https://drive.google.com/drive/folders/1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO"
 };
 
 const csvUrls = {
@@ -314,12 +304,9 @@ function toggleAllRecords() {
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  const directLink = document.getElementById('drive-direct-link');
   const catName = cat === 'xile' ? '喜樂' : '平安';
   
   container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 900; color: var(--ink-light);">🐈 正在向 Google 討 ${catName} 的萌照中...</div>`;
-  directLink.href = driveLinks[cat];
-  directLink.textContent = `🔗 點我直接開啟 ${catName} 的 Google Drive 完整相簿 ↗`;
 
   const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
@@ -340,10 +327,11 @@ async function renderPhotoWall(cat) {
       data.files.forEach(file => {
         const imgSrc = `https://drive.google.com/thumbnail?id=${file.id}&sz=w500`;
         const viewLink = `https://drive.google.com/file/d/${file.id}/view`;
+        // 👉 黑魔法在這裡：把 <a> 標籤換成 <div>，並用 onclick 觸發新分頁，徹底消滅左下角網址！
         html += `
-          <a href="${viewLink}" target="_blank" class="photo-link-block ${themeClass}" style="padding:0; overflow:hidden;" title="${file.name}">
+          <div class="photo-link-block ${themeClass}" style="padding:0; overflow:hidden;" title="${file.name}" onclick="window.open('${viewLink}', '_blank')">
             <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${file.name}">
-          </a>
+          </div>
         `;
       });
       container.innerHTML = html;
