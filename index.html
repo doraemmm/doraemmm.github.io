@@ -251,7 +251,7 @@ async function renderPhotoWall(cat) {
 
   // 找圖魔法陣：只要圖片檔、不要在垃圾桶裡的、照時間排最新的5張
   const query = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
-  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+  const fetchUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
 
   try {
     const res = await fetch(fetchUrl);
