@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>喜樂 × 平安 健康日誌</title>
 
+<!-- Favicon 4大天王連線 -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="shortcut icon" href="favicon.ico">
@@ -156,17 +157,26 @@ async function fetchSheetData(cat) {
   } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
 }
 
+// 👉 核心邏輯修正：0、空白、字串0 都顯示為 —
+function rc(val, type) {
+  const isZero = !val || val === "0" || val === " " || val === "";
+  if (type === 'check') return val === 'TRUE' ? '✅' : '—';
+  if (type === 'nail') return val === 'TRUE' ? '✂️' : '—';
+  if (isZero) return '—';
+  return val + '次';
+}
+
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
   const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
   tbody.innerHTML = '';
   if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]==='TRUE'?'✅':'—'}</td><td>${r[2]==='TRUE'?'✅':'—'}</td><td>${r[3]||'0'}次</td><td>${r[4]||'—'}</td><td>${r[5]==='TRUE'?'✂️':'—'}</td></tr>`);
+    thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'count')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'nail')}</td></tr>`);
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]||'0'}次</td><td>${r[2]||'0'}次</td><td>${r[3]||'—'}</td><td>${r[4]==='TRUE'?'✂️':'—'}</td></tr>`);
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'count')}</td><td>${rc(r[2],'count')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'nail')}</td></tr>`);
   }
   document.getElementById('show-all-btn').style.display = allCatRecords.length > 10 ? 'block' : 'none';
   document.getElementById('show-all-btn').textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部 (${allCatRecords.length}) ↓`;
