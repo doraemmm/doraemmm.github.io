@@ -23,19 +23,26 @@
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
     font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
   }
-  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden}
-  header{padding:60px 48px 40px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
-  .title-block h1{font-size:clamp(2.5rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
+  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+
+  /* ─── HEADER ─── */
+  /* 4: 縮減 header padding，手機更合比例 */
+  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
+  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+  .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
   .title-block h1 em{font-style:italic;color:var(--xile-color)}
-  .title-block .subtitle{margin-top:12px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+  .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
 
   /* ─── DASHBOARD ─── */
-  .dashboard{max-width:1100px;margin:36px auto 0;padding:0 48px;animation:fadeUp .5s ease .1s both}
+  /* 5: 加 padding-bottom */
+  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
-  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white)}
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center}
+  /* 1: dash-cat-header 變可點擊，整合選貓功能 */
+  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
+  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
+  .dash-cat-header:hover{filter:brightness(.96)}
+  .dash-cat-header:active{filter:brightness(.92)}
   .dash-cat-header.xile{background:var(--xile-pale)}
   .dash-cat-header.ping{background:var(--ping-pale)}
   .dash-cat-header-top{display:flex;align-items:center;gap:10px;justify-content:center}
@@ -43,6 +50,10 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
+  /* 選中狀態的卡片 header 加底線提示 */
+  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
+  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
+  .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
 
   .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 
@@ -63,6 +74,8 @@
   .stat-val.ping{color:var(--ping-deep)}
   .stat-val.alert{color:var(--accent-red)}
   .stat-label{font-size:.72rem;color:var(--ink-light);margin-top:4px;font-weight:700}
+  .stat-icon{font-size:1.6rem;line-height:1}
+  .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
 
   /* 罐頭推薦列 */
   .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
@@ -75,40 +88,74 @@
   .phos-table tr:last-child td{border-bottom:none}
   .phos-em{font-weight:900;font-size:.85rem}
 
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border-left:3px solid var(--border);border-radius:0 4px 4px 0;line-height:1.6}
+  /* 6: dash-note 改成完整 border + 圓角，統一風格 */
+  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
   .dash-note strong{color:var(--ink);font-weight:900}
 
-  .section-head{max-width:1100px;margin:48px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
+  /* 醫療區塊 */
+  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
+  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
+  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
+  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
+  .visit-row .visit-items{color:var(--ink-light)}
+
+  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
   .section-head h2{font-size:1.5rem;font-weight:900}
   .section-head .line{flex:1;height:1px;background:var(--border)}
-  .selector-wrap{max-width:1100px;margin:28px auto 0;padding:0 48px}
-  .selector-inner{display:flex;align-items:center;gap:20px;background:var(--warm-white);border:1px solid var(--border);border-radius:4px;padding:20px 28px}
-  .selector-label{font-size:.9rem;font-weight:900;letter-spacing:.1em;color:var(--ink-light);white-space:nowrap}
-  .selector-options{display:flex;gap:10px;flex-wrap:wrap}
-  .sel-btn{padding:10px 28px;border:1.5px solid var(--border);border-radius:3px;background:var(--cream);font-size:.9rem;font-weight:900;cursor:pointer;transition:all .2s}
-  .sel-btn.active{background:var(--warm-white);border-color:var(--ink)}
-  .cat-content-visible{display:block;max-width:1100px;margin:32px auto 0;padding:0 48px;animation:fadeUp .35s ease both}
-  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px}
+
+  /* 1: selector-wrap 隱藏，改由 dashboard header 點擊觸發 */
+  .selector-wrap{display:none}
+
+  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px;
+    /* 3: 加 max-width + padding */
+    max-width:1100px;margin:32px auto 0;padding:28px 48px}
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none}
-  .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink)}
-  .scroll-wrap{max-height: 400px; overflow-y: auto; border: 2px solid var(--border); border-radius: 8px; background: var(--warm-white); position: relative;}
-  table{width:100%;border-collapse:separate; border-spacing: 0; font-size:.9rem; min-width:640px}
-  thead th{position: sticky; top: 0; z-index: 10; background: #e6e0d3; padding:12px 14px;text-align:center;box-shadow: 0 2px 0 var(--border);}
-  tbody td { border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; }
-  .show-all-btn { display: block; width: 100%; padding: 12px; margin-top: 12px; background: var(--warm-white); border: 2px dashed var(--border); border-radius:8px; cursor: pointer; font-weight: 900;}
-  .photo-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; }
-  .photo-link-block { aspect-ratio: 1; border-radius: 12px; border: 3px dashed var(--border); cursor: pointer; overflow: hidden; transition: 0.3s; }
-  .photo-link-block:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+  .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);transition:opacity .15s}
+  .btn-submit:hover{opacity:.85}
+  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative}
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
+  thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
+  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
+  /* 7: show-all-btn hover */
+  .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
+  .show-all-btn:hover{background:var(--cream)}
+  .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
+  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
+  .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
+  /* 10: 底部安全距離 */
+  .page-end{height:calc(40px + env(safe-area-inset-bottom))}
+
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ─── LIGHTBOX ─── */
+  #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  #lightbox-img{max-width:100%;max-height:80vh;border-radius:6px;object-fit:contain;transition:opacity .2s;cursor:default}
+  .lb-close{position:absolute;top:16px;right:20px;font-size:2rem;color:#fff;cursor:pointer;opacity:.7;line-height:1;background:none;border:none;transition:opacity .15s}
+  .lb-close:hover{opacity:1}
+  .lb-nav{display:flex;align-items:center;gap:24px;margin-top:16px}
+  .lb-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+  .lb-btn:hover{background:rgba(255,255,255,.25)}
+  #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
 
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
-    header{padding:36px 20px 28px}
-    .dashboard,.selector-wrap,.section-head{padding:0 20px}
-    .cat-content-visible{padding:0 20px}
+    header{padding:28px 20px 24px}
+    .dashboard,.section-head{padding:0 20px}
+    .dashboard{padding-bottom:4px}
+    .form-card{margin:24px 20px 0;padding:20px}
+    .log-container{padding:0 20px}
+    .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
+  }
+  /* 9: 平板中間斷點 */
+  @media(min-width:641px) and (max-width:900px){
+    .dashboard-grid{grid-template-columns:1fr}
+    .dashboard{padding:0 32px 8px}
+    .form-card{padding:24px 32px}
+    .section-head{padding:0 32px}
   }
 </style>
 
@@ -129,52 +176,60 @@
 <div class="dashboard">
   <div class="dashboard-grid">
 
+```
 <!-- 喜樂 -->
 <div class="dash-cat">
-  <div class="dash-cat-header xile">
+  <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
     <div class="dash-cat-header-top">
       <span style="font-size:1.6rem">🟠</span>
       <span class="dash-cat-name xile">喜樂</span>
     </div>
     <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
   </div>
   <div class="dash-body">
-    <!-- 狀態標籤 -->
-    <div class="dash-tags">
-      <span class="tag warn">⚠️ 脫水警訊 HCT 54.1%</span>
-      <span class="tag safe">✅ CREA 已降回 1.7</span>
-      <span class="tag info">💊 腎臟藥 ＋ 胰臟藥</span>
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">💧</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">💊</div>
+            <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div>
+          </div>
+        </div>
+        <div class="visit-row">
+          <span class="visit-date">2/9 就診</span>
+          <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
+        </div>
+      </div>
     </div>
-    <!-- 數值 -->
-    <div class="dash-stats">
-      <div class="stat-box">
-        <div class="stat-val xile">1.7</div>
-        <div class="stat-label">CREA（↓ 改善）</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val xile">1373</div>
-        <div class="stat-label">AMYL（↓ 改善）</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val alert">54.1%</div>
-        <div class="stat-label">HCT 脫水警戒</div>
-      </div>
-    </div>
-    <!-- 罐頭推薦 -->
+    <!-- 飲食＋主食罐合併表 -->
     <div class="phos-table-wrap">
     <table class="phos-table">
-      <thead><tr><th>罐頭口味</th><th>磷 DM</th><th>評估</th></tr></thead>
+      <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
       <tbody>
+        <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
+        <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
+        <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td><td></td><td></td></tr>
         <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
         <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
         <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
         <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
-        <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 直接出局</td></tr>
+        <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
       </tbody>
     </table>
     </div>
     <div class="dash-note">
-      罐頭比例：<strong>惜時零食罐 × 超越汪喵 = 1:2</strong><br>
+      混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
       鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
     </div>
   </div>
@@ -182,33 +237,37 @@
 
 <!-- 平安 -->
 <div class="dash-cat">
-  <div class="dash-cat-header ping">
+  <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
     <div class="dash-cat-header-top">
       <span style="font-size:1.6rem">🔵</span>
       <span class="dash-cat-name ping">平安</span>
     </div>
     <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
   </div>
   <div class="dash-body">
-    <!-- 狀態標籤 -->
-    <div class="dash-tags">
-      <span class="tag alert">❤️ 心臟肥大</span>
-      <span class="tag warn">🫁 不定時咳嗽</span>
-      <span class="tag safe">✅ 腎臟數值正常</span>
-    </div>
-    <!-- 數值 -->
-    <div class="dash-stats">
-      <div class="stat-box">
-        <div class="stat-val alert">心臟</div>
-        <div class="stat-label">肥大，持續追蹤</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val ping">正常</div>
-        <div class="stat-label">腎臟數值</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val ping">1/27</div>
-        <div class="stat-label">狂犬病疫苗</div>
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">❤️‍🩹</div>
+            <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫁</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
+          </div>
+        </div>
+        <div class="visit-row">
+          <span class="visit-date">1/27 就診</span>
+          <span class="visit-items">狂犬病疫苗</span>
+        </div>
       </div>
     </div>
     <!-- 飲食說明 -->
@@ -228,6 +287,7 @@
     </div>
   </div>
 </div>
+```
 
   </div>
 </div>
@@ -248,10 +308,11 @@
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
+```
 <div id="xile-fields" style="display:none">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
     <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-    <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">罐頭</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
+    <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
   </div>
   <div class="form-field">
     <label>今日用藥</label>
@@ -278,6 +339,7 @@
 </div>
 <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
 <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
+```
 
   </div>
 
@@ -290,8 +352,20 @@
   </div>
 
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
-  <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 40px;padding:0 48px"></div>
+  <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
 </div>
+<!-- ═══ LIGHTBOX ═══ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-nav" onclick="event.stopPropagation()">
+    <button class="lb-btn" id="lb-prev" onclick="lightboxNav(-1)">‹</button>
+    <span id="lb-counter">1 / 1</span>
+    <button class="lb-btn" id="lb-next" onclick="lightboxNav(1)">›</button>
+  </div>
+</div>
+
+<div class="page-end"></div>
 
 <script>
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
@@ -306,11 +380,19 @@ let currentCat = null, allCatRecords = [], showFullHistory = false;
 
 function selectCat(cat) {
   currentCat = cat; showFullHistory = false;
+  // 同步隱藏的 sel-btn（保留相容性）
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById('sel-' + cat).classList.add('active');
+  const activeBtn = document.getElementById('sel-' + cat);
+  if (activeBtn) activeBtn.classList.add('active');
+  // 卡片選中視覺
+  document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
+  const card = document.getElementById('header-' + cat)?.closest('.dash-cat');
+  if (card) card.classList.add('selected-' + cat);
+  // 顯示表單並捲動
   document.getElementById('cat-content').style.display = 'block';
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
+  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth', block:'start'}), 100);
   fetchSheetData(cat); renderPhotoWall(cat);
 }
 
@@ -354,14 +436,60 @@ function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryT
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;">🐈 正在抓貓中...</div>`;
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 正在抓貓中...</div>`;
   const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
     const res = await fetch(url); const data = await res.json();
-    container.innerHTML = data.files.map(f => `<div class="photo-link-block" onclick="window.open('https://drive.google.com/file/d/${f.id}/view', '_blank')"><img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`).join('');
-  } catch (e) { container.innerHTML = `<div>載入失敗</div>`; }
+    lightboxImages = data.files.map(f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`);
+    container.innerHTML = data.files.map((f, i) => `
+      <div class="photo-link-block" onclick="openLightbox(${i})">
+        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>`).join('');
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-light)">載入失敗</div>`; }
 }
+
+let lightboxImages = [], lightboxIndex = 0;
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = lightboxImages[i];
+  img.style.opacity = '0';
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  const img = document.getElementById('lightbox-img');
+  img.style.opacity = '0';
+  img.src = lightboxImages[lightboxIndex];
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function updateLightboxNav() {
+  document.getElementById('lb-counter').textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+  document.getElementById('lb-prev').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+  document.getElementById('lb-next').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+}
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').style.display === 'flex') {
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'Escape') closeLightbox();
+  }
+});
 
 async function submitForm() {
   const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
