@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>喜樂 × 平安 健康日誌</title>
 
-<!-- 👉 Favicon 4大天王連線 -->
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">[span_11](start_span)[span_11](end_span)
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">[span_12](start_span)[span_12](end_span)
-<link rel="shortcut icon" href="favicon.ico">[span_13](start_span)[span_13](end_span)
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">[span_14](start_span)[span_14](end_span)
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
 <style>
   :root {
@@ -59,8 +58,8 @@
 <header>
   <div class="header-inner">
     <div class="title-block">
-      <h1><em>喜樂</em> × 平安</h1>
-      <p class="subtitle">寵物健康日誌 · 終極圖示同步版</p>
+      <h1>喜樂 × 平安</h1>
+      <p class="subtitle">寵物健康日誌</p>
     </div>
   </div>
 </header>
@@ -188,7 +187,6 @@ async function renderPhotoWall(cat) {
 
 async function submitForm() {
   const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
-  // 此處請更換為你的 Google Apps Script Web App URL
   await new Promise(r => setTimeout(r, 1500)); 
   btn.textContent = '✅ 已通知同步';
   fetchSheetData(currentCat);
