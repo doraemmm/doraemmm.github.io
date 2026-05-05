@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -129,6 +130,16 @@
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
+  /* ─── LIGHTBOX ─── */
+  #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  #lightbox-img{max-width:100%;max-height:80vh;border-radius:6px;object-fit:contain;transition:opacity .2s;cursor:default}
+  .lb-close{position:absolute;top:16px;right:20px;font-size:2rem;color:#fff;cursor:pointer;opacity:.7;line-height:1;background:none;border:none;transition:opacity .15s}
+  .lb-close:hover{opacity:1}
+  .lb-nav{display:flex;align-items:center;gap:24px;margin-top:16px}
+  .lb-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+  .lb-btn:hover{background:rgba(255,255,255,.25)}
+  #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
+
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
@@ -147,6 +158,7 @@
     .section-head{padding:0 32px}
   }
 </style>
+
 </head>
 <body>
 
@@ -160,119 +172,122 @@
 </header>
 
 <!-- ═══ DASHBOARD ═══ -->
+
 <div class="dashboard">
   <div class="dashboard-grid">
 
-    <!-- 喜樂 -->
-    <div class="dash-cat">
-      <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🟠</span>
-          <span class="dash-cat-name xile">喜樂</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
-        <span class="tap-hint">點此記錄今日狀況</span>
-      </div>
-      <div class="dash-body">
-        <!-- 醫療區塊 -->
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box">
-                <div class="stat-icon">💧</div>
-                <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫘</div>
-                <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">💊</div>
-                <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div>
-              </div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">2/9 就診</span>
-              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
-            </div>
+```
+<!-- 喜樂 -->
+<div class="dash-cat">
+  <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
+    <div class="dash-cat-header-top">
+      <span style="font-size:1.6rem">🟠</span>
+      <span class="dash-cat-name xile">喜樂</span>
+    </div>
+    <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
+  </div>
+  <div class="dash-body">
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">💧</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">💊</div>
+            <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div>
           </div>
         </div>
-        <!-- 飲食＋主食罐合併表 -->
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
-            <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td><td></td><td></td></tr>
-            <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
-            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
-            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
-            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
-            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
-          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
+        <div class="visit-row">
+          <span class="visit-date">2/9 就診</span>
+          <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
         </div>
       </div>
     </div>
+    <!-- 飲食＋主食罐合併表 -->
+    <div class="phos-table-wrap">
+    <table class="phos-table">
+      <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
+      <tbody>
+        <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
+        <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
+        <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td><td></td><td></td></tr>
+        <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
+        <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
+        <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
+        <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
+        <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="dash-note">
+      混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
+      鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
+    </div>
+  </div>
+</div>
 
-    <!-- 平安 -->
-    <div class="dash-cat">
-      <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🔵</span>
-          <span class="dash-cat-name ping">平安</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
-        <span class="tap-hint">點此記錄今日狀況</span>
-      </div>
-      <div class="dash-body">
-        <!-- 醫療區塊 -->
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box">
-                <div class="stat-icon">❤️‍🩹</div>
-                <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫘</div>
-                <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫁</div>
-                <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
-              </div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">1/27 就診</span>
-              <span class="visit-items">狂犬病疫苗</span>
-            </div>
+<!-- 平安 -->
+<div class="dash-cat">
+  <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
+    <div class="dash-cat-header-top">
+      <span style="font-size:1.6rem">🔵</span>
+      <span class="dash-cat-name ping">平安</span>
+    </div>
+    <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
+  </div>
+  <div class="dash-body">
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">❤️‍🩹</div>
+            <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫁</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
           </div>
         </div>
-        <!-- 飲食說明 -->
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
-            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
-          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
+        <div class="visit-row">
+          <span class="visit-date">1/27 就診</span>
+          <span class="visit-items">狂犬病疫苗</span>
         </div>
       </div>
     </div>
+    <!-- 飲食說明 -->
+    <div class="phos-table-wrap">
+    <table class="phos-table">
+      <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
+      <tbody>
+        <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
+        <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
+        <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="dash-note">
+      食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
+      心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
+    </div>
+  </div>
+</div>
+```
 
   </div>
 </div>
@@ -293,36 +308,39 @@
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
-    <div id="xile-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
-      </div>
-      <div class="form-field">
-        <label>今日用藥</label>
-        <div style="display:flex;gap:20px">
-          <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
-          <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
-        </div>
-      </div>
+```
+<div id="xile-fields" style="display:none">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+    <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
+  </div>
+  <div class="form-field">
+    <label>今日用藥</label>
+    <div style="display:flex;gap:20px">
+      <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
+      <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
     </div>
+  </div>
+</div>
 
-    <div id="ping-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-      </div>
-    </div>
+<div id="ping-fields" style="display:none">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+    <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+  </div>
+</div>
 
-    <div class="form-field">
-      <label>其他事項</label>
-      <div style="display:flex;gap:20px">
-        <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
-        <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
-      </div>
-    </div>
-    <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
+<div class="form-field">
+  <label>其他事項</label>
+  <div style="display:flex;gap:20px">
+    <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
+    <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
+  </div>
+</div>
+<div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
+<button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
+```
+
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
@@ -336,6 +354,17 @@
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
 </div>
+<!-- ═══ LIGHTBOX ═══ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-nav" onclick="event.stopPropagation()">
+    <button class="lb-btn" id="lb-prev" onclick="lightboxNav(-1)">‹</button>
+    <span id="lb-counter">1 / 1</span>
+    <button class="lb-btn" id="lb-next" onclick="lightboxNav(1)">›</button>
+  </div>
+</div>
+
 <div class="page-end"></div>
 
 <script>
@@ -394,4 +423,82 @@ function renderHistoryTable() {
   tbody.innerHTML = '';
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'count')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'nail')}</td></tr>`);
+  } else {
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽次數</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'count')}</td><td>${rc(r[2],'count')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'nail')}</td></tr>`);
+  }
+  document.getElementById('show-all-btn').style.display = allCatRecords.length > 10 ? 'block' : 'none';
+  document.getElementById('show-all-btn').textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部 (${allCatRecords.length}) ↓`;
+}
+
+function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
+
+async function renderPhotoWall(cat) {
+  const container = document.getElementById('photo-wall-container');
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 正在抓貓中...</div>`;
+  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
+  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+  try {
+    const res = await fetch(url); const data = await res.json();
+    lightboxImages = data.files.map(f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`);
+    container.innerHTML = data.files.map((f, i) => `
+      <div class="photo-link-block" onclick="openLightbox(${i})">
+        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>`).join('');
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-light)">載入失敗</div>`; }
+}
+
+let lightboxImages = [], lightboxIndex = 0;
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = lightboxImages[i];
+  img.style.opacity = '0';
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  const img = document.getElementById('lightbox-img');
+  img.style.opacity = '0';
+  img.src = lightboxImages[lightboxIndex];
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function updateLightboxNav() {
+  document.getElementById('lb-counter').textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+  document.getElementById('lb-prev').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+  document.getElementById('lb-next').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+}
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').style.display === 'flex') {
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'Escape') closeLightbox();
+  }
+});
+
+async function submitForm() {
+  const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
+  await new Promise(r => setTimeout(r, 1500)); 
+  btn.textContent = '✅ 已通知同步';
+  fetchSheetData(currentCat);
+  setTimeout(() => { btn.disabled = false; btn.textContent = '送出紀錄'; }, 2000);
+}
+</script>
+
+</body>
+</html>
