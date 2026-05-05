@@ -172,10 +172,10 @@ function renderHistoryTable() {
   const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
   tbody.innerHTML = '';
   if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎</th><th>胰</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'count')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'nail')}</td></tr>`);
   } else {
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>內容</th><th>剪甲</th></tr>';
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽次數</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'count')}</td><td>${rc(r[2],'count')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'nail')}</td></tr>`);
   }
   document.getElementById('show-all-btn').style.display = allCatRecords.length > 10 ? 'block' : 'none';
