@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>喜樂 × 平安 健康日誌</title>
 
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="shortcut icon" href="favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
 <style>
   :root {
     --cream:#f5f0e8; --warm-white:#faf7f2; --ink:#1a1410; --ink-light:#3d3228;
@@ -18,230 +13,232 @@
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
   }
-  
-  /* 🛠️ 基礎設定修正 */
   *{margin:0;padding:0;box-sizing:border-box}
-  
-  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
-    font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
-  }
-  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+  body, button, input, select, textarea, h1, h2, h3 { font-family: '微軟正黑體', sans-serif !important; }
+  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
 
-  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
-  .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
-  .title-block h1 em{font-style:italic;color:var(--xile-color)}
-  .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+  /* ─── HEADER ─── */
+  header{padding:40px 48px 32px; border-bottom:1px solid var(--border); text-align:center}
+  .title-block h1{font-size:clamp(2rem,6vw,4rem); font-weight:900}
+  .title-block .subtitle{margin-top:10px; font-size:1rem; color:var(--ink-light); letter-spacing:.1em}
 
-  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
-  .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-
-  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
-  .dash-cat-header:hover{filter:brightness(.96)}
-  .dash-cat-header:active{filter:brightness(.92)}
+  /* ─── DASHBOARD ─── */
+  .dashboard{max-width:1100px; margin:32px auto 0; padding:0 48px}
+  .dashboard-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .dash-cat{border:2px solid var(--border); border-radius:12px; overflow:hidden; background:var(--warm-white); transition:transform .2s}
+  .dash-cat:hover{transform:translateY(-2px)}
+  .dash-cat-header{padding:20px; text-align:center; cursor:pointer; border-bottom:2px solid var(--border)}
   .dash-cat-header.xile{background:var(--xile-pale)}
   .dash-cat-header.ping{background:var(--ping-pale)}
-  .dash-cat-header-top{display:flex;align-items:center;gap:10px;justify-content:center}
-  .dash-cat-name{font-size:1.25rem;font-weight:900;letter-spacing:-.01em}
-  .dash-cat-name.xile{color:var(--xile-deep)}
-  .dash-cat-name.ping{color:var(--ping-deep)}
-  .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
-  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
-  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
-  .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
+  .dash-cat-name{font-size:1.5rem; font-weight:900}
+  .dash-cat-meta{font-size:.85rem; color:var(--ink-light); display:block; margin-top:5px}
+  .tap-hint{font-size:.75rem; opacity:.6; display:block; margin-top:8px}
 
-  .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+  /* ─── FORM ─── */
+  .form-card{background:var(--warm-white); border:2px solid var(--border); border-radius:12px; max-width:1100px; margin:32px auto 0; padding:32px 48px}
+  .form-field{margin-bottom:24px}
+  .form-field label{display:block; font-size:.95rem; margin-bottom:10px}
 
-  /* 📊 數據區塊 */
-  .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
-  .stat-val{font-size:1.5rem;font-weight:900;line-height:1}
-  .stat-icon{font-size:1.6rem;line-height:1}
-  .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
+  /* 分段選鈕 Segmented Control */
+  .seg-control{display:flex; background:var(--cream); border:1px solid var(--border); border-radius:8px; padding:4px; gap:4px}
+  .seg-btn{flex:1; border:none; padding:10px; border-radius:6px; background:transparent; cursor:pointer; font-weight:900; color:var(--ink-light); transition:.2s}
+  .seg-btn.active{background:var(--ink); color:#fff}
 
-  /* 🍴 飲食表格 */
-  .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
-  .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
-  .phos-table th{text-align:center;padding:10px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light)}
-  .phos-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center}
-  .phos-em{font-weight:900;font-size:.85rem}
+  /* 通用輸入框 */
+  input[type="date"], textarea{width:100%; padding:12px; background:var(--cream); border:1px solid var(--border); border-radius:8px; font-weight:700; outline:none}
+  textarea{min-height:100px; resize:vertical}
 
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
-  .dash-note strong{color:var(--ink);font-weight:900}
+  /* 核取方塊自訂 */
+  .check-group{display:flex; gap:20px; flex-wrap:wrap}
+  .check-item{display:flex; align-items:center; gap:8px; cursor:pointer}
 
-  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
-  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
-  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
-  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
+  /* 送出按鈕 */
+  .btn-submit{display:block; width:fit-content; min-width:160px; padding:12px 32px; margin:32px auto 0; border:none; border-radius:8px; font-size:1.1rem; font-weight:900; background:var(--ink); color:#fff; cursor:pointer; transition:opacity .2s}
+  .btn-submit:hover{opacity:.8}
 
-  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
-  .section-head h2{font-size:1.5rem;font-weight:900}
-  .section-head .line{flex:1;height:1px;background:var(--border)}
+  /* ─── HISTORY ─── */
+  .section-head{max-width:1100px; margin:48px auto 0; padding:0 48px; display:flex; align-items:center; gap:16px}
+  .section-head .line{flex:1; height:1px; background:var(--border)}
+  .scroll-wrap{max-width:1100px; margin:24px auto 0; overflow-x:auto; border-radius:12px; border:2px solid var(--border)}
+  table{width:100%; border-collapse:collapse; min-width:700px; background:#fff}
+  th{background:var(--cream); padding:16px; border-bottom:2px solid var(--border)}
+  td{padding:14px; text-align:center; border-bottom:1px solid var(--border)}
+  .status-tag{padding:4px 10px; border-radius:4px; font-size:.8rem; font-weight:900}
+  .tag-red{background:#fdf0ee; color:var(--accent-red); border:1px solid var(--accent-red)}
+  .tag-green{background:#eef6f0; color:var(--accent-green); border:1px solid var(--accent-green)}
 
-  .selector-wrap{display:none}
+  /* ─── PHOTOS ─── */
+  .photo-wall{display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; padding:0 48px; max-width:1100px; margin:24px auto 0}
+  .photo-item{aspect-ratio:1; border-radius:12px; overflow:hidden; border:2px solid var(--border); cursor:zoom-in}
+  .photo-item img{width:100%; height:100%; object-fit:cover; transition:.3s}
+  .photo-item img:hover{transform:scale(1.05)}
 
-  /* 📝 表單區域修正 */
-  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;max-width:1100px;margin:32px auto 0;padding:28px 48px}
-  .form-field{margin-bottom:16px; width:100%}
-  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:8px}
+  /* ─── LIGHTBOX ─── */
+  #lightbox{display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:1000; justify-content:center; align-items:center; cursor:zoom-out}
+  #lightbox img{max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 0 30px rgba(0,0,0,.5)}
 
-  /* 📏 核心修正：日期框寬度必須 100% 且包含 padding */
-  .form-field input:not([type="checkbox"]),
-  .form-field select,
-  .form-field textarea {
-    width: 100% !important; 
-    padding: 10px 12px;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: .9rem;
-    font-weight: 700;
-    outline: none;
-    display: block;
-  }
-
-  /* 🔘 核心修正：按鈕寬度縮減並置中 */
-  .btn-submit {
-    display: block;
-    width: fit-content;    /* 寬度隨內容變化 */
-    padding: 10px 24px;   /* 左右預留約兩格空格的寬度 */
-    margin: 24px auto 0;  /* 置中 */
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 900;
-    cursor: pointer;
-    color: #fff;
-    background: var(--ink);
-    transition: opacity .15s;
-    text-align: center;
-  }
-  .btn-submit:hover{opacity:.85}
-
-  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative}
-  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
-  thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
-
-  .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
-  .show-all-btn:hover{background:var(--cream)}
-
-  .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
-  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
-  .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
-  .page-end{height:calc(40px + env(safe-area-inset-bottom))}
-
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-  @media(max-width:640px){
+  @media(max-width:768px){
     .dashboard-grid{grid-template-columns:1fr}
-    header{padding:28px 20px 24px}
-    .dashboard,.section-head{padding:0 20px}
-    .form-card{margin:24px 20px 0;padding:20px}
-    .log-container, .photo-wall{padding:0 20px !important}
-    .btn-submit { width: fit-content; min-width: 150px; } /* 手機板維持寬度適中 */
+    .dashboard, .form-card, .section-head, .photo-wall{padding:0 20px}
+    header{padding:30px 20px}
   }
 </style>
-
 </head>
 <body>
 
 <header>
-  <div class="header-inner">
-    <div class="title-block">
-      <h1>喜樂 × 平安</h1>
-      <p class="subtitle">寵物健康日誌</p>
-    </div>
+  <div class="title-block">
+    <h1>喜樂 × 平安</h1>
+    <p class="subtitle">奴才專用健康紀錄表</p>
   </div>
 </header>
 
-<!-- ═══ DASHBOARD ═══ -->
 <div class="dashboard">
   <div class="dashboard-grid">
-    <!-- 喜樂卡片省略，結構同下 -->
-    <div class="dash-cat">
-      <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🟠</span>
-          <span class="dash-cat-name xile">喜樂</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="dash-note">今日尚未紀錄</div>
+    <div class="dash-cat" onclick="selectCat('xile')">
+      <div class="dash-cat-header xile">
+        <span class="dash-cat-name">🟠 喜樂</span>
+        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 脫水注意</span>
+        <span class="tap-hint">👉 點此開啟紀錄表</span>
       </div>
     </div>
-    <!-- 平安卡片省略 -->
-    <div class="dash-cat">
-      <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🔵</span>
-          <span class="dash-cat-name ping">平安</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="dash-note">今日尚未紀錄</div>
+    <div class="dash-cat" onclick="selectCat('ping')">
+      <div class="dash-cat-header ping">
+        <span class="dash-cat-name">🔵 平安</span>
+        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 心臟追蹤</span>
+        <span class="tap-hint">👉 點此開啟紀錄表</span>
       </div>
     </div>
   </div>
 </div>
 
 <div id="cat-content" style="display:none">
-  <div class="form-card">
-    <h3>今日紀錄</h3>
+  <div class="form-card" id="form-scroll-target">
+    <h3 id="form-title" style="margin-bottom:20px">正在記錄：</h3>
+    
     <div class="form-field">
-      <label>日期</label>
+      <label>📅 紀錄日期</label>
       <input type="date" id="date-active">
     </div>
 
+    <!-- 喜樂專屬欄位 -->
     <div id="xile-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-field"><label>嘔吐次數</label><select><option>0 次</option><option>1 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select><option>— 選擇 —</option><option>飼料</option></select></div>
+      <div class="form-field">
+        <label>🤮 嘔吐次數</label>
+        <div class="seg-control" id="vomit-seg-xile">
+          <button class="seg-btn active" onclick="setSeg(this, 0)">0 次</button>
+          <button class="seg-btn" onclick="setSeg(this, 1)">1 次</button>
+          <button class="seg-btn" onclick="setSeg(this, 2)">2 次</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>💊 今日用藥（預設已吃）</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" checked> 腎臟藥</label>
+          <label class="check-item"><input type="checkbox" checked> 胰臟藥</label>
+        </div>
       </div>
     </div>
-    
+
+    <!-- 平安專屬欄位 -->
     <div id="ping-fields" style="display:none">
-      <div class="form-field"><label>咳嗽次數</label><select><option>0 次</option></select></div>
+      <div class="form-field">
+        <label>🗣️ 咳嗽次數</label>
+        <div class="seg-control">
+          <button class="seg-btn active" onclick="setSeg(this, 0)">0 次</button>
+          <button class="seg-btn" onclick="setSeg(this, 1)">1 次</button>
+          <button class="seg-btn" onclick="setSeg(this, 2)">2 次以上</button>
+        </div>
+      </div>
     </div>
 
     <div class="form-field">
-      <label>備註</label>
-      <textarea placeholder="補充說明..."></textarea>
+      <label>📝 奴才備註</label>
+      <textarea placeholder="主子今天心情如何？有沒有特別反常？"></textarea>
     </div>
-    
-    <button class="btn-submit" onclick="submitForm()">送出紀錄</button>
+
+    <button class="btn-submit" onclick="submitForm()">✅ 記錄完畢</button>
   </div>
 
-  <!-- 歷史紀錄 -->
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
-  <div class="log-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px">
-    <div class="scroll-wrap">
-      <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
-    </div>
+  <div class="scroll-wrap">
+    <table>
+      <thead>
+        <tr><th>日期</th><th>狀態</th><th>用藥/次數</th><th>備註</th></tr>
+      </thead>
+      <tbody id="history-tbody">
+        <!-- JS 動態帶入 -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head"><h2>最新寫真</h2><div class="line"></div></div>
+  <div class="photo-wall" id="photo-wall">
+    <!-- 抓取 Google Drive 照片 -->
   </div>
 </div>
 
-<div class="page-end"></div>
+<div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
+<div style="height:60px"></div>
 
 <script>
-// 設定日期預設值
-document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
+  // 初始化日期
+  document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 
-function selectCat(cat) {
-  document.getElementById('cat-content').style.display = 'block';
-  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
-  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
-  document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
-  document.getElementById('header-' + cat).closest('.dash-cat').classList.add('selected-' + cat);
-}
+  function setSeg(btn, val) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 
-function submitForm() {
-  alert('紀錄已送出！（模擬）');
-}
+  function selectCat(cat) {
+    const title = cat === 'xile' ? '🟠 喜樂' : '🔵 平安';
+    document.getElementById('form-title').innerText = '正在記錄：' + title;
+    document.getElementById('cat-content').style.display = 'block';
+    document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
+    document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
+    
+    // 平滑捲動
+    document.getElementById('form-scroll-target').scrollIntoView({behavior:'smooth'});
+    
+    // 模擬歷史紀錄標籤化
+    const tbody = document.getElementById('history-tbody');
+    tbody.innerHTML = `
+      <tr>
+        <td>05/05</td>
+        <td><span class="status-tag tag-green">正常</span></td>
+        <td>已用藥 / 0次</td>
+        <td>胃口很好</td>
+      </tr>
+      <tr>
+        <td>05/04</td>
+        <td><span class="status-tag tag-red">有狀況</span></td>
+        <td>已用藥 / 1次</td>
+        <td>早上吐了一點膽汁</td>
+      </tr>
+    `;
+
+    // 模擬照片牆 (這部分請保留你原本的 Drive API 邏輯)
+    const wall = document.getElementById('photo-wall');
+    wall.innerHTML = '';
+    for(let i=0; i<4; i++) {
+      const div = document.createElement('div');
+      div.className = 'photo-item';
+      div.onclick = () => openLightbox('https://via.placeholder.com/800x800?text=Cat+Photo');
+      div.innerHTML = `<img src="https://via.placeholder.com/300x300?text=Cat+Photo">`;
+      wall.appendChild(div);
+    }
+  }
+
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = src;
+    lb.style.display = 'flex';
+  }
+
+  function submitForm() {
+    alert('主子紀錄已存檔，辛苦了奴才！');
+  }
 </script>
 
 </body>
