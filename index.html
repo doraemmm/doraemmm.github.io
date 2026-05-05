@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -23,19 +22,21 @@
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
     font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
   }
-  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden}
-  header{padding:60px 48px 40px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
-  .title-block h1{font-size:clamp(2.5rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
-  .title-block h1 em{font-style:italic;color:var(--xile-color)}
-  .title-block .subtitle{margin-top:12px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
 
-  /* ─── DASHBOARD ─── */
-  .dashboard{max-width:1100px;margin:36px auto 0;padding:0 48px;animation:fadeUp .5s ease .1s both}
+  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
+  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+  .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
+  .title-block h1 em{font-style:italic;color:var(--xile-color)}
+  .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+
+  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
-  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white)}
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center}
+  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
+  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
+  .dash-cat-header:hover{filter:brightness(.96)}
+  .dash-cat-header:active{filter:brightness(.92)}
   .dash-cat-header.xile{background:var(--xile-pale)}
   .dash-cat-header.ping{background:var(--ping-pale)}
   .dash-cat-header-top{display:flex;align-items:center;gap:10px;justify-content:center}
@@ -43,10 +44,12 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
+  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
+  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
+  .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
 
   .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 
-  /* 狀態標籤列 */
   .dash-tags{display:flex;flex-wrap:wrap;gap:6px}
   .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:3px;font-size:.8rem;font-weight:900;border:1.5px solid}
   .tag.warn{background:#fff8e6;border-color:#c47a1a;color:#7a4c00}
@@ -55,7 +58,6 @@
   .tag.info{background:#edf4f8;border-color:#5b8fa8;color:#1a4d68}
   .tag.neutral{background:var(--cream);border-color:var(--border);color:var(--ink-light)}
 
-  /* 數值 row */
   .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
   .stat-val{font-size:1.5rem;font-weight:900;line-height:1}
@@ -63,52 +65,83 @@
   .stat-val.ping{color:var(--ping-deep)}
   .stat-val.alert{color:var(--accent-red)}
   .stat-label{font-size:.72rem;color:var(--ink-light);margin-top:4px;font-weight:700}
+  .stat-icon{font-size:1.6rem;line-height:1}
+  .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
 
-  /* 罐頭推薦列 */
   .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
   .phos-table-wrap::-webkit-scrollbar{height:5px}
   .phos-table-wrap::-webkit-scrollbar-track{background:var(--cream)}
   .phos-table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
   .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
-  .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
-  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center}
+  .phos-table th{text-align:center;padding:10px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
+  .phos-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center}
   .phos-table tr:last-child td{border-bottom:none}
   .phos-em{font-weight:900;font-size:.85rem}
 
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border-left:3px solid var(--border);border-radius:0 4px 4px 0;line-height:1.6}
+  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
   .dash-note strong{color:var(--ink);font-weight:900}
 
-  .section-head{max-width:1100px;margin:48px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
+  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
+  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
+  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
+  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
+  .visit-row .visit-items{color:var(--ink-light)}
+
+  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
   .section-head h2{font-size:1.5rem;font-weight:900}
   .section-head .line{flex:1;height:1px;background:var(--border)}
-  .selector-wrap{max-width:1100px;margin:28px auto 0;padding:0 48px}
-  .selector-inner{display:flex;align-items:center;gap:20px;background:var(--warm-white);border:1px solid var(--border);border-radius:4px;padding:20px 28px}
-  .selector-label{font-size:.9rem;font-weight:900;letter-spacing:.1em;color:var(--ink-light);white-space:nowrap}
-  .selector-options{display:flex;gap:10px;flex-wrap:wrap}
-  .sel-btn{padding:10px 28px;border:1.5px solid var(--border);border-radius:3px;background:var(--cream);font-size:.9rem;font-weight:900;cursor:pointer;transition:all .2s}
-  .sel-btn.active{background:var(--warm-white);border-color:var(--ink)}
-  .cat-content-visible{display:block;max-width:1100px;margin:32px auto 0;padding:0 48px;animation:fadeUp .35s ease both}
-  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px}
-  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
-  .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
-    width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none}
-  .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink)}
-  .scroll-wrap{max-height: 400px; overflow-y: auto; border: 2px solid var(--border); border-radius: 8px; background: var(--warm-white); position: relative;}
-  table{width:100%;border-collapse:separate; border-spacing: 0; font-size:.9rem; min-width:640px}
-  thead th{position: sticky; top: 0; z-index: 10; background: #e6e0d3; padding:12px 14px;text-align:center;box-shadow: 0 2px 0 var(--border);}
-  tbody td { border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; }
-  .show-all-btn { display: block; width: 100%; padding: 12px; margin-top: 12px; background: var(--warm-white); border: 2px dashed var(--border); border-radius:8px; cursor: pointer; font-weight: 900;}
-  .photo-wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; }
-  .photo-link-block { aspect-ratio: 1; border-radius: 12px; border: 3px dashed var(--border); cursor: pointer; overflow: hidden; transition: 0.3s; }
-  .photo-link-block:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+  .selector-wrap{display:none}
+
+  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;max-width:1100px;margin:32px auto 0;padding:28px 48px}
+  .form-field{margin-bottom:16px}
+  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:8px}
+  
+  /* ✨ 框框對齊核心：統一高度與 Padding */
+  .form-field input:not([type="checkbox"]),
+  .form-field select {
+    width:100%;height:42px;padding:0 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none;display:block;line-height:40px}
+  
+  .form-field textarea {
+    width:100%;padding:10px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none;min-height:100px;display:block}
+
+  /* ✨ 送出按鈕修正：縮短寬度並置中 */
+  .btn-submit{display:block; width:fit-content; min-width:120px; padding:0 24px; height:42px; margin:24px auto 0; border:none; border-radius:4px; font-size:1rem; font-weight:900; cursor:pointer; color:#fff; background:var(--ink); transition:opacity .15s; line-height:42px; text-align:center}
+  .btn-submit:hover{opacity:.85}
+
+  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative}
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
+  thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
+  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
+  
+  /* ✨ 「顯示全部」按鈕也順便統一一下高度感 */
+  .show-all-btn{display:block;width:100%;padding:0;height:42px;line-height:40px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
+  .show-all-btn:hover{background:var(--cream)}
+
+  .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
+  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
+  .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
+  .page-end{height:calc(40px + env(safe-area-inset-bottom))}
+
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
-    header{padding:36px 20px 28px}
-    .dashboard,.selector-wrap,.section-head{padding:0 20px}
-    .cat-content-visible{padding:0 20px}
+    header{padding:28px 20px 24px}
+    .dashboard,.section-head{padding:0 20px}
+    .dashboard{padding-bottom:4px}
+    .form-card{margin:24px 20px 0;padding:20px}
+    .log-container{padding:0 20px !important}
+    .photo-wall{padding:0 20px !important}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
+    .btn-submit { width:80%; } 
+  }
+  @media(min-width:641px) and (max-width:900px){
+    .dashboard-grid{grid-template-columns:1fr}
+    .dashboard{padding:0 32px 8px}
+    .form-card{padding:24px 32px}
+    .section-head{padding:0 32px}
   }
 </style>
 
@@ -131,51 +164,47 @@
 
 <!-- 喜樂 -->
 <div class="dash-cat">
-  <div class="dash-cat-header xile">
+  <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
     <div class="dash-cat-header-top">
       <span style="font-size:1.6rem">🟠</span>
       <span class="dash-cat-name xile">喜樂</span>
     </div>
     <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
   </div>
   <div class="dash-body">
-    <!-- 狀態標籤 -->
-    <div class="dash-tags">
-      <span class="tag warn">⚠️ 脫水警訊 HCT 54.1%</span>
-      <span class="tag safe">✅ CREA 已降回 1.7</span>
-      <span class="tag info">💊 腎臟藥 ＋ 胰臟藥</span>
-      <span class="tag neutral">🏥 2/9 狂犬病・止吐・退燒・營養針</span>
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">💧</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">💊</div>
+            <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div>
+          </div>
+        </div>
+        <div class="visit-row">
+          <span class="visit-date">2/9 就診</span>
+          <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
+        </div>
+      </div>
     </div>
-    <!-- 數值 -->
-    <div class="dash-stats">
-      <div class="stat-box">
-        <div class="stat-val xile">1.7</div>
-        <div class="stat-label">CREA（↓ 改善）</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val xile">1373</div>
-        <div class="stat-label">AMYL（↓ 改善）</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val alert">54.1%</div>
-        <div class="stat-label">HCT 脫水警戒</div>
-      </div>
-    </div>
-    <!-- 飲食 -->
+    <!-- 飲食＋主食罐合併表 -->
     <div class="phos-table-wrap">
     <table class="phos-table">
-      <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
+      <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
       <tbody>
-        <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-        <tr><td class="phos-em">惜時零食罐</td><td>✅ 接受</td></tr>
-      </tbody>
-    </table>
-    </div>
-    <!-- 罐頭推薦 -->
-    <div class="phos-table-wrap">
-    <table class="phos-table">
-      <thead><tr><th>超越汪喵主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-      <tbody>
+        <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
+        <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
+        <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td><td></td><td></td></tr>
         <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
         <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
         <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
@@ -193,33 +222,37 @@
 
 <!-- 平安 -->
 <div class="dash-cat">
-  <div class="dash-cat-header ping">
+  <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
     <div class="dash-cat-header-top">
       <span style="font-size:1.6rem">🔵</span>
       <span class="dash-cat-name ping">平安</span>
     </div>
     <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
+    <span class="tap-hint">點此記錄今日狀況</span>
   </div>
   <div class="dash-body">
-    <!-- 狀態標籤 -->
-    <div class="dash-tags">
-      <span class="tag alert">❤️ 心臟肥大</span>
-      <span class="tag warn">🫁 不定時咳嗽</span>
-      <span class="tag safe">✅ 腎臟數值正常</span>
-    </div>
-    <!-- 數值 -->
-    <div class="dash-stats">
-      <div class="stat-box">
-        <div class="stat-val alert">心臟</div>
-        <div class="stat-label">肥大，持續追蹤</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val ping">正常</div>
-        <div class="stat-label">腎臟數值</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-val ping">1/27</div>
-        <div class="stat-label">狂犬病疫苗</div>
+    <!-- 醫療區塊 -->
+    <div class="medical-block">
+      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+      <div class="medical-block-body">
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-icon">❤️‍🩹</div>
+            <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫘</div>
+            <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon">🫁</div>
+            <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
+          </div>
+        </div>
+        <div class="visit-row">
+          <span class="visit-date">1/27 就診</span>
+          <span class="visit-items">狂犬病疫苗</span>
+        </div>
       </div>
     </div>
     <!-- 飲食說明 -->
@@ -301,8 +334,9 @@
   </div>
 
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
-  <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 40px;padding:0 48px"></div>
+  <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
 </div>
+<div class="page-end"></div>
 
 <script>
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
@@ -318,10 +352,15 @@ let currentCat = null, allCatRecords = [], showFullHistory = false;
 function selectCat(cat) {
   currentCat = cat; showFullHistory = false;
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById('sel-' + cat).classList.add('active');
+  const activeBtn = document.getElementById('sel-' + cat);
+  if (activeBtn) activeBtn.classList.add('active');
+  document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
+  const card = document.getElementById('header-' + cat)?.closest('.dash-cat');
+  if (card) card.classList.add('selected-' + cat);
   document.getElementById('cat-content').style.display = 'block';
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
+  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth', block:'start'}), 100);
   fetchSheetData(cat); renderPhotoWall(cat);
 }
 
@@ -365,7 +404,7 @@ function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryT
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;">🐈 正在抓貓中...</div>`;
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 正在抓貓中...</div>`;
   const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
