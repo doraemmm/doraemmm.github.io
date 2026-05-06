@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -158,7 +157,6 @@
     .section-head{padding:0 32px}
   }
 </style>
-
 </head>
 <body>
 
@@ -172,122 +170,119 @@
 </header>
 
 <!-- ═══ DASHBOARD ═══ -->
-
 <div class="dashboard">
   <div class="dashboard-grid">
 
-
-<!-- 喜樂 -->
-<div class="dash-cat">
-  <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
-    <div class="dash-cat-header-top">
-      <span style="font-size:1.6rem">🟠</span>
-      <span class="dash-cat-name xile">喜樂</span>
-    </div>
-    <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
-    <span class="tap-hint">點此記錄今日狀況</span>
-  </div>
-  <div class="dash-body">
-    <!-- 醫療區塊 -->
-    <div class="medical-block">
-      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-      <div class="medical-block-body">
-        <div class="dash-stats">
-          <div class="stat-box">
-            <div class="stat-icon">💧</div>
-            <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-icon">🫘</div>
-            <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-icon">💊</div>
-            <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥／<br>胰臟藥</div>
+    <!-- 喜樂 -->
+    <div class="dash-cat">
+      <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
+        <div class="dash-cat-header-top">
+          <span style="font-size:1.6rem">🟠</span>
+          <span class="dash-cat-name xile">喜樂</span>
+        </div>
+        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
+        <span class="tap-hint">點此記錄今日狀況</span>
+      </div>
+      <div class="dash-body">
+        <!-- 醫療區塊 -->
+        <div class="medical-block">
+          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+          <div class="medical-block-body">
+            <div class="dash-stats">
+              <div class="stat-box">
+                <div class="stat-icon">💧</div>
+                <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon">🫘</div>
+                <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon">💊</div>
+                <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div>
+              </div>
+            </div>
+            <div class="visit-row">
+              <span class="visit-date">2/9 就診</span>
+              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
+            </div>
           </div>
         </div>
-        <div class="visit-row">
-          <span class="visit-date">2/9 就診</span>
-          <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
+        <!-- 飲食＋主食罐合併表 -->
+        <div class="phos-table-wrap">
+        <table class="phos-table">
+          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
+          <tbody>
+            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
+            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
+            <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td><td></td><td></td></tr>
+            <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
+            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
+            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
+            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
+            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="dash-note">
+          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
+          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
         </div>
       </div>
     </div>
-    <!-- 飲食＋主食罐合併表 -->
-    <div class="phos-table-wrap">
-    <table class="phos-table">
-      <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-      <tbody>
-        <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
-        <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
-        <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">── 超越汪喵主食罐 ──</td></tr>
-        <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
-        <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
-        <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
-        <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
-        <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
-      </tbody>
-    </table>
-    </div>
-    <div class="dash-note">
-      混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
-      鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
-    </div>
-  </div>
-</div>
 
-<!-- 平安 -->
-<div class="dash-cat">
-  <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
-    <div class="dash-cat-header-top">
-      <span style="font-size:1.6rem">🔵</span>
-      <span class="dash-cat-name ping">平安</span>
-    </div>
-    <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
-    <span class="tap-hint">點此記錄今日狀況</span>
-  </div>
-  <div class="dash-body">
-    <!-- 醫療區塊 -->
-    <div class="medical-block">
-      <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-      <div class="medical-block-body">
-        <div class="dash-stats">
-          <div class="stat-box">
-            <div class="stat-icon">❤️‍🩹</div>
-            <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-icon">🫘</div>
-            <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-icon">🫁</div>
-            <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
+    <!-- 平安 -->
+    <div class="dash-cat">
+      <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
+        <div class="dash-cat-header-top">
+          <span style="font-size:1.6rem">🔵</span>
+          <span class="dash-cat-name ping">平安</span>
+        </div>
+        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
+        <span class="tap-hint">點此記錄今日狀況</span>
+      </div>
+      <div class="dash-body">
+        <!-- 醫療區塊 -->
+        <div class="medical-block">
+          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
+          <div class="medical-block-body">
+            <div class="dash-stats">
+              <div class="stat-box">
+                <div class="stat-icon">❤️‍🩹</div>
+                <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon">🫘</div>
+                <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon">🫁</div>
+                <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
+              </div>
+            </div>
+            <div class="visit-row">
+              <span class="visit-date">1/27 就診</span>
+              <span class="visit-items">狂犬病疫苗</span>
+            </div>
           </div>
         </div>
-        <div class="visit-row">
-          <span class="visit-date">1/27 就診</span>
-          <span class="visit-items">狂犬病疫苗</span>
+        <!-- 飲食說明 -->
+        <div class="phos-table-wrap">
+        <table class="phos-table">
+          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
+          <tbody>
+            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
+            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
+            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="dash-note">
+          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
+          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
         </div>
       </div>
     </div>
-    <!-- 飲食說明 -->
-    <div class="phos-table-wrap">
-    <table class="phos-table">
-      <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
-      <tbody>
-        <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-        <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
-        <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
-      </tbody>
-    </table>
-    </div>
-    <div class="dash-note">
-      食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
-      心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
-    </div>
-  </div>
-</div>
-
 
   </div>
 </div>
@@ -308,39 +303,41 @@
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
-
-<div id="xile-fields" style="display:none">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-    <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-    <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
-  </div>
-  <div class="form-field">
-    <label>今日用藥</label>
-    <div style="display:flex;gap:20px">
-      <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
-      <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
+    <div id="xile-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
+      </div>
+      <div class="form-field">
+        <label>今日用藥</label>
+        <div style="display:flex;gap:20px">
+          <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
+          <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<div id="ping-fields" style="display:none">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-    <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-    <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-  </div>
-</div>
+    <div id="ping-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+      </div>
+    </div>
 
-<div class="form-field">
-  <label>其他事項</label>
-  <div style="display:flex;gap:20px">
-    <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
-    <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
-  </div>
-</div>
-<div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-<button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
-
-
+    <div class="form-field">
+      <label>其他事項</label>
+      <div style="display:flex;gap:20px">
+        <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
+        <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
+      </div>
+    </div>
+    <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
+    <div class="form-field">
+      <label>密碼</label>
+      <input type="password" id="write-password" placeholder="輸入寫入密碼">
+    </div>
+    <div id="submit-msg" style="display:none;font-size:.85rem;padding:8px 12px;border-radius:4px;margin-top:4px"></div>
+    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
@@ -492,13 +489,69 @@ document.addEventListener('keydown', e => {
 });
 
 async function submitForm() {
-  const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = '寫入中...';
-  await new Promise(r => setTimeout(r, 1500)); 
-  btn.textContent = '✅ 已通知同步';
-  fetchSheetData(currentCat);
-  setTimeout(() => { btn.disabled = false; btn.textContent = '送出紀錄'; }, 2000);
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('submit-msg');
+  const password = document.getElementById('write-password').value.trim();
+
+  if (!password) {
+    showMsg('請輸入密碼', 'warn'); return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '寫入中...';
+  msg.style.display = 'none';
+
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbx3KwQ8W1PaCF3U_K8ttbzJaoi91CLMbYyViZGriCbpNVmY_6Av5zexWdTmx5mmMsHw_g/exec';
+
+  const payload = {
+    password,
+    cat: currentCat,
+    date: document.getElementById('date-active').value,
+    nailCut: document.getElementById('nail-cut').checked,
+    vaccine: document.getElementById('vaccine').checked,
+    note: document.getElementById('note-text').value.trim(),
+  };
+
+  if (currentCat === 'xile') {
+    payload.vomitCount = document.getElementById('vomit-count-xile').value;
+    payload.vomitType  = document.getElementById('vomit-type-xile').value;
+    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
+    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
+  } else {
+    payload.coughCount = document.getElementById('cough-count-ping').value;
+    payload.vomitCount = document.getElementById('vomit-count-ping').value;
+  }
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json();
+    if (result.ok) {
+      showMsg('✅ 已寫入', 'ok');
+      document.getElementById('write-password').value = '';
+      await fetchSheetData(currentCat);
+    } else {
+      showMsg('❌ ' + (result.msg || '寫入失敗'), 'err');
+    }
+  } catch(e) {
+    showMsg('❌ 連線失敗，請稍後再試', 'err');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '送出紀錄';
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('submit-msg');
+  el.textContent = text;
+  el.style.display = 'block';
+  el.style.background = type === 'ok' ? '#eef6f0' : type === 'warn' ? '#fff8e6' : '#fdf0ee';
+  el.style.color = type === 'ok' ? '#1f5c30' : type === 'warn' ? '#7a4c00' : '#7a1a10';
+  el.style.border = `1.5px solid ${type === 'ok' ? '#4a8c5c' : type === 'warn' ? '#c47a1a' : '#c44b3a'}`;
+  el.style.borderRadius = '4px';
 }
 </script>
-
 </body>
 </html>
