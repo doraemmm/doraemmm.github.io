@@ -25,7 +25,6 @@
   body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
 
   /* ─── HEADER ─── */
-  /* 4: 縮減 header padding，手機更合比例 */
   header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
   .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
   .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
@@ -33,11 +32,9 @@
   .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
 
   /* ─── DASHBOARD ─── */
-  /* 5: 加 padding-bottom */
   .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
-  /* 1: dash-cat-header 變可點擊，整合選貓功能 */
   .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
   .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
   .dash-cat-header:hover{filter:brightness(.96)}
@@ -49,14 +46,12 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
-  /* 選中狀態的卡片 header 加底線提示 */
   .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
   .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
   .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
 
   .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 
-  /* 狀態標籤列 */
   .dash-tags{display:flex;flex-wrap:wrap;gap:6px}
   .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:3px;font-size:.8rem;font-weight:900;border:1.5px solid}
   .tag.warn{background:#fff8e6;border-color:#c47a1a;color:#7a4c00}
@@ -65,7 +60,6 @@
   .tag.info{background:#edf4f8;border-color:#5b8fa8;color:#1a4d68}
   .tag.neutral{background:var(--cream);border-color:var(--border);color:var(--ink-light)}
 
-  /* 數值 row */
   .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
   .stat-val{font-size:1.5rem;font-weight:900;line-height:1}
@@ -76,7 +70,6 @@
   .stat-icon{font-size:1.6rem;line-height:1}
   .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
 
-  /* 罐頭推薦列 */
   .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
   .phos-table-wrap::-webkit-scrollbar{height:5px}
   .phos-table-wrap::-webkit-scrollbar-track{background:var(--cream)}
@@ -87,11 +80,9 @@
   .phos-table tr:last-child td{border-bottom:none}
   .phos-em{font-weight:900;font-size:.85rem}
 
-  /* 6: dash-note 改成完整 border + 圓角，統一風格 */
   .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
   .dash-note strong{color:var(--ink);font-weight:900}
 
-  /* 醫療區塊 */
   .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
   .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
   .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
@@ -103,12 +94,17 @@
   .section-head h2{font-size:1.5rem;font-weight:900}
   .section-head .line{flex:1;height:1px;background:var(--border)}
 
-  /* 1: selector-wrap 隱藏，改由 dashboard header 點擊觸發 */
   .selector-wrap{display:none}
 
-  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px;
-    /* 3: 加 max-width + padding */
-    max-width:1100px;margin:32px auto 0;padding:28px 48px}
+  /* 調整過的 form-card，寬度精準對齊 1004px (1100 - 左右48px padding) */
+  .form-card{
+    background:var(--warm-white);
+    border:2px solid var(--border);
+    border-radius:8px;
+    max-width:1004px;
+    margin:32px auto 0;
+    padding:28px 48px;
+  }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none}
@@ -118,13 +114,11 @@
   table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
   thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
-  /* 7: show-all-btn hover */
   .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
   .show-all-btn:hover{background:var(--cream)}
   .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
   .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
   .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
-  /* 10: 底部安全距離 */
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -139,21 +133,21 @@
   .lb-btn:hover{background:rgba(255,255,255,.25)}
   #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
 
+  /* 修好的 RWD 斷點 */
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    .form-card{margin:24px 20px 0;padding:20px}
+    .form-card{max-width:none;margin:24px 20px 0;padding:20px}
     .log-container{padding:0 20px}
     .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
   }
-  /* 9: 平板中間斷點 */
   @media(min-width:641px) and (max-width:900px){
     .dashboard-grid{grid-template-columns:1fr}
     .dashboard{padding:0 32px 8px}
-    .form-card{padding:24px 32px}
+    .form-card{max-width:none;margin:32px 32px 0;padding:24px 32px}
     .section-head{padding:0 32px}
   }
 </style>
@@ -184,7 +178,6 @@
         <span class="tap-hint">點此記錄今日狀況</span>
       </div>
       <div class="dash-body">
-        <!-- 醫療區塊 -->
         <div class="medical-block">
           <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
@@ -208,7 +201,6 @@
             </div>
           </div>
         </div>
-        <!-- 飲食＋主食罐合併表 -->
         <div class="phos-table-wrap">
         <table class="phos-table">
           <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
@@ -242,7 +234,6 @@
         <span class="tap-hint">點此記錄今日狀況</span>
       </div>
       <div class="dash-body">
-        <!-- 醫療區塊 -->
         <div class="medical-block">
           <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
@@ -266,7 +257,6 @@
             </div>
           </div>
         </div>
-        <!-- 飲食說明 -->
         <div class="phos-table-wrap">
         <table class="phos-table">
           <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
@@ -299,14 +289,15 @@
 </div>
 
 <div id="cat-content" style="display:none">
-  <div class="form-card" id="dynamic-form-card" style="max-width:1100px;margin:32px auto 0">
+  <!-- 已經拔掉 inline style 的乾淨標籤 -->
+  <div class="form-card" id="dynamic-form-card">
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
     <div id="xile-fields" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">罐頭</option><option>飼料</option><option>透明液體</option><option>膽汁</option><option>毛球</option></select></div>
+        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">— 選擇 —</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
       </div>
       <div class="form-field">
         <label>今日用藥</label>
@@ -375,15 +366,198 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false;
 
+// 將日期字串轉為時間戳記的救星函式
+function parseDateString(ds) {
+  if (!ds) return 0;
+  let parts = ds.replace(/-/g, '/').split('/');
+  let y = new Date().getFullYear(), m = 0, d = 1;
+  if (parts.length === 3) {
+    y = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10) - 1;
+    d = parseInt(parts[2], 10);
+  } else if (parts.length === 2) {
+    m = parseInt(parts[0], 10) - 1;
+    d = parseInt(parts[1], 10);
+  }
+  return new Date(y, m, d).getTime();
+}
+
 function selectCat(cat) {
   currentCat = cat; showFullHistory = false;
-  // 同步隱藏的 sel-btn（保留相容性）
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
   const activeBtn = document.getElementById('sel-' + cat);
   if (activeBtn) activeBtn.classList.add('active');
-  // 卡片選中視覺
   document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
   const card = document.getElementById('header-' + cat)?.closest('.dash-cat');
   if (card) card.classList.add('selected-' + cat);
-  // 顯示表單並捲動
-  document.getElementById('cat-cont
+  document.getElementById('cat-content').style.display = 'block';
+  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
+  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
+  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth', block:'start'}), 100);
+  fetchSheetData(cat); renderPhotoWall(cat);
+}
+
+async function fetchSheetData(cat) {
+  const tbody = document.getElementById('history-tbody');
+  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線中...</td></tr>`;
+  try {
+    const res = await fetch(csvUrls[cat]);
+    const csv = await res.text();
+    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
+    allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
+    // 放棄智商稅的 reverse()，改用科學排序法
+    allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
+    renderHistoryTable();
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
+}
+
+function rc(val, type) {
+  const isZero = !val || val === "0" || val === " " || val === "";
+  if (type === 'check') return val === 'TRUE' ? '✅' : '—';
+  if (type === 'nail') return val === 'TRUE' ? '✂️' : '—';
+  if (isZero) return '—';
+  return val + '次';
+}
+
+function renderHistoryTable() {
+  const tbody = document.getElementById('history-tbody');
+  const thead = document.getElementById('history-thead');
+  const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
+  tbody.innerHTML = '';
+  if (currentCat === 'xile') {
+    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'count')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'nail')}</td></tr>`);
+  } else {
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽次數</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'count')}</td><td>${rc(r[2],'count')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'nail')}</td></tr>`);
+  }
+  document.getElementById('show-all-btn').style.display = allCatRecords.length > 10 ? 'block' : 'none';
+  document.getElementById('show-all-btn').textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部 (${allCatRecords.length}) ↓`;
+}
+
+function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
+
+async function renderPhotoWall(cat) {
+  const container = document.getElementById('photo-wall-container');
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 正在抓貓中...</div>`;
+  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
+  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
+  try {
+    const res = await fetch(url); const data = await res.json();
+    lightboxImages = data.files.map(f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`);
+    container.innerHTML = data.files.map((f, i) => `
+      <div class="photo-link-block" onclick="openLightbox(${i})">
+        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>`).join('');
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-light)">載入失敗</div>`; }
+}
+
+let lightboxImages = [], lightboxIndex = 0;
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = lightboxImages[i];
+  img.style.opacity = '0';
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  const img = document.getElementById('lightbox-img');
+  img.style.opacity = '0';
+  img.src = lightboxImages[lightboxIndex];
+  img.onload = () => { img.style.opacity = '1'; };
+  updateLightboxNav();
+}
+
+function updateLightboxNav() {
+  document.getElementById('lb-counter').textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+  document.getElementById('lb-prev').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+  document.getElementById('lb-next').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
+}
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').style.display === 'flex') {
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'Escape') closeLightbox();
+  }
+});
+
+async function submitForm() {
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('submit-msg');
+  const password = document.getElementById('write-password').value.trim();
+
+  if (!password) {
+    showMsg('請輸入密碼', 'warn'); return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '寫入中...';
+  msg.style.display = 'none';
+
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbx3KwQ8W1PaCF3U_K8ttbzJaoi91CLMbYyViZGriCbpNVmY_6Av5zexWdTmx5mmMsHw_g/exec';
+
+  const payload = {
+    password,
+    cat: currentCat,
+    date: document.getElementById('date-active').value,
+    nailCut: document.getElementById('nail-cut').checked,
+    vaccine: document.getElementById('vaccine').checked,
+    note: document.getElementById('note-text').value.trim(),
+  };
+
+  if (currentCat === 'xile') {
+    payload.vomitCount = document.getElementById('vomit-count-xile').value;
+    payload.vomitType  = document.getElementById('vomit-type-xile').value;
+    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
+    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
+  } else {
+    payload.coughCount = document.getElementById('cough-count-ping').value;
+    payload.vomitCount = document.getElementById('vomit-count-ping').value;
+  }
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json();
+    if (result.ok) {
+      showMsg('✅ 已寫入', 'ok');
+      document.getElementById('write-password').value = '';
+      await fetchSheetData(currentCat);
+    } else {
+      showMsg('❌ ' + (result.msg || '寫入失敗'), 'err');
+    }
+  } catch(e) {
+    showMsg('❌ 連線失敗，請稍後再試', 'err');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '送出紀錄';
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('submit-msg');
+  el.textContent = text;
+  el.style.display = 'block';
+  el.style.background = type === 'ok' ? '#eef6f0' : type === 'warn' ? '#fff8e6' : '#fdf0ee';
+  el.style.color = type === 'ok' ? '#1f5c30' : type === 'warn' ? '#7a4c00' : '#7a1a10';
+  el.style.border = `1.5px solid ${type === 'ok' ? '#4a8c5c' : type === 'warn' ? '#c47a1a' : '#c44b3a'}`;
+  el.style.borderRadius = '4px';
+}
+</script>
+</body>
+</html>
