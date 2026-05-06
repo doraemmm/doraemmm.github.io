@@ -25,6 +25,7 @@
   body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
 
   /* ─── HEADER ─── */
+  /* 4: 縮減 header padding，手機更合比例 */
   header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
   .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
   .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
@@ -32,9 +33,11 @@
   .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
 
   /* ─── DASHBOARD ─── */
+  /* 5: 加 padding-bottom */
   .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
+  /* 1: dash-cat-header 變可點擊，整合選貓功能 */
   .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
   .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
   .dash-cat-header:hover{filter:brightness(.96)}
@@ -46,6 +49,7 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
+  /* 選中狀態的卡片 header 加底線提示 */
   .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
   .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
   .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
@@ -83,6 +87,7 @@
   .phos-table tr:last-child td{border-bottom:none}
   .phos-em{font-weight:900;font-size:.85rem}
 
+  /* 6: dash-note 改成完整 border + 圓角，統一風格 */
   .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
   .dash-note strong{color:var(--ink);font-weight:900}
 
@@ -98,23 +103,12 @@
   .section-head h2{font-size:1.5rem;font-weight:900}
   .section-head .line{flex:1;height:1px;background:var(--border)}
 
+  /* 1: selector-wrap 隱藏，改由 dashboard header 點擊觸發 */
   .selector-wrap{display:none}
 
-  /* ✨ 幫你修好對齊的 form-container 外衣 ✨ */
-  .form-container {
-    max-width: 1100px;
-    margin: 32px auto 0;
-    padding: 0 48px;
-  }
-
-  /* ✨ 幫表單卡片瘦身 ✨ */
-  .form-card{
-    background:var(--warm-white);
-    border:2px solid var(--border);
-    border-radius:8px;
-    padding:28px 48px;
-  }
-  
+  .form-card{background:var(--warm-white);border:2px solid var(--border);border-radius:8px;padding:28px;
+    /* 3: 加 max-width + padding */
+    max-width:1100px;margin:32px auto 0;padding:28px 48px}
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none}
@@ -124,11 +118,13 @@
   table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
   thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
+  /* 7: show-all-btn hover */
   .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
   .show-all-btn:hover{background:var(--cream)}
   .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
   .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
   .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
+  /* 10: 底部安全距離 */
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -143,22 +139,20 @@
   .lb-btn:hover{background:rgba(255,255,255,.25)}
   #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
 
-  /* ✨ RWD 斷點順便幫你搞好 ✨ */
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    .form-container{padding:0 20px;margin-top:24px}
-    .form-card{padding:20px}
+    .form-card{margin:24px 20px 0;padding:20px}
     .log-container{padding:0 20px}
     .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
   }
+  /* 9: 平板中間斷點 */
   @media(min-width:641px) and (max-width:900px){
     .dashboard-grid{grid-template-columns:1fr}
     .dashboard{padding:0 32px 8px}
-    .form-container{padding:0 32px}
     .form-card{padding:24px 32px}
     .section-head{padding:0 32px}
   }
@@ -175,9 +169,11 @@
   </div>
 </header>
 
+<!-- ═══ DASHBOARD ═══ -->
 <div class="dashboard">
   <div class="dashboard-grid">
 
+    <!-- 喜樂 -->
     <div class="dash-cat">
       <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
         <div class="dash-cat-header-top">
@@ -188,6 +184,7 @@
         <span class="tap-hint">點此記錄今日狀況</span>
       </div>
       <div class="dash-body">
+        <!-- 醫療區塊 -->
         <div class="medical-block">
           <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
@@ -211,6 +208,7 @@
             </div>
           </div>
         </div>
+        <!-- 飲食＋主食罐合併表 -->
         <div class="phos-table-wrap">
         <table class="phos-table">
           <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
@@ -233,6 +231,7 @@
       </div>
     </div>
 
+    <!-- 平安 -->
     <div class="dash-cat">
       <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
         <div class="dash-cat-header-top">
@@ -243,6 +242,7 @@
         <span class="tap-hint">點此記錄今日狀況</span>
       </div>
       <div class="dash-body">
+        <!-- 醫療區塊 -->
         <div class="medical-block">
           <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
@@ -266,6 +266,7 @@
             </div>
           </div>
         </div>
+        <!-- 飲食說明 -->
         <div class="phos-table-wrap">
         <table class="phos-table">
           <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
@@ -285,6 +286,8 @@
 
   </div>
 </div>
+<!-- ═══ END DASHBOARD ═══ -->
+
 <div class="selector-wrap">
   <div class="selector-inner">
     <span class="selector-label">選擇寵物</span>
@@ -296,47 +299,45 @@
 </div>
 
 <div id="cat-content" style="display:none">
-  <div class="form-container">
-    <div class="form-card" id="dynamic-form-card">
-      <h3 id="form-title">今日紀錄</h3>
-      <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
+  <div class="form-card" id="dynamic-form-card" style="max-width:1100px;margin:32px auto 0">
+    <h3 id="form-title">今日紀錄</h3>
+    <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
-      <div id="xile-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-          <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">罐頭</option><option>飼料</option><option>透明液體</option><option>膽汁</option><option>毛球</option></select></div>
-        </div>
-        <div class="form-field">
-          <label>今日用藥</label>
-          <div style="display:flex;gap:20px">
-            <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
-            <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
-          </div>
-        </div>
+    <div id="xile-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">罐頭</option><option>飼料</option><option>透明液體</option><option>膽汁</option><option>毛球</option></select></div>
       </div>
-
-      <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-        </div>
-      </div>
-
       <div class="form-field">
-        <label>其他事項</label>
+        <label>今日用藥</label>
         <div style="display:flex;gap:20px">
-          <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
-          <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
+          <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
+          <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
         </div>
       </div>
-      <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field">
-        <label>密碼</label>
-        <input type="password" id="write-password" placeholder="輸入寫入密碼">
-      </div>
-      <div id="submit-msg" style="display:none;font-size:.85rem;padding:8px 12px;border-radius:4px;margin-top:4px"></div>
-      <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
     </div>
+
+    <div id="ping-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>其他事項</label>
+      <div style="display:flex;gap:20px">
+        <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
+        <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
+      </div>
+    </div>
+    <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
+    <div class="form-field">
+      <label>密碼</label>
+      <input type="password" id="write-password" placeholder="輸入寫入密碼">
+    </div>
+    <div id="submit-msg" style="display:none;font-size:.85rem;padding:8px 12px;border-radius:4px;margin-top:4px"></div>
+    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
@@ -350,6 +351,7 @@
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
 </div>
+<!-- ═══ LIGHTBOX ═══ -->
 <div id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="closeLightbox()">×</button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
@@ -375,13 +377,13 @@ let currentCat = null, allCatRecords = [], showFullHistory = false;
 
 function selectCat(cat) {
   currentCat = cat; showFullHistory = false;
+  // 同步隱藏的 sel-btn（保留相容性）
   document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
   const activeBtn = document.getElementById('sel-' + cat);
   if (activeBtn) activeBtn.classList.add('active');
+  // 卡片選中視覺
   document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
   const card = document.getElementById('header-' + cat)?.closest('.dash-cat');
   if (card) card.classList.add('selected-' + cat);
-  document.getElementById('cat-content').style.display = 'block';
-  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
-  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
-  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smo
+  // 顯示表單並捲動
+  document.getElementById('cat-cont
