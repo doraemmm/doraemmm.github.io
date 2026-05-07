@@ -23,9 +23,9 @@
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
     --theme-border: var(--border);
-    --theme-bg-card: var(--warm-white);  /* 卡片大底色 */
-    --theme-bg-block: var(--cream);      /* 輸入框、按鈕底色 */
-    --theme-table-header: #e6e0d3;       /* 表頭底色 */
+    --theme-bg-card: var(--warm-white);
+    --theme-bg-block: var(--cream);
+    --theme-table-header: #e6e0d3;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
@@ -56,14 +56,13 @@
   .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color); transform:translateY(-3px);}
   .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color); transform:translateY(-3px);}
 
-  /* 🟦 平安的 Dashboard 深度藍色化 (修復飲食表格框線) */
   #card-ping { background: #f0f6fa; border-color: #cce0ec; }
   #card-ping .dash-cat-header { border-bottom-color: #cce0ec; }
   #card-ping .stat-box, 
   #card-ping .medical-block, 
-  #card-ping .phos-table-wrap,  /* ✅ 修復飲食表格外框 */
+  #card-ping .phos-table-wrap,  
   #card-ping .dash-note { background: #e1edf5; border-color: #cce0ec; }
-  #card-ping .phos-table th { background: #dbe8f0; border-bottom-color: #cce0ec; } /* ✅ 修復飲食表頭 */
+  #card-ping .phos-table th { background: #dbe8f0; border-bottom-color: #cce0ec; } 
   #card-ping .medical-block-title { background: rgba(91,143,168,0.08); border-bottom-color: #cce0ec; }
   #card-ping .visit-row { border-top-color: #cce0ec; }
   #card-ping .phos-table td { border-bottom-color: rgba(91,143,168,0.1); }
@@ -94,13 +93,14 @@
   .dash-note strong{color:var(--ink);font-weight:900}
 
   .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
-  .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--border)}
+  /* 🎯 修復 1px 裝飾線，套用動態主題邊框變數 */
+  .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--theme-border);transition:background 0.3s ease;}
   .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
 
   /* ─── FORM ─── */
   .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
   .form-card {
-    background:var(--theme-bg-card);  /* 🎯 動態卡片底色 */
+    background:var(--theme-bg-card); 
     border:2px solid var(--theme-border);
     border-radius:12px;
     box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:all 0.3s ease;
@@ -112,7 +112,7 @@
   
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%; max-width:100%; padding:10px 12px; 
-    background:var(--theme-bg-block); /* 🎯 動態輸入框底色 */
+    background:var(--theme-bg-block); 
     border:1.5px solid var(--theme-border); 
     border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
   }
@@ -137,7 +137,7 @@
   .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
   .filter-btn {
     padding:6px 12px; border-radius:20px; border:1.5px solid var(--theme-border); 
-    background:var(--theme-bg-card); /* 🎯 動態過濾按鈕底色 */
+    background:var(--theme-bg-card); 
     font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
   }
   .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
@@ -148,7 +148,7 @@
     overflow:auto; 
     -webkit-overflow-scrolling:touch;
     border:2px solid var(--theme-border);
-    background:var(--theme-bg-card); /* 🎯 動態歷史表格底色 */
+    background:var(--theme-bg-card); 
     border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
     transition:all 0.3s ease;
   }
@@ -160,7 +160,7 @@
   
   .show-all-btn{
     display:block;width:100%;padding:14px;margin-top:12px;
-    background:var(--theme-bg-card); /* 🎯 動態按鈕底色 */
+    background:var(--theme-bg-card); 
     border:2px dashed var(--theme-border); 
     border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
   }
@@ -170,7 +170,7 @@
   .photo-link-block{
     aspect-ratio:1; border-radius:12px; 
     border:3px dashed var(--theme-border);
-    background:var(--theme-bg-card); /* 🎯 讓照片載入前的底色也一致 */
+    background:var(--theme-bg-card); 
     cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
   }
   .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
@@ -317,7 +317,9 @@
       <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
       <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
       <div class="form-field"><label>密碼</label><input type="password" id="write-password"></div>
-      <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900"></div>
+      
+      <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
+      
       <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
     </div>
   </div>
@@ -369,7 +371,6 @@ function parseDateString(ds) {
   return new Date(y, m, d).getTime();
 }
 
-// 🎯 全面套用動態色系：卡片底色、輸入框、表格全包了
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
@@ -461,7 +462,14 @@ function renderHistoryTable() {
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
   }
   
-  document.getElementById('show-all-btn').style.display = filtered.length > 10 ? 'block' : 'none';
+  // 🎯 按鈕狀態動態更新：依據是否為「全部顯示」狀態來決定文案
+  const showBtn = document.getElementById('show-all-btn');
+  if (filtered.length > 10) {
+    showBtn.style.display = 'block';
+    showBtn.textContent = showFullHistory ? '向上收合 ↑' : '顯示全部 ↓';
+  } else {
+    showBtn.style.display = 'none';
+  }
 }
 
 function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
@@ -519,8 +527,16 @@ async function submitForm() {
 function showMsg(text, type) {
   const el = document.getElementById('submit-msg');
   el.textContent = text; el.style.display = 'block';
-  el.style.background = type === 'ok' ? '#eef6f0' : '#fdf0ee';
-  el.style.color = type === 'ok' ? '#1f5c30' : '#7a1a10';
+  if (type === 'ok') {
+    el.style.background = '#eef6f0';
+    el.style.color = '#1f5c30';
+    el.style.border = '1px solid #4a8c5c';
+  } else {
+    /* 🎯 讓錯誤提示底色符合主題，但保留紅色邊框與文字提醒 */
+    el.style.background = 'var(--theme-bg-block)';
+    el.style.color = 'var(--accent-red)';
+    el.style.border = '1.5px solid var(--accent-red)';
+  }
 }
 </script>
 </body>
