@@ -96,7 +96,6 @@
 
   .selector-wrap{display:none}
 
-  /* 調整 padding 以確保內部表單元素寬度對齊其他區塊 */
   .form-card{
     background:var(--warm-white);
     border:2px solid var(--border);
@@ -106,17 +105,41 @@
     padding:28px 24px;
   }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
+  
+  /* 徹底修復下拉選單傲嬌屬性，強制寬度與日期框一致 */
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
-    width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none}
+    width:100%;min-width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none;box-sizing:border-box;
+  }
+  .form-field select{
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;background-size:24px;padding-right:32px;
+  }
+
   .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);transition:opacity .15s}
   .btn-submit:hover{opacity:.85}
+  
+  /* 歷史紀錄與照片牆容器樣式移到這，禁止 inline style 霸凌 */
+  .log-container {
+    max-width: 1100px;
+    margin: 20px auto 0;
+    padding: 0 48px;
+  }
+  .photo-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    gap: 16px;
+    max-width: 1100px;
+    margin: 20px auto 0;
+    padding: 0 48px;
+  }
+
   .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative}
   table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
   thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
   .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
   .show-all-btn:hover{background:var(--cream)}
-  .photo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px}
   .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
   .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
@@ -133,16 +156,15 @@
   .lb-btn:hover{background:rgba(255,255,255,.25)}
   #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
 
-  /* 修好的 RWD 斷點 */
+  /* 手機版 RWD 斷點修復 */
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    /* 這裡把 padding 調小，讓表單欄位寬度撐開，對齊上下區塊 */
     .form-card{max-width:none;margin:24px 20px 0;padding:16px}
-    .log-container{padding:0 20px}
-    .photo-wall{padding:0 20px}
+    .log-container{padding:0 20px} /* 這裡終於能正常運作了 */
+    .photo-wall{padding:0 20px} /* 同上 */
     .dash-stats{grid-template-columns:repeat(3,1fr)}
   }
   @media(min-width:641px) and (max-width:900px){
@@ -290,7 +312,7 @@
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
     <div id="xile-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
         <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
       </div>
@@ -304,7 +326,7 @@
     </div>
 
     <div id="ping-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
         <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
         <div class="form-field" style="grid-column: 1 / -1;"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
@@ -328,7 +350,7 @@
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
-  <div class="log-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px">
+  <div class="log-container">
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
     </div>
@@ -336,7 +358,7 @@
   </div>
 
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
-  <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
+  <div class="photo-wall" id="photo-wall-container"></div>
 </div>
 <div id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="closeLightbox()">×</button>
