@@ -18,11 +18,13 @@
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
     
-    /* 🎯 動態主題變數 */
+    /* 🎯 動態主題變數（預設為喜樂奶茶色系） */
     --theme-color: var(--ink);
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
-    --theme-border: var(--border); /* 讓框框顏色跟著主題跑 */
+    --theme-border: var(--border);
+    --theme-input-bg: var(--cream);
+    --theme-table-header: #e6e0d3;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
@@ -86,15 +88,19 @@
   .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
   .form-card {
     background:var(--warm-white); 
-    border:2px solid var(--theme-border); /* 🎯 動態框線 */
+    border:2px solid var(--theme-border);
     border-radius:12px;
     box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:border-color 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
   }
-  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px;color:var(--ink-light)}
+  .form-field label{display:block;font-size:.85rem;font-weight:900;margin-bottom:6px;color:var(--ink-light);white-space:nowrap;}
+  
+  /* 🎯 全面套用動態變數：輸入框顏色 */
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
-    width:100%; padding:10px 14px; background:var(--cream); border:1.5px solid var(--border); border-radius:6px; 
-    font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
+    width:100%; padding:10px 12px; 
+    background:var(--theme-input-bg); 
+    border:1.5px solid var(--theme-border); 
+    border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
   }
   .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
     border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:var(--warm-white);
@@ -105,7 +111,7 @@
   .form-field select{
     -webkit-appearance:none;appearance:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 12px center;background-size:24px;padding-right:36px;
+    background-repeat:no-repeat;background-position:right 8px center;background-size:20px;padding-right:28px;
   }
 
   .btn-submit{
@@ -116,7 +122,7 @@
 
   .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
   .filter-btn {
-    padding:6px 12px; border-radius:20px; border:1.5px solid var(--border); 
+    padding:6px 12px; border-radius:20px; border:1.5px solid var(--theme-border); 
     background:var(--warm-white); font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
   }
   .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
@@ -124,19 +130,20 @@
   .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
   .scroll-wrap{
     max-height:400px; overflow-y:auto; 
-    border:2px solid var(--theme-border); /* 🎯 動態框線 */
+    border:2px solid var(--theme-border);
     border-radius:8px; background:var(--warm-white); box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
     transition:border-color 0.3s ease;
   }
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
-  thead th{position:sticky; top:0; z-index:10; background:#e6e0d3; padding:12px 14px; box-shadow:0 2px 0 var(--border)}
+  /* 🎯 全面套用動態變數：表頭顏色 */
+  thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
   tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
   
   .show-all-btn{
     display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);
-    border:2px dashed var(--theme-border); /* 🎯 動態框線 */
+    border:2px dashed var(--theme-border);
     border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
   }
   .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
@@ -144,7 +151,7 @@
   .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
   .photo-link-block{
     aspect-ratio:1; border-radius:12px; 
-    border:3px dashed var(--theme-border); /* 🎯 動態框線 */
+    border:3px dashed var(--theme-border);
     cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
   }
   .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
@@ -281,10 +288,10 @@
       </div>
       
       <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;width:100%">
           <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
           <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-          <div class="form-field" style="grid-column:1/-1"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+          <div class="form-field"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
         </div>
       </div>
       
@@ -328,7 +335,6 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
-// ⏳ 時光倒流神器：超強日期解析，保證降序排列不烙賽
 function parseDateString(ds) {
   if (!ds) return 0;
   let parts = ds.replace(/-/g, '/').split('/');
@@ -344,18 +350,23 @@ function parseDateString(ds) {
   return new Date(y, m, d).getTime();
 }
 
+// 🎯 更新主題配色，現在連輸入框、表格頭、外框都會一起變色
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
     root.style.setProperty('--theme-color', 'var(--xile-color)');
     root.style.setProperty('--theme-pale', 'var(--xile-pale)');
     root.style.setProperty('--theme-deep', 'var(--xile-deep)');
-    root.style.setProperty('--theme-border', 'var(--xile-color)'); // 🎯 喜樂專屬橘框
+    root.style.setProperty('--theme-border', 'var(--border)'); 
+    root.style.setProperty('--theme-input-bg', 'var(--cream)');
+    root.style.setProperty('--theme-table-header', '#e6e0d3');
   } else {
     root.style.setProperty('--theme-color', 'var(--ping-color)');
     root.style.setProperty('--theme-pale', 'var(--ping-pale)');
     root.style.setProperty('--theme-deep', 'var(--ping-deep)');
-    root.style.setProperty('--theme-border', 'var(--ping-color)'); // 🎯 平安專屬藍框
+    root.style.setProperty('--theme-border', 'var(--ping-color)'); 
+    root.style.setProperty('--theme-input-bg', '#f0f5f9'); 
+    root.style.setProperty('--theme-table-header', '#dbe8f0');
   }
 }
 
@@ -385,7 +396,6 @@ async function fetchSheetData(cat) {
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
     allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
     
-    // 🎯 降序排列強勢回歸，最新的一定在最上面
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     
     renderHistoryTable();
