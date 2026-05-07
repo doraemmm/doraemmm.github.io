@@ -17,7 +17,6 @@
     --ping-color:#5b8fa8; --ping-pale:#cce0ec; --ping-deep:#2d607a;
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
-    /* 動態變量預設值 */
     --theme-color: var(--ink);
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
@@ -48,7 +47,6 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   
-  /* 🎯 功能 1：選取後的高亮樣式 */
   .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color); transform:translateY(-3px);}
   .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color); transform:translateY(-3px);}
 
@@ -59,68 +57,104 @@
   .stat-icon{font-size:1.6rem;line-height:1}
   .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
 
-  /* 🎯 功能 3：趨勢小視覺化 */
-  .trend-wrap {background:var(--cream); border-radius:6px; padding:10px; border:1.5px solid var(--border);}
+  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
+  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
+  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
+  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
+  .visit-row .visit-items{color:var(--ink-light)}
+
+  .trend-wrap {background:var(--warm-white); border-radius:6px; padding:10px; border:1.5px solid var(--border);}
   .trend-title {font-size:0.75rem; margin-bottom:8px; color:var(--ink-light); display:flex; justify-content:space-between;}
   .trend-bar-container {display:flex; align-items:flex-end; gap:4px; height:40px; padding-bottom:2px; border-bottom:1px solid var(--border);}
   .trend-bar {flex:1; background:var(--border); border-radius:2px 2px 0 0; transition:height 0.5s ease; min-height:2px;}
   .trend-bar.active {background:var(--theme-color);}
+
+  .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
+  .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
+  .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
+  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center; transition:background 0.15s}
+  .phos-table tr:hover td {background-color:rgba(0,0,0,0.03)}
+  .phos-table tr:last-child td{border-bottom:none}
+  .phos-em{font-weight:900;font-size:.85rem}
+
+  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
+  .dash-note strong{color:var(--ink);font-weight:900}
 
   .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
   .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--border)}
   .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
 
   /* ─── FORM ─── */
-  .form-card{
+  /* ✨ 這裡加了 form-container 確保跟 log-container 寬度與 Padding 完全一致！ */
+  .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
+  .form-card {
     background:var(--warm-white); border:2px solid var(--border); border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05); max-width:1004px; margin:16px auto 0; padding:28px 24px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:box-shadow 0.3s ease;
+    width: 100%;
   }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px;color:var(--ink-light)}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%; padding:10px 14px; background:var(--cream); border:1.5px solid var(--border); border-radius:6px; 
-    font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease;
+    font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
   }
-  /* 🎯 功能 1：Focus 顏色隨主題變動 */
   .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: var(--theme-color);
-    box-shadow: 0 0 0 3px var(--theme-pale);
+    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:var(--warm-white);
+  }
+  input[type="checkbox"] {
+    accent-color: var(--theme-deep); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
+  }
+  .form-field select{
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:24px;padding-right:36px;
   }
 
   .btn-submit{
     width:100%; padding:14px; margin-top:12px; border:none; border-radius:8px; font-size:1.05rem; font-weight:900; 
-    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease;
+    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(26,20,16,0.15);
   }
-  .btn-submit:hover{transform:translateY(-1px); filter: brightness(1.1);}
+  .btn-submit:hover{transform:translateY(-1px); filter: brightness(1.1); box-shadow:0 6px 16px rgba(26,20,16,0.2)}
 
-  /* 🎯 功能 4：過濾器按鈕 */
   .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
   .filter-btn {
     padding:6px 12px; border-radius:20px; border:1.5px solid var(--border); 
-    background:var(--warm-white); font-size:0.8rem; cursor:pointer; transition:all 0.2s;
+    background:var(--warm-white); font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
   }
   .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
 
   .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .scroll-wrap{max-height:400px; overflow-y:auto; border:2px solid var(--border); border-radius:8px; background:var(--warm-white);}
+  .scroll-wrap{max-height:400px; overflow-y:auto; border:2px solid var(--border); border-radius:8px; background:var(--warm-white); box-shadow:inset 0 2px 8px rgba(0,0,0,0.02)}
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
   thead th{position:sticky; top:0; z-index:10; background:#e6e0d3; padding:12px 14px; box-shadow:0 2px 0 var(--border)}
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center;}
+  tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
+  tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
+  .show-all-btn{display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .2s ease}
+  .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
 
   .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .photo-link-block{aspect-ratio:1; border-radius:12px; border:3px dashed var(--border); cursor:pointer; overflow:hidden; transition:all .3s ease;}
+  .photo-link-block{aspect-ratio:1; border-radius:12px; border:3px dashed var(--border); cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)}
   .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
 
   #lightbox{display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px)}
-  #lightbox-img{max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain;}
+  #lightbox-img{max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain; box-shadow:0 10px 30px rgba(0,0,0,0.5)}
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
-    .dashboard,.section-head,.log-container,.photo-wall{padding:0 20px}
-    .form-card{margin:16px 20px 0; padding:16px}
+    header{padding:28px 20px 24px}
+    /* 這裡確保大家一起貼齊 20px，不會有人叛逆 */
+    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 20px}
+    .form-card{padding:20px 16px;}
+    .dash-stats{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(min-width:641px) and (max-width:900px){
+    .dashboard-grid{grid-template-columns:1fr}
+    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 32px}
+    .form-card{padding:24px;}
   }
 </style>
 </head>
@@ -143,14 +177,43 @@
         <span class="dash-cat-meta">10歲 · 母 · 4.65 kg</span>
       </div>
       <div class="dash-body">
-        <div class="dash-stats">
-          <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%</div></div>
-          <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7</div></div>
-          <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label">腎/胰臟藥</div></div>
+        <div class="medical-block">
+          <div class="medical-block-title">🏥 健康狀況 ＆ 趨勢</div>
+          <div class="medical-block-body">
+            <div class="dash-stats">
+              <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%<br>脫水警訊</div></div>
+              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>降回正常</div></div>
+              <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div></div>
+            </div>
+            <div class="trend-wrap">
+              <div class="trend-title"><span>嘔吐趨勢 (7D)</span><span id="trend-count-xile">0 次</span></div>
+              <div class="trend-bar-container" id="trend-bars-xile"></div>
+            </div>
+            <div class="visit-row">
+              <span class="visit-date">2/9 就診</span>
+              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
+            </div>
+          </div>
         </div>
-        <div class="trend-wrap">
-          <div class="trend-title"><span>嘔吐趨勢 (7D)</span><span id="trend-count-xile">0 次</span></div>
-          <div class="trend-bar-container" id="trend-bars-xile"></div>
+        
+        <div class="phos-table-wrap">
+        <table class="phos-table">
+          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
+          <tbody>
+            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
+            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
+            <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">─超越汪喵主食罐─</td><td></td><td></td></tr>
+            <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
+            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
+            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
+            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
+            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="dash-note">
+          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
+          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
         </div>
       </div>
     </div>
@@ -161,14 +224,38 @@
         <span class="dash-cat-meta">10歲 · 公 · 5.4 kg</span>
       </div>
       <div class="dash-body">
-        <div class="dash-stats">
-          <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟追蹤</div></div>
-          <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟正常</div></div>
-          <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">觀察咳嗽</div></div>
+        <div class="medical-block">
+          <div class="medical-block-title">🏥 健康狀況 ＆ 趨勢</div>
+          <div class="medical-block-body">
+            <div class="dash-stats">
+              <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div></div>
+              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div></div>
+              <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div></div>
+            </div>
+            <div class="trend-wrap">
+              <div class="trend-title"><span>咳嗽趨勢 (7D)</span><span id="trend-count-ping">0 次</span></div>
+              <div class="trend-bar-container" id="trend-bars-ping"></div>
+            </div>
+            <div class="visit-row">
+              <span class="visit-date">1/27 就診</span>
+              <span class="visit-items">狂犬病疫苗</span>
+            </div>
+          </div>
         </div>
-        <div class="trend-wrap">
-          <div class="trend-title"><span>咳嗽趨勢 (7D)</span><span id="trend-count-ping">0 次</span></div>
-          <div class="trend-bar-container" id="trend-bars-ping"></div>
+        
+        <div class="phos-table-wrap">
+        <table class="phos-table">
+          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
+          <tbody>
+            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
+            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
+            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="dash-note">
+          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
+          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
         </div>
       </div>
     </div>
@@ -177,27 +264,33 @@
 
 <div id="cat-content" style="display:none">
   <div class="section-head"><h2 id="form-title">今日紀錄</h2></div>
-  <div class="form-card">
-    <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
-    <div id="xile-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option>罐頭</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
+  
+  <div class="form-container">
+    <div class="form-card">
+      <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
+      
+      <div id="xile-fields" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+          <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+        </div>
+        <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
       </div>
-      <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
-    </div>
-    <div id="ping-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-        <div class="form-field" style="grid-column:1/-1"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option>罐頭</option><option>飼料</option><option>毛球</option></select></div>
+      
+      <div id="ping-fields" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
+          <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+          <div class="form-field" style="grid-column:1/-1"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+        </div>
       </div>
+      
+      <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
+      <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
+      <div class="form-field"><label>密碼</label><input type="password" id="write-password"></div>
+      <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900"></div>
+      <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
     </div>
-    <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
-    <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-    <div class="form-field"><label>密碼</label><input type="password" id="write-password"></div>
-    <div id="submit-msg" style="display:none;padding:10px;border-radius:6px;margin-bottom:10px"></div>
-    <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2></div>
@@ -232,7 +325,6 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
-// 🎯 功能 1：動態切換主題
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
@@ -256,7 +348,6 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
   
-  // 重置過濾按鈕
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.filter-btn').classList.add('active');
 
@@ -274,13 +365,11 @@ async function fetchSheetData(cat) {
     allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
     allCatRecords.sort((a, b) => new Date(b[0]) - new Date(a[0]));
     
-    // 🎯 渲染趨勢圖
     renderTrend(cat);
     renderHistoryTable();
   } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
 }
 
-// 🎯 功能 3：渲染趨勢小圖
 function renderTrend(cat) {
   const barsContainer = document.getElementById('trend-bars-' + cat);
   const countLabel = document.getElementById('trend-count-' + cat);
@@ -289,13 +378,12 @@ function renderTrend(cat) {
   const last7Days = allCatRecords.slice(0, 7).reverse();
   let total = 0;
   
-  // 取得嘔吐或咳嗽的索引 (喜樂嘔吐是 [3], 平安咳嗽是 [1])
   const idx = (cat === 'xile') ? 3 : 1;
 
   last7Days.forEach(r => {
     const val = parseInt(r[idx]) || 0;
     total += val;
-    const height = Math.min(val * 15 + 2, 40); // 1次15px
+    const height = Math.min(val * 15 + 2, 40);
     const bar = document.createElement('div');
     bar.className = 'trend-bar' + (val > 0 ? ' active' : '');
     bar.style.height = height + 'px';
@@ -306,7 +394,6 @@ function renderTrend(cat) {
   countLabel.textContent = total + ' 次';
 }
 
-// 🎯 功能 4：過濾邏輯
 function filterLogs(type) {
   currentFilter = type;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -318,7 +405,6 @@ function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
   
-  // 執行過濾
   let filtered = allCatRecords;
   if (currentFilter === 'vomit') {
     const idx = (currentCat === 'xile') ? 3 : 2;
