@@ -90,23 +90,23 @@
   .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
   .visit-row .visit-items{color:var(--ink-light)}
 
-  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;gap:16px}
-  .section-head h2{font-size:1.5rem;font-weight:900}
-  .section-head .line{flex:1;height:1px;background:var(--border)}
-
   .selector-wrap{display:none}
+
+  /* 🎯 標題置中外加左右橫線 */
+  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
+  .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--border)}
+  .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap;margin:0}
 
   .form-card{
     background:var(--warm-white);
     border:2px solid var(--border);
     border-radius:8px;
     max-width:1004px;
-    margin:32px auto 0;
+    margin:16px auto 0; /* 🤏 距離拉近，才不會跟上面的標題太疏遠 */
     padding:28px 24px;
   }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
   
-  /* 徹底修復下拉選單傲嬌屬性，強制寬度與日期框一致 */
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%;min-width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none;box-sizing:border-box;
   }
@@ -119,10 +119,9 @@
   .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);transition:opacity .15s}
   .btn-submit:hover{opacity:.85}
   
-  /* 歷史紀錄與照片牆容器樣式移到這，禁止 inline style 霸凌 */
   .log-container {
     max-width: 1100px;
-    margin: 20px auto 0;
+    margin: 16px auto 0;
     padding: 0 48px;
   }
   .photo-wall {
@@ -130,7 +129,7 @@
     grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
     gap: 16px;
     max-width: 1100px;
-    margin: 20px auto 0;
+    margin: 16px auto 0;
     padding: 0 48px;
   }
 
@@ -156,21 +155,20 @@
   .lb-btn:hover{background:rgba(255,255,255,.25)}
   #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
 
-  /* 手機版 RWD 斷點修復 */
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    .form-card{max-width:none;margin:24px 20px 0;padding:16px}
-    .log-container{padding:0 20px} /* 這裡終於能正常運作了 */
-    .photo-wall{padding:0 20px} /* 同上 */
+    .form-card{max-width:none;margin:16px 20px 0;padding:16px}
+    .log-container{padding:0 20px}
+    .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
   }
   @media(min-width:641px) and (max-width:900px){
     .dashboard-grid{grid-template-columns:1fr}
     .dashboard{padding:0 32px 8px}
-    .form-card{max-width:none;margin:32px 32px 0;padding:24px 24px}
+    .form-card{max-width:none;margin:16px 32px 0;padding:24px 24px}
     .section-head{padding:0 32px}
   }
 </style>
@@ -307,8 +305,9 @@
 </div>
 
 <div id="cat-content" style="display:none">
+  <div class="section-head"><h2 id="form-title">今日紀錄</h2></div>
+
   <div class="form-card" id="dynamic-form-card">
-    <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
 
     <div id="xile-fields" style="display:none">
@@ -349,7 +348,7 @@
     <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
-  <div class="section-head"><h2>歷史紀錄</h2><div class="line"></div></div>
+  <div class="section-head"><h2>歷史紀錄</h2></div>
   <div class="log-container">
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
@@ -357,7 +356,7 @@
     <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部紀錄 ↓</button>
   </div>
 
-  <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
+  <div class="section-head"><h2>最新照片</h2></div>
   <div class="photo-wall" id="photo-wall-container"></div>
 </div>
 <div id="lightbox" onclick="closeLightbox()">
