@@ -35,7 +35,10 @@
   .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
-  .dash-cat{border:2px solid var(--border);border-radius:10px;overflow:hidden;background:var(--warm-white);transition:box-shadow .2s}
+  /* ✨ UX/UI 升級：卡片陰影與懸停動畫 */
+  .dash-cat{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--warm-white);box-shadow:0 4px 12px rgba(0,0,0,0.04);transition:transform 0.25s ease, box-shadow 0.25s ease;}
+  .dash-cat:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+  
   .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
   .dash-cat-header:hover{filter:brightness(.96)}
   .dash-cat-header:active{filter:brightness(.92)}
@@ -46,8 +49,10 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
-  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color)}
-  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color)}
+  
+  /* ✨ UX/UI 升級：選取狀態更明顯 */
+  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color), 0 8px 24px rgba(193,123,74,0.15); transform:translateY(-3px);}
+  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color), 0 8px 24px rgba(91,143,168,0.15); transform:translateY(-3px);}
   .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
 
   .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
@@ -61,7 +66,8 @@
   .tag.neutral{background:var(--cream);border-color:var(--border);color:var(--ink-light)}
 
   .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
+  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center;transition:background 0.2s}
+  .stat-box:hover{background:var(--warm-white)}
   .stat-val{font-size:1.5rem;font-weight:900;line-height:1}
   .stat-val.xile{color:var(--xile-deep)}
   .stat-val.ping{color:var(--ping-deep)}
@@ -76,7 +82,12 @@
   .phos-table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
   .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
   .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
-  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center}
+  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center; transition:background 0.15s}
+  
+  /* ✨ UX/UI 升級：表格 hover 與斑馬紋 */
+  .phos-table tr:hover td, tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
+  tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
+  
   .phos-table tr:last-child td{border-bottom:none}
   .phos-em{font-weight:900;font-size:.85rem}
 
@@ -92,32 +103,56 @@
 
   .selector-wrap{display:none}
 
-  /* 🎯 標題置中外加左右橫線 */
   .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
   .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--border)}
   .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap;margin:0}
 
+  /* ✨ UX/UI 升級：表單陰影與圓角 */
   .form-card{
     background:var(--warm-white);
     border:2px solid var(--border);
-    border-radius:8px;
+    border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.05);
     max-width:1004px;
-    margin:16px auto 0; /* 🤏 距離拉近，才不會跟上面的標題太疏遠 */
+    margin:16px auto 0; 
     padding:28px 24px;
+    transition:box-shadow 0.3s ease;
   }
-  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
+  .form-card:hover {box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+  .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px;color:var(--ink-light)}
   
+  /* ✨ UX/UI 升級：輸入框 Focus 狀態光暈 */
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
-    width:100%;min-width:100%;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:4px;font-size:.9rem;font-weight:700;outline:none;box-sizing:border-box;
+    width:100%;min-width:100%;padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;font-size:.9rem;font-weight:700;outline:none;box-sizing:border-box;transition:all 0.2s ease;
   }
+  .form-field input:not([type="checkbox"]):focus,.form-field select:focus,.form-field textarea:focus{
+    border-color:var(--xile-color);
+    box-shadow:0 0 0 3px rgba(193,123,74,0.15);
+    background:var(--warm-white);
+  }
+  
+  /* ✨ UX/UI 升級：核取方塊美化 */
+  input[type="checkbox"] {
+    accent-color: var(--xile-deep);
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 6px;
+    position: relative;
+    top: -2px;
+  }
+  
   .form-field select{
     -webkit-appearance:none;appearance:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 10px center;background-size:24px;padding-right:32px;
+    background-repeat:no-repeat;background-position:right 12px center;background-size:24px;padding-right:36px;
   }
 
-  .btn-submit{width:100%;padding:12px;margin-top:8px;border:none;border-radius:4px;font-size:1rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);transition:opacity .15s}
-  .btn-submit:hover{opacity:.85}
+  /* ✨ UX/UI 升級：按鈕點擊回饋 */
+  .btn-submit{width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px;font-size:1.05rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);box-shadow:0 4px 12px rgba(26,20,16,0.15);transition:all 0.2s ease}
+  .btn-submit:hover{background:var(--ink-light);transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,20,16,0.2)}
+  .btn-submit:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(26,20,16,0.15)}
   
   .log-container {
     max-width: 1100px;
@@ -133,34 +168,36 @@
     padding: 0 48px;
   }
 
-  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative}
+  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative;box-shadow:inset 0 2px 8px rgba(0,0,0,0.02)}
   table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
   thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center}
-  .show-all-btn{display:block;width:100%;padding:12px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;transition:background .15s}
-  .show-all-btn:hover{background:var(--cream)}
-  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:.3s}
-  .photo-link-block:hover{transform:translateY(-5px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
+  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center;transition:background 0.15s}
+  .show-all-btn{display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .2s ease}
+  .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
+  
+  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  .photo-link-block:hover{transform:translateY(-5px);border-style:solid;box-shadow:0 8px 20px rgba(0,0,0,0.12)}
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
   /* ─── LIGHTBOX ─── */
-  #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:20px}
-  #lightbox-img{max-width:100%;max-height:80vh;border-radius:6px;object-fit:contain;transition:opacity .2s;cursor:default}
-  .lb-close{position:absolute;top:16px;right:20px;font-size:2rem;color:#fff;cursor:pointer;opacity:.7;line-height:1;background:none;border:none;transition:opacity .15s}
+  #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+  #lightbox-img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;transition:opacity .2s;cursor:default;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+  .lb-close{position:absolute;top:16px;right:20px;font-size:2.5rem;color:#fff;cursor:pointer;opacity:.7;line-height:1;background:none;border:none;transition:opacity .15s}
   .lb-close:hover{opacity:1}
-  .lb-nav{display:flex;align-items:center;gap:24px;margin-top:16px}
-  .lb-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
-  .lb-btn:hover{background:rgba(255,255,255,.25)}
-  #lb-counter{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:48px;text-align:center}
+  .lb-nav{display:flex;align-items:center;gap:24px;margin-top:20px}
+  .lb-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;width:48px;height:48px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease}
+  .lb-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
+  .lb-btn:active{transform:scale(0.95)}
+  #lb-counter{color:rgba(255,255,255,.8);font-size:.9rem;font-weight:900;min-width:48px;text-align:center;letter-spacing:0.05em}
 
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    .form-card{max-width:none;margin:16px 20px 0;padding:16px}
+    .form-card{max-width:none;margin:16px 20px 0;padding:20px 16px}
     .log-container{padding:0 20px}
     .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
@@ -344,7 +381,7 @@
       <label>密碼</label>
       <input type="password" id="write-password" placeholder="輸入寫入密碼">
     </div>
-    <div id="submit-msg" style="display:none;font-size:.85rem;padding:8px 12px;border-radius:4px;margin-top:4px"></div>
+    <div id="submit-msg" style="display:none;font-size:.85rem;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900"></div>
     <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
@@ -574,7 +611,6 @@ function showMsg(text, type) {
   el.style.background = type === 'ok' ? '#eef6f0' : type === 'warn' ? '#fff8e6' : '#fdf0ee';
   el.style.color = type === 'ok' ? '#1f5c30' : type === 'warn' ? '#7a4c00' : '#7a1a10';
   el.style.border = `1.5px solid ${type === 'ok' ? '#4a8c5c' : type === 'warn' ? '#c47a1a' : '#c44b3a'}`;
-  el.style.borderRadius = '4px';
 }
 </script>
 </body>
