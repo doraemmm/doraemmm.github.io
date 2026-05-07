@@ -17,6 +17,10 @@
     --ping-color:#5b8fa8; --ping-pale:#cce0ec; --ping-deep:#2d607a;
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
+    /* 動態變量預設值 */
+    --theme-color: var(--ink);
+    --theme-pale: var(--cream);
+    --theme-deep: var(--ink-light);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
@@ -25,183 +29,98 @@
   body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
 
   /* ─── HEADER ─── */
-  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);animation:fadeUp .5s ease both;text-align:center}
+  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);text-align:center}
   .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
   .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
   .title-block h1 em{font-style:italic;color:var(--xile-color)}
   .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
 
   /* ─── DASHBOARD ─── */
-  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease .1s both}
+  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease both}
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
-  .dash-cat{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--warm-white);box-shadow:0 4px 12px rgba(0,0,0,0.04);transition:transform 0.25s ease, box-shadow 0.25s ease;}
-  .dash-cat:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.08);}
-  
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer;transition:filter .15s}
-  .dash-cat-header:hover{filter:brightness(.96)}
-  .dash-cat-header:active{filter:brightness(.92)}
+  .dash-cat{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--warm-white);box-shadow:0 4px 12px rgba(0,0,0,0.04);transition:all 0.3s ease;}
+  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer}
   .dash-cat-header.xile{background:var(--xile-pale)}
   .dash-cat-header.ping{background:var(--ping-pale)}
-  .dash-cat-header-top{display:flex;align-items:center;gap:10px;justify-content:center}
-  .dash-cat-name{font-size:1.25rem;font-weight:900;letter-spacing:-.01em}
+  .dash-cat-header-top{display:flex;align-items:center;gap:10px}
+  .dash-cat-name{font-size:1.25rem;font-weight:900}
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
-  .dash-cat-meta{font-size:.78rem;color:var(--ink-light);font-weight:700;text-align:center}
   
-  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color), 0 8px 24px rgba(193,123,74,0.15); transform:translateY(-3px);}
-  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color), 0 8px 24px rgba(91,143,168,0.15); transform:translateY(-3px);}
-  .dash-cat-header .tap-hint{font-size:.7rem;color:var(--ink-light);opacity:.6;margin-top:2px;letter-spacing:.05em}
+  /* 🎯 功能 1：選取後的高亮樣式 */
+  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color); transform:translateY(-3px);}
+  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color); transform:translateY(-3px);}
 
   .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 
-  .dash-tags{display:flex;flex-wrap:wrap;gap:6px}
-  .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:3px;font-size:.8rem;font-weight:900;border:1.5px solid}
-  .tag.warn{background:#fff8e6;border-color:#c47a1a;color:#7a4c00}
-  .tag.safe{background:#eef6f0;border-color:#4a8c5c;color:#1f5c30}
-  .tag.alert{background:#fdf0ee;border-color:#c44b3a;color:#7a1a10}
-  .tag.info{background:#edf4f8;border-color:#5b8fa8;color:#1a4d68}
-  .tag.neutral{background:var(--cream);border-color:var(--border);color:var(--ink-light)}
-
   .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center;transition:background 0.2s}
-  .stat-box:hover{background:var(--warm-white)}
-  .stat-val{font-size:1.5rem;font-weight:900;line-height:1}
-  .stat-val.xile{color:var(--xile-deep)}
-  .stat-val.ping{color:var(--ping-deep)}
-  .stat-val.alert{color:var(--accent-red)}
-  .stat-label{font-size:.72rem;color:var(--ink-light);margin-top:4px;font-weight:700}
+  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
   .stat-icon{font-size:1.6rem;line-height:1}
   .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
 
-  .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
-  .phos-table-wrap::-webkit-scrollbar{height:5px}
-  .phos-table-wrap::-webkit-scrollbar-track{background:var(--cream)}
-  .phos-table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
-  .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
-  .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
-  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center; transition:background 0.15s}
-  
-  .phos-table tr:hover td, tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
-  tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
-  
-  .phos-table tr:last-child td{border-bottom:none}
-  .phos-em{font-weight:900;font-size:.85rem}
-
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
-  .dash-note strong{color:var(--ink);font-weight:900}
-
-  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
-  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
-  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
-  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
-  .visit-row .visit-items{color:var(--ink-light)}
-
-  .selector-wrap{display:none}
+  /* 🎯 功能 3：趨勢小視覺化 */
+  .trend-wrap {background:var(--cream); border-radius:6px; padding:10px; border:1.5px solid var(--border);}
+  .trend-title {font-size:0.75rem; margin-bottom:8px; color:var(--ink-light); display:flex; justify-content:space-between;}
+  .trend-bar-container {display:flex; align-items:flex-end; gap:4px; height:40px; padding-bottom:2px; border-bottom:1px solid var(--border);}
+  .trend-bar {flex:1; background:var(--border); border-radius:2px 2px 0 0; transition:height 0.5s ease; min-height:2px;}
+  .trend-bar.active {background:var(--theme-color);}
 
   .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
   .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--border)}
-  .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap;margin:0}
+  .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
 
+  /* ─── FORM ─── */
   .form-card{
-    background:var(--warm-white);
-    border:2px solid var(--border);
-    border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05);
-    max-width:1004px;
-    margin:16px auto 0; 
-    padding:28px 24px;
-    transition:box-shadow 0.3s ease;
+    background:var(--warm-white); border:2px solid var(--border); border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.05); max-width:1004px; margin:16px auto 0; padding:28px 24px;
   }
-  .form-card:hover {box-shadow:0 8px 24px rgba(0,0,0,0.08);}
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px;color:var(--ink-light)}
-  
-  /* 為了擠進三行，這裡把 padding 稍微縮小了一點 */
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
-    width:100%;min-width:100%;padding:10px 8px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;font-size:.9rem;font-weight:700;outline:none;box-sizing:border-box;transition:all 0.2s ease;
+    width:100%; padding:10px 14px; background:var(--cream); border:1.5px solid var(--border); border-radius:6px; 
+    font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease;
   }
-  .form-field input:not([type="checkbox"]):focus,.form-field select:focus,.form-field textarea:focus{
-    border-color:var(--xile-color);
-    box-shadow:0 0 0 3px rgba(193,123,74,0.15);
-    background:var(--warm-white);
-  }
-  
-  input[type="checkbox"] {
-    accent-color: var(--xile-deep);
-    width: 1.1rem;
-    height: 1.1rem;
-    cursor: pointer;
-    vertical-align: middle;
-    margin-right: 6px;
-    position: relative;
-    top: -2px;
-  }
-  
-  /* 箭頭往右邊退，把空間留給字體 */
-  .form-field select{
-    -webkit-appearance:none;appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 6px center;background-size:20px;padding-right:24px;
+  /* 🎯 功能 1：Focus 顏色隨主題變動 */
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 0 3px var(--theme-pale);
   }
 
-  .btn-submit{width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px;font-size:1.05rem;font-weight:900;cursor:pointer;color:#fff;background:var(--ink);box-shadow:0 4px 12px rgba(26,20,16,0.15);transition:all 0.2s ease}
-  .btn-submit:hover{background:var(--ink-light);transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,20,16,0.2)}
-  .btn-submit:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(26,20,16,0.15)}
-  
-  .log-container {
-    max-width: 1100px;
-    margin: 16px auto 0;
-    padding: 0 48px;
+  .btn-submit{
+    width:100%; padding:14px; margin-top:12px; border:none; border-radius:8px; font-size:1.05rem; font-weight:900; 
+    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease;
   }
-  .photo-wall {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-    gap: 16px;
-    max-width: 1100px;
-    margin: 16px auto 0;
-    padding: 0 48px;
-  }
+  .btn-submit:hover{transform:translateY(-1px); filter: brightness(1.1);}
 
-  .scroll-wrap{max-height:400px;overflow-y:auto;border:2px solid var(--border);border-radius:8px;background:var(--warm-white);position:relative;box-shadow:inset 0 2px 8px rgba(0,0,0,0.02)}
-  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;min-width:640px}
-  thead th{position:sticky;top:0;z-index:10;background:#e6e0d3;padding:12px 14px;text-align:center;box-shadow:0 2px 0 var(--border)}
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05);padding:10px 14px;text-align:center;transition:background 0.15s}
-  .show-all-btn{display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .2s ease}
-  .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
-  
-  .photo-link-block{aspect-ratio:1;border-radius:12px;border:3px dashed var(--border);cursor:pointer;overflow:hidden;transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-  .photo-link-block:hover{transform:translateY(-5px);border-style:solid;box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+  /* 🎯 功能 4：過濾器按鈕 */
+  .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
+  .filter-btn {
+    padding:6px 12px; border-radius:20px; border:1.5px solid var(--border); 
+    background:var(--warm-white); font-size:0.8rem; cursor:pointer; transition:all 0.2s;
+  }
+  .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
+
+  .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
+  .scroll-wrap{max-height:400px; overflow-y:auto; border:2px solid var(--border); border-radius:8px; background:var(--warm-white);}
+  table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
+  thead th{position:sticky; top:0; z-index:10; background:#e6e0d3; padding:12px 14px; box-shadow:0 2px 0 var(--border)}
+  tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center;}
+  tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
+
+  .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
+  .photo-link-block{aspect-ratio:1; border-radius:12px; border:3px dashed var(--border); cursor:pointer; overflow:hidden; transition:all .3s ease;}
+  .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+
+  #lightbox{display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px)}
+  #lightbox-img{max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain;}
   .page-end{height:calc(40px + env(safe-area-inset-bottom))}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ─── LIGHTBOX ─── */
-  #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-  #lightbox-img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;transition:opacity .2s;cursor:default;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-  .lb-close{position:absolute;top:16px;right:20px;font-size:2.5rem;color:#fff;cursor:pointer;opacity:.7;line-height:1;background:none;border:none;transition:opacity .15s}
-  .lb-close:hover{opacity:1}
-  .lb-nav{display:flex;align-items:center;gap:24px;margin-top:20px}
-  .lb-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;width:48px;height:48px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease}
-  .lb-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
-  .lb-btn:active{transform:scale(0.95)}
-  #lb-counter{color:rgba(255,255,255,.8);font-size:.9rem;font-weight:900;min-width:48px;text-align:center;letter-spacing:0.05em}
-
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
-    header{padding:28px 20px 24px}
-    .dashboard,.section-head{padding:0 20px}
-    .dashboard{padding-bottom:4px}
-    .form-card{max-width:none;margin:16px 20px 0;padding:20px 16px}
-    .log-container{padding:0 20px}
-    .photo-wall{padding:0 20px}
-    .dash-stats{grid-template-columns:repeat(3,1fr)}
-  }
-  @media(min-width:641px) and (max-width:900px){
-    .dashboard-grid{grid-template-columns:1fr}
-    .dashboard{padding:0 32px 8px}
-    .form-card{max-width:none;margin:16px 32px 0;padding:24px 24px}
-    .section-head{padding:0 32px}
+    .dashboard,.section-head,.log-container,.photo-wall{padding:0 20px}
+    .form-card{margin:16px 20px 0; padding:16px}
   }
 </style>
 </head>
@@ -218,189 +137,88 @@
 
 <div class="dashboard">
   <div class="dashboard-grid">
-
-    <div class="dash-cat">
-      <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🟠</span>
-          <span class="dash-cat-name xile">喜樂</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg · 已結紮</span>
-        <span class="tap-hint">點此記錄今日狀況</span>
+    <div class="dash-cat" id="card-xile">
+      <div class="dash-cat-header xile" onclick="selectCat('xile')">
+        <div class="dash-cat-header-top"><span>🟠</span><span class="dash-cat-name xile">喜樂</span></div>
+        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg</span>
       </div>
       <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box">
-                <div class="stat-icon">💧</div>
-                <div class="stat-icon-label" style="color:var(--accent-warn)">脫水警訊<br>HCT 54.1%</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫘</div>
-                <div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>已降回正常</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">💊</div>
-                <div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥／胰臟藥</div>
-              </div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">2/9 就診</span>
-              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
-            </div>
-          </div>
+        <div class="dash-stats">
+          <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%</div></div>
+          <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7</div></div>
+          <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label">腎/胰臟藥</div></div>
         </div>
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受</td></tr>
-            <tr><td class="phos-em" style="color:var(--ink-light);font-size:.75rem;padding-top:8px">─超越汪喵主食罐─</td></tr>
-            <tr><td class="phos-em">法式鴨肉</td><td>0.51%</td><td>✅ 推薦</td></tr>
-            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦</td></tr>
-            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧</td></tr>
-            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議</td></tr>
-            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
-          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
+        <div class="trend-wrap">
+          <div class="trend-title"><span>嘔吐趨勢 (7D)</span><span id="trend-count-xile">0 次</span></div>
+          <div class="trend-bar-container" id="trend-bars-xile"></div>
         </div>
       </div>
     </div>
 
-    <div class="dash-cat">
-      <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
-        <div class="dash-cat-header-top">
-          <span style="font-size:1.6rem">🔵</span>
-          <span class="dash-cat-name ping">平安</span>
-        </div>
-        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg · 已結紮</span>
-        <span class="tap-hint">點此記錄今日狀況</span>
+    <div class="dash-cat" id="card-ping">
+      <div class="dash-cat-header ping" onclick="selectCat('ping')">
+        <div class="dash-cat-header-top"><span>🔵</span><span class="dash-cat-name ping">平安</span></div>
+        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg</span>
       </div>
       <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box">
-                <div class="stat-icon">❤️‍🩹</div>
-                <div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫘</div>
-                <div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div>
-              </div>
-              <div class="stat-box">
-                <div class="stat-icon">🫁</div>
-                <div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div>
-              </div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">1/27 就診</span>
-              <span class="visit-items">狂犬病疫苗</span>
-            </div>
-          </div>
+        <div class="dash-stats">
+          <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟追蹤</div></div>
+          <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟正常</div></div>
+          <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">觀察咳嗽</div></div>
         </div>
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
-            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
-          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
+        <div class="trend-wrap">
+          <div class="trend-title"><span>咳嗽趨勢 (7D)</span><span id="trend-count-ping">0 次</span></div>
+          <div class="trend-bar-container" id="trend-bars-ping"></div>
         </div>
       </div>
-    </div>
-
-  </div>
-</div>
-<div class="selector-wrap">
-  <div class="selector-inner">
-    <span class="selector-label">選擇寵物</span>
-    <div class="selector-options">
-      <button class="sel-btn" id="sel-xile" onclick="selectCat('xile')">🟠 喜樂</button>
-      <button class="sel-btn" id="sel-ping" onclick="selectCat('ping')">🔵 平安</button>
     </div>
   </div>
 </div>
 
 <div id="cat-content" style="display:none">
   <div class="section-head"><h2 id="form-title">今日紀錄</h2></div>
-
-  <div class="form-card" id="dynamic-form-card">
+  <div class="form-card">
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
-
     <div id="xile-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option>罐頭</option><option>飼料</option><option>膽汁</option><option>毛球</option></select></div>
       </div>
-      <div class="form-field">
-        <label>今日用藥</label>
-        <div style="display:flex;gap:20px">
-          <label style="cursor:pointer"><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label>
-          <label style="cursor:pointer"><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label>
-        </div>
-      </div>
+      <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
     </div>
-
     <div id="ping-fields" style="display:none">
-      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+        <div class="form-field" style="grid-column:1/-1"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option>罐頭</option><option>飼料</option><option>毛球</option></select></div>
       </div>
     </div>
-
-    <div class="form-field">
-      <label>其他事項</label>
-      <div style="display:flex;gap:20px">
-        <label style="cursor:pointer"><input type="checkbox" id="nail-cut"> 剪趾甲</label>
-        <label style="cursor:pointer"><input type="checkbox" id="vaccine"> 施打疫苗</label>
-      </div>
-    </div>
+    <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
     <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-    <div class="form-field">
-      <label>密碼</label>
-      <input type="password" id="write-password" placeholder="輸入寫入密碼">
-    </div>
-    <div id="submit-msg" style="display:none;font-size:.85rem;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900"></div>
+    <div class="form-field"><label>密碼</label><input type="password" id="write-password"></div>
+    <div id="submit-msg" style="display:none;padding:10px;border-radius:6px;margin-bottom:10px"></div>
     <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
   </div>
 
   <div class="section-head"><h2>歷史紀錄</h2></div>
   <div class="log-container">
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
+      <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
+      <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
+      <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
+    </div>
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
     </div>
-    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部紀錄 ↓</button>
+    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部 ↓</button>
   </div>
 
   <div class="section-head"><h2>最新照片</h2></div>
   <div class="photo-wall" id="photo-wall-container"></div>
 </div>
-<div id="lightbox" onclick="closeLightbox()">
-  <button class="lb-close" onclick="closeLightbox()">×</button>
-  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
-  <div class="lb-nav" onclick="event.stopPropagation()">
-    <button class="lb-btn" id="lb-prev" onclick="lightboxNav(-1)">‹</button>
-    <span id="lb-counter">1 / 1</span>
-    <button class="lb-btn" id="lb-next" onclick="lightboxNav(1)">›</button>
-  </div>
-</div>
 
+<div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
 <div class="page-end"></div>
 
 <script>
@@ -412,152 +230,151 @@ const csvUrls = {
   ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
 
-let currentCat = null, allCatRecords = [], showFullHistory = false;
+let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
-function parseDateString(ds) {
-  if (!ds) return 0;
-  let parts = ds.replace(/-/g, '/').split('/');
-  let y = new Date().getFullYear(), m = 0, d = 1;
-  if (parts.length === 3) {
-    y = parseInt(parts[0], 10);
-    m = parseInt(parts[1], 10) - 1;
-    d = parseInt(parts[2], 10);
-  } else if (parts.length === 2) {
-    m = parseInt(parts[0], 10) - 1;
-    d = parseInt(parts[1], 10);
+// 🎯 功能 1：動態切換主題
+function updateTheme(cat) {
+  const root = document.documentElement;
+  if (cat === 'xile') {
+    root.style.setProperty('--theme-color', 'var(--xile-color)');
+    root.style.setProperty('--theme-pale', 'var(--xile-pale)');
+    root.style.setProperty('--theme-deep', 'var(--xile-deep)');
+  } else {
+    root.style.setProperty('--theme-color', 'var(--ping-color)');
+    root.style.setProperty('--theme-pale', 'var(--ping-pale)');
+    root.style.setProperty('--theme-deep', 'var(--ping-deep)');
   }
-  return new Date(y, m, d).getTime();
 }
 
 function selectCat(cat) {
-  currentCat = cat; showFullHistory = false;
-  document.querySelectorAll('.sel-btn').forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.getElementById('sel-' + cat);
-  if (activeBtn) activeBtn.classList.add('active');
+  currentCat = cat; showFullHistory = false; currentFilter = 'all';
+  updateTheme(cat);
   document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
-  const card = document.getElementById('header-' + cat)?.closest('.dash-cat');
-  if (card) card.classList.add('selected-' + cat);
+  document.getElementById('card-' + cat).classList.add('selected-' + cat);
   document.getElementById('cat-content').style.display = 'block';
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
-  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth', block:'start'}), 100);
+  document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
+  
+  // 重置過濾按鈕
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+
+  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth'}), 100);
   fetchSheetData(cat); renderPhotoWall(cat);
 }
 
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 正在連線中...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 載入中...</td></tr>`;
   try {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
     allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
-    allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
+    allCatRecords.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+    
+    // 🎯 渲染趨勢圖
+    renderTrend(cat);
     renderHistoryTable();
   } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
 }
 
-function rc(val, type) {
-  const isZero = !val || val === "0" || val === " " || val === "";
-  if (type === 'check') return val === 'TRUE' ? '✅' : '—';
-  if (type === 'nail') return val === 'TRUE' ? '✂️' : '—';
-  if (isZero) return '—';
-  return val + '次';
+// 🎯 功能 3：渲染趨勢小圖
+function renderTrend(cat) {
+  const barsContainer = document.getElementById('trend-bars-' + cat);
+  const countLabel = document.getElementById('trend-count-' + cat);
+  barsContainer.innerHTML = '';
+  
+  const last7Days = allCatRecords.slice(0, 7).reverse();
+  let total = 0;
+  
+  // 取得嘔吐或咳嗽的索引 (喜樂嘔吐是 [3], 平安咳嗽是 [1])
+  const idx = (cat === 'xile') ? 3 : 1;
+
+  last7Days.forEach(r => {
+    const val = parseInt(r[idx]) || 0;
+    total += val;
+    const height = Math.min(val * 15 + 2, 40); // 1次15px
+    const bar = document.createElement('div');
+    bar.className = 'trend-bar' + (val > 0 ? ' active' : '');
+    bar.style.height = height + 'px';
+    bar.title = `${r[0]}: ${val}次`;
+    barsContainer.appendChild(bar);
+  });
+  
+  countLabel.textContent = total + ' 次';
+}
+
+// 🎯 功能 4：過濾邏輯
+function filterLogs(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderHistoryTable();
 }
 
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
-  const displayData = showFullHistory ? allCatRecords : allCatRecords.slice(0, 10);
-  tbody.innerHTML = '';
-  if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3],'count')}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'nail')}</td></tr>`);
-  } else {
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽次數</th><th>嘔吐次數</th><th>嘔吐物</th><th>剪趾甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'count')}</td><td>${rc(r[2],'count')}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'nail')}</td></tr>`);
+  
+  // 執行過濾
+  let filtered = allCatRecords;
+  if (currentFilter === 'vomit') {
+    const idx = (currentCat === 'xile') ? 3 : 2;
+    filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
+  } else if (currentFilter === 'cough') {
+    filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
+  } else if (currentFilter === 'nail') {
+    const idx = (currentCat === 'xile') ? 5 : 4;
+    filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
   }
-  document.getElementById('show-all-btn').style.display = allCatRecords.length > 10 ? 'block' : 'none';
-  document.getElementById('show-all-btn').textContent = showFullHistory ? '收合紀錄 ↑' : `顯示全部 (${allCatRecords.length}) ↓`;
+
+  const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
+  tbody.innerHTML = '';
+  
+  const rc = (val, type) => {
+    if (type === 'check') return val === 'TRUE' ? '✅' : '—';
+    return (!val || val === "0") ? '—' : val + '次';
+  };
+
+  if (currentCat === 'xile') {
+    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td></tr>`);
+  } else {
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
+  }
+  
+  document.getElementById('show-all-btn').style.display = filtered.length > 10 ? 'block' : 'none';
 }
 
 function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 正在抓貓中...</div>`;
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 找照片中...</div>`;
   const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
     const res = await fetch(url); const data = await res.json();
-    lightboxImages = data.files.map(f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`);
-    container.innerHTML = data.files.map((f, i) => `
-      <div class="photo-link-block" onclick="openLightbox(${i})">
-        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;display:block;">
+    container.innerHTML = data.files.map(f => `
+      <div class="photo-link-block" onclick="document.getElementById('lightbox').style.display='flex';document.getElementById('lightbox-img').src='https://drive.google.com/thumbnail?id=${f.id}&sz=w1200'">
+        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;">
       </div>`).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-light)">載入失敗</div>`; }
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">載入失敗</div>`; }
 }
-
-let lightboxImages = [], lightboxIndex = 0;
-
-function openLightbox(i) {
-  lightboxIndex = i;
-  const lb = document.getElementById('lightbox');
-  const img = document.getElementById('lightbox-img');
-  img.src = lightboxImages[i];
-  img.style.opacity = '0';
-  lb.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  img.onload = () => { img.style.opacity = '1'; };
-  updateLightboxNav();
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function lightboxNav(dir) {
-  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
-  const img = document.getElementById('lightbox-img');
-  img.style.opacity = '0';
-  img.src = lightboxImages[lightboxIndex];
-  img.onload = () => { img.style.opacity = '1'; };
-  updateLightboxNav();
-}
-
-function updateLightboxNav() {
-  document.getElementById('lb-counter').textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
-  document.getElementById('lb-prev').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
-  document.getElementById('lb-next').style.visibility = lightboxImages.length > 1 ? 'visible' : 'hidden';
-}
-
-document.addEventListener('keydown', e => {
-  if (document.getElementById('lightbox').style.display === 'flex') {
-    if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'ArrowRight') lightboxNav(1);
-    if (e.key === 'Escape') closeLightbox();
-  }
-});
 
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   const msg = document.getElementById('submit-msg');
   const password = document.getElementById('write-password').value.trim();
+  if (!password) { showMsg('請輸入密碼', 'warn'); return; }
 
-  if (!password) {
-    showMsg('請輸入密碼', 'warn'); return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '寫入中...';
-  msg.style.display = 'none';
-
+  btn.disabled = true; btn.textContent = '寫入中...';
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx3KwQ8W1PaCF3U_K8ttbzJaoi91CLMbYyViZGriCbpNVmY_6Av5zexWdTmx5mmMsHw_g/exec';
-
   const payload = {
-    password,
-    cat: currentCat,
+    password, cat: currentCat,
     date: document.getElementById('date-active').value,
     nailCut: document.getElementById('nail-cut').checked ? true : "",
     vaccine: document.getElementById('vaccine').checked ? true : "",
@@ -565,47 +382,30 @@ async function submitForm() {
   };
 
   if (currentCat === 'xile') {
-    let vcX = document.getElementById('vomit-count-xile').value;
-    payload.vomitCount = vcX === "0" ? "" : vcX;
-    payload.vomitType  = vcX === "0" ? "" : document.getElementById('vomit-type-xile').value;
-    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
+    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
+    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-xile').value : "";
+    payload.kidneyDrug = document.getElementById('kidney-drug').checked;
     payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
   } else {
-    let ccP = document.getElementById('cough-count-ping').value;
-    payload.coughCount = ccP === "0" ? "" : ccP;
-    let vcP = document.getElementById('vomit-count-ping').value;
-    payload.vomitCount = vcP === "0" ? "" : vcP;
-    payload.vomitType  = vcP === "0" ? "" : document.getElementById('vomit-type-ping').value;
+    payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
+    payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
+    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-ping').value : "";
   }
 
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
     const result = await res.json();
-    if (result.ok) {
-      showMsg('✅ 已寫入', 'ok');
-      document.getElementById('write-password').value = '';
-      await fetchSheetData(currentCat);
-    } else {
-      showMsg('❌ ' + (result.msg || '寫入失敗'), 'err');
-    }
-  } catch(e) {
-    showMsg('❌ 連線失敗，請稍後再試', 'err');
-  }
-
-  btn.disabled = false;
-  btn.textContent = '送出紀錄';
+    if (result.ok) { showMsg('✅ 已寫入', 'ok'); fetchSheetData(currentCat); }
+    else { showMsg('❌ ' + result.msg, 'err'); }
+  } catch(e) { showMsg('❌ 連線失敗', 'err'); }
+  btn.disabled = false; btn.textContent = '送出紀錄';
 }
 
 function showMsg(text, type) {
   const el = document.getElementById('submit-msg');
-  el.textContent = text;
-  el.style.display = 'block';
-  el.style.background = type === 'ok' ? '#eef6f0' : type === 'warn' ? '#fff8e6' : '#fdf0ee';
-  el.style.color = type === 'ok' ? '#1f5c30' : type === 'warn' ? '#7a4c00' : '#7a1a10';
-  el.style.border = `1.5px solid ${type === 'ok' ? '#4a8c5c' : type === 'warn' ? '#c47a1a' : '#c44b3a'}`;
+  el.textContent = text; el.style.display = 'block';
+  el.style.background = type === 'ok' ? '#eef6f0' : '#fdf0ee';
+  el.style.color = type === 'ok' ? '#1f5c30' : '#7a1a10';
 }
 </script>
 </body>
