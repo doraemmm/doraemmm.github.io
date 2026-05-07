@@ -17,9 +17,12 @@
     --ping-color:#5b8fa8; --ping-pale:#cce0ec; --ping-deep:#2d607a;
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
+    
+    /* 🎯 動態主題變數 */
     --theme-color: var(--ink);
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
+    --theme-border: var(--border); /* 讓框框顏色跟著主題跑 */
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
@@ -64,12 +67,6 @@
   .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
   .visit-row .visit-items{color:var(--ink-light)}
 
-  .trend-wrap {background:var(--warm-white); border-radius:6px; padding:10px; border:1.5px solid var(--border);}
-  .trend-title {font-size:0.75rem; margin-bottom:8px; color:var(--ink-light); display:flex; justify-content:space-between;}
-  .trend-bar-container {display:flex; align-items:flex-end; gap:4px; height:40px; padding-bottom:2px; border-bottom:1px solid var(--border);}
-  .trend-bar {flex:1; background:var(--border); border-radius:2px 2px 0 0; transition:height 0.5s ease; min-height:2px;}
-  .trend-bar.active {background:var(--theme-color);}
-
   .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
   .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
   .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
@@ -86,11 +83,12 @@
   .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
 
   /* ─── FORM ─── */
-  /* ✨ 這裡加了 form-container 確保跟 log-container 寬度與 Padding 完全一致！ */
   .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
   .form-card {
-    background:var(--warm-white); border:2px solid var(--border); border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:box-shadow 0.3s ease;
+    background:var(--warm-white); 
+    border:2px solid var(--theme-border); /* 🎯 動態框線 */
+    border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:border-color 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
   }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px;color:var(--ink-light)}
@@ -124,17 +122,31 @@
   .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
 
   .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .scroll-wrap{max-height:400px; overflow-y:auto; border:2px solid var(--border); border-radius:8px; background:var(--warm-white); box-shadow:inset 0 2px 8px rgba(0,0,0,0.02)}
+  .scroll-wrap{
+    max-height:400px; overflow-y:auto; 
+    border:2px solid var(--theme-border); /* 🎯 動態框線 */
+    border-radius:8px; background:var(--warm-white); box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
+    transition:border-color 0.3s ease;
+  }
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
   thead th{position:sticky; top:0; z-index:10; background:#e6e0d3; padding:12px 14px; box-shadow:0 2px 0 var(--border)}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
   tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
-  .show-all-btn{display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);border:2px dashed var(--border);border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .2s ease}
+  
+  .show-all-btn{
+    display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);
+    border:2px dashed var(--theme-border); /* 🎯 動態框線 */
+    border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
+  }
   .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
 
   .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .photo-link-block{aspect-ratio:1; border-radius:12px; border:3px dashed var(--border); cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  .photo-link-block{
+    aspect-ratio:1; border-radius:12px; 
+    border:3px dashed var(--theme-border); /* 🎯 動態框線 */
+    cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
+  }
   .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
 
   #lightbox{display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px)}
@@ -146,7 +158,6 @@
   @media(max-width:640px){
     .dashboard-grid{grid-template-columns:1fr}
     header{padding:28px 20px 24px}
-    /* 這裡確保大家一起貼齊 20px，不會有人叛逆 */
     .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 20px}
     .form-card{padding:20px 16px;}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
@@ -178,16 +189,12 @@
       </div>
       <div class="dash-body">
         <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 趨勢</div>
+          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
             <div class="dash-stats">
               <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%<br>脫水警訊</div></div>
               <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>降回正常</div></div>
               <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div></div>
-            </div>
-            <div class="trend-wrap">
-              <div class="trend-title"><span>嘔吐趨勢 (7D)</span><span id="trend-count-xile">0 次</span></div>
-              <div class="trend-bar-container" id="trend-bars-xile"></div>
             </div>
             <div class="visit-row">
               <span class="visit-date">2/9 就診</span>
@@ -225,16 +232,12 @@
       </div>
       <div class="dash-body">
         <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 趨勢</div>
+          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
           <div class="medical-block-body">
             <div class="dash-stats">
               <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div></div>
               <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div></div>
               <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div></div>
-            </div>
-            <div class="trend-wrap">
-              <div class="trend-title"><span>咳嗽趨勢 (7D)</span><span id="trend-count-ping">0 次</span></div>
-              <div class="trend-bar-container" id="trend-bars-ping"></div>
             </div>
             <div class="visit-row">
               <span class="visit-date">1/27 就診</span>
@@ -325,16 +328,34 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
+// ⏳ 時光倒流神器：超強日期解析，保證降序排列不烙賽
+function parseDateString(ds) {
+  if (!ds) return 0;
+  let parts = ds.replace(/-/g, '/').split('/');
+  let y = new Date().getFullYear(), m = 0, d = 1;
+  if (parts.length === 3) {
+    y = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10) - 1;
+    d = parseInt(parts[2], 10);
+  } else if (parts.length === 2) {
+    m = parseInt(parts[0], 10) - 1;
+    d = parseInt(parts[1], 10);
+  }
+  return new Date(y, m, d).getTime();
+}
+
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
     root.style.setProperty('--theme-color', 'var(--xile-color)');
     root.style.setProperty('--theme-pale', 'var(--xile-pale)');
     root.style.setProperty('--theme-deep', 'var(--xile-deep)');
+    root.style.setProperty('--theme-border', 'var(--xile-color)'); // 🎯 喜樂專屬橘框
   } else {
     root.style.setProperty('--theme-color', 'var(--ping-color)');
     root.style.setProperty('--theme-pale', 'var(--ping-pale)');
     root.style.setProperty('--theme-deep', 'var(--ping-deep)');
+    root.style.setProperty('--theme-border', 'var(--ping-color)'); // 🎯 平安專屬藍框
   }
 }
 
@@ -363,35 +384,12 @@ async function fetchSheetData(cat) {
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
     allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
-    allCatRecords.sort((a, b) => new Date(b[0]) - new Date(a[0]));
     
-    renderTrend(cat);
+    // 🎯 降序排列強勢回歸，最新的一定在最上面
+    allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
+    
     renderHistoryTable();
   } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
-}
-
-function renderTrend(cat) {
-  const barsContainer = document.getElementById('trend-bars-' + cat);
-  const countLabel = document.getElementById('trend-count-' + cat);
-  barsContainer.innerHTML = '';
-  
-  const last7Days = allCatRecords.slice(0, 7).reverse();
-  let total = 0;
-  
-  const idx = (cat === 'xile') ? 3 : 1;
-
-  last7Days.forEach(r => {
-    const val = parseInt(r[idx]) || 0;
-    total += val;
-    const height = Math.min(val * 15 + 2, 40);
-    const bar = document.createElement('div');
-    bar.className = 'trend-bar' + (val > 0 ? ' active' : '');
-    bar.style.height = height + 'px';
-    bar.title = `${r[0]}: ${val}次`;
-    barsContainer.appendChild(bar);
-  });
-  
-  countLabel.textContent = total + ' 次';
 }
 
 function filterLogs(type) {
