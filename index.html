@@ -23,8 +23,9 @@
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
     --theme-border: var(--border);
-    --theme-input-bg: var(--cream);
-    --theme-table-header: #e6e0d3;
+    --theme-bg-card: var(--warm-white);  /* 卡片大底色 */
+    --theme-bg-block: var(--cream);      /* 輸入框、按鈕底色 */
+    --theme-table-header: #e6e0d3;       /* 表頭底色 */
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
@@ -55,13 +56,14 @@
   .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color); transform:translateY(-3px);}
   .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color); transform:translateY(-3px);}
 
-  /* 🟦 針對平安的 Dashboard 進行深度藍色化 */
-  #card-ping { background: #f0f6fa; border-color: var(--ping-pale); }
-  #card-ping .dash-cat-header { border-bottom-color: var(--ping-pale); }
+  /* 🟦 平安的 Dashboard 深度藍色化 (修復飲食表格框線) */
+  #card-ping { background: #f0f6fa; border-color: #cce0ec; }
+  #card-ping .dash-cat-header { border-bottom-color: #cce0ec; }
   #card-ping .stat-box, 
   #card-ping .medical-block, 
-  #card-ping .dash-note, 
-  #card-ping .phos-table th { background: #e1edf5; border-color: #cce0ec; }
+  #card-ping .phos-table-wrap,  /* ✅ 修復飲食表格外框 */
+  #card-ping .dash-note { background: #e1edf5; border-color: #cce0ec; }
+  #card-ping .phos-table th { background: #dbe8f0; border-bottom-color: #cce0ec; } /* ✅ 修復飲食表頭 */
   #card-ping .medical-block-title { background: rgba(91,143,168,0.08); border-bottom-color: #cce0ec; }
   #card-ping .visit-row { border-top-color: #cce0ec; }
   #card-ping .phos-table td { border-bottom-color: rgba(91,143,168,0.1); }
@@ -98,25 +100,24 @@
   /* ─── FORM ─── */
   .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
   .form-card {
-    background:var(--warm-white); 
+    background:var(--theme-bg-card);  /* 🎯 動態卡片底色 */
     border:2px solid var(--theme-border);
     border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:all 0.3s ease;
     width: 100%;
   }
   
-  /* 💥 解決 Grid 被字體撐爆破版的救星：min-width: 0 */
   .form-field { min-width: 0; width: 100%; } 
   .form-field label{display:block;font-size:.85rem;font-weight:900;margin-bottom:6px;color:var(--ink-light);white-space:nowrap;}
   
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
     width:100%; max-width:100%; padding:10px 12px; 
-    background:var(--theme-input-bg); 
+    background:var(--theme-bg-block); /* 🎯 動態輸入框底色 */
     border:1.5px solid var(--theme-border); 
     border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
   }
   .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:var(--warm-white);
+    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:var(--theme-bg-card);
   }
   input[type="checkbox"] {
     accent-color: var(--theme-deep); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
@@ -136,36 +137,40 @@
   .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
   .filter-btn {
     padding:6px 12px; border-radius:20px; border:1.5px solid var(--theme-border); 
-    background:var(--warm-white); font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
+    background:var(--theme-bg-card); /* 🎯 動態過濾按鈕底色 */
+    font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
   }
   .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
 
   .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
   .scroll-wrap{
     max-height:400px; 
-    overflow:auto; /* 💥 改成 auto，讓 X 軸也能滾動，解決右邊少一塊的問題 */
+    overflow:auto; 
     -webkit-overflow-scrolling:touch;
     border:2px solid var(--theme-border);
-    border-radius:8px; background:var(--warm-white); box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
-    transition:border-color 0.3s ease;
+    background:var(--theme-bg-card); /* 🎯 動態歷史表格底色 */
+    border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
+    transition:all 0.3s ease;
   }
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
   thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
-  tbody tr:hover td {background-color:rgba(0,0,0,0.03)}
+  tbody tr:hover td {background-color:rgba(0,0,0,0.04)}
   
   .show-all-btn{
-    display:block;width:100%;padding:14px;margin-top:12px;background:var(--warm-white);
-    border:2px dashed var(--theme-border);
+    display:block;width:100%;padding:14px;margin-top:12px;
+    background:var(--theme-bg-card); /* 🎯 動態按鈕底色 */
+    border:2px dashed var(--theme-border); 
     border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
   }
-  .show-all-btn:hover{background:var(--cream);border-color:var(--ink-light);color:var(--ink)}
+  .show-all-btn:hover{background:var(--theme-bg-block);border-color:var(--ink-light);color:var(--ink)}
 
   .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
   .photo-link-block{
     aspect-ratio:1; border-radius:12px; 
     border:3px dashed var(--theme-border);
+    background:var(--theme-bg-card); /* 🎯 讓照片載入前的底色也一致 */
     cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
   }
   .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
@@ -364,6 +369,7 @@ function parseDateString(ds) {
   return new Date(y, m, d).getTime();
 }
 
+// 🎯 全面套用動態色系：卡片底色、輸入框、表格全包了
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
@@ -371,14 +377,16 @@ function updateTheme(cat) {
     root.style.setProperty('--theme-pale', 'var(--xile-pale)');
     root.style.setProperty('--theme-deep', 'var(--xile-deep)');
     root.style.setProperty('--theme-border', 'var(--border)'); 
-    root.style.setProperty('--theme-input-bg', 'var(--cream)');
+    root.style.setProperty('--theme-bg-card', 'var(--warm-white)');
+    root.style.setProperty('--theme-bg-block', 'var(--cream)');
     root.style.setProperty('--theme-table-header', '#e6e0d3');
   } else {
     root.style.setProperty('--theme-color', 'var(--ping-color)');
     root.style.setProperty('--theme-pale', 'var(--ping-pale)');
     root.style.setProperty('--theme-deep', 'var(--ping-deep)');
-    root.style.setProperty('--theme-border', 'var(--ping-color)'); 
-    root.style.setProperty('--theme-input-bg', '#f0f5f9'); 
+    root.style.setProperty('--theme-border', '#cce0ec'); 
+    root.style.setProperty('--theme-bg-card', '#f0f6fa'); 
+    root.style.setProperty('--theme-bg-block', '#e1edf5'); 
     root.style.setProperty('--theme-table-header', '#dbe8f0');
   }
 }
