@@ -96,14 +96,14 @@
 
   .selector-wrap{display:none}
 
-  /* 調整過的 form-card，寬度精準對齊 1004px (1100 - 左右48px padding) */
+  /* 調整 padding 以確保內部表單元素寬度對齊其他區塊 */
   .form-card{
     background:var(--warm-white);
     border:2px solid var(--border);
     border-radius:8px;
     max-width:1004px;
     margin:32px auto 0;
-    padding:28px 48px;
+    padding:28px 24px;
   }
   .form-field label{display:block;font-size:.9rem;font-weight:900;margin-bottom:6px}
   .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
@@ -139,7 +139,8 @@
     header{padding:28px 20px 24px}
     .dashboard,.section-head{padding:0 20px}
     .dashboard{padding-bottom:4px}
-    .form-card{max-width:none;margin:24px 20px 0;padding:20px}
+    /* 這裡把 padding 調小，讓表單欄位寬度撐開，對齊上下區塊 */
+    .form-card{max-width:none;margin:24px 20px 0;padding:16px}
     .log-container{padding:0 20px}
     .photo-wall{padding:0 20px}
     .dash-stats{grid-template-columns:repeat(3,1fr)}
@@ -147,7 +148,7 @@
   @media(min-width:641px) and (max-width:900px){
     .dashboard-grid{grid-template-columns:1fr}
     .dashboard{padding:0 32px 8px}
-    .form-card{max-width:none;margin:32px 32px 0;padding:24px 32px}
+    .form-card{max-width:none;margin:32px 32px 0;padding:24px 24px}
     .section-head{padding:0 32px}
   }
 </style>
@@ -163,11 +164,9 @@
   </div>
 </header>
 
-<!-- ═══ DASHBOARD ═══ -->
 <div class="dashboard">
   <div class="dashboard-grid">
 
-    <!-- 喜樂 -->
     <div class="dash-cat">
       <div class="dash-cat-header xile" onclick="selectCat('xile')" id="header-xile">
         <div class="dash-cat-header-top">
@@ -223,7 +222,6 @@
       </div>
     </div>
 
-    <!-- 平安 -->
     <div class="dash-cat">
       <div class="dash-cat-header ping" onclick="selectCat('ping')" id="header-ping">
         <div class="dash-cat-header-top">
@@ -276,8 +274,6 @@
 
   </div>
 </div>
-<!-- ═══ END DASHBOARD ═══ -->
-
 <div class="selector-wrap">
   <div class="selector-inner">
     <span class="selector-label">選擇寵物</span>
@@ -289,7 +285,6 @@
 </div>
 
 <div id="cat-content" style="display:none">
-  <!-- 已經拔掉 inline style 的乾淨標籤 -->
   <div class="form-card" id="dynamic-form-card">
     <h3 id="form-title">今日紀錄</h3>
     <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
@@ -297,7 +292,7 @@
     <div id="xile-fields" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">罐頭</option><option>飼料</option><option>膽汁</option><option>毛球</option><option>透明液體</option></select></div>
+        <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
       </div>
       <div class="form-field">
         <label>今日用藥</label>
@@ -312,6 +307,7 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
         <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+        <div class="form-field" style="grid-column: 1 / -1;"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
       </div>
     </div>
 
@@ -342,7 +338,6 @@
   <div class="section-head"><h2>最新照片</h2><div class="line"></div></div>
   <div class="photo-wall" id="photo-wall-container" style="max-width:1100px;margin:20px auto 0;padding:0 48px"></div>
 </div>
-<!-- ═══ LIGHTBOX ═══ -->
 <div id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="closeLightbox()">×</button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
@@ -366,7 +361,6 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false;
 
-// 將日期字串轉為時間戳記的救星函式
 function parseDateString(ds) {
   if (!ds) return 0;
   let parts = ds.replace(/-/g, '/').split('/');
@@ -405,7 +399,6 @@ async function fetchSheetData(cat) {
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
     allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
-    // 放棄智商稅的 reverse()，改用科學排序法
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     renderHistoryTable();
   } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
@@ -513,19 +506,23 @@ async function submitForm() {
     password,
     cat: currentCat,
     date: document.getElementById('date-active').value,
-    nailCut: document.getElementById('nail-cut').checked,
-    vaccine: document.getElementById('vaccine').checked,
+    nailCut: document.getElementById('nail-cut').checked ? true : "",
+    vaccine: document.getElementById('vaccine').checked ? true : "",
     note: document.getElementById('note-text').value.trim(),
   };
 
   if (currentCat === 'xile') {
-    payload.vomitCount = document.getElementById('vomit-count-xile').value;
-    payload.vomitType  = document.getElementById('vomit-type-xile').value;
+    let vcX = document.getElementById('vomit-count-xile').value;
+    payload.vomitCount = vcX === "0" ? "" : vcX;
+    payload.vomitType  = vcX === "0" ? "" : document.getElementById('vomit-type-xile').value;
     payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
     payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
   } else {
-    payload.coughCount = document.getElementById('cough-count-ping').value;
-    payload.vomitCount = document.getElementById('vomit-count-ping').value;
+    let ccP = document.getElementById('cough-count-ping').value;
+    payload.coughCount = ccP === "0" ? "" : ccP;
+    let vcP = document.getElementById('vomit-count-ping').value;
+    payload.vomitCount = vcP === "0" ? "" : vcP;
+    payload.vomitType  = vcP === "0" ? "" : document.getElementById('vomit-type-ping').value;
   }
 
   try {
