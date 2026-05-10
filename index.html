@@ -18,7 +18,6 @@
     --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
     --border:#d4c9b5;
     
-    /* 🎯 動態主題變數（預設為喜樂奶茶色系） */
     --theme-color: var(--ink);
     --theme-pale: var(--cream);
     --theme-deep: var(--ink-light);
@@ -93,7 +92,6 @@
   .dash-note strong{color:var(--ink);font-weight:900}
 
   .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
-  /* 🎯 修復 1px 裝飾線，套用動態主題邊框變數 */
   .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--theme-border);transition:background 0.3s ease;}
   .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
 
@@ -356,17 +354,29 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
+// 🎯 終極時間校正回歸器：專治 Google 表單格式不一的壞毛病
 function parseDateString(ds) {
   if (!ds) return 0;
-  let parts = ds.replace(/-/g, '/').split('/');
+  let s = ds.replace(/-/g, '/').trim();
+  let parts = s.split('/');
+  
   let y = new Date().getFullYear(), m = 0, d = 1;
   if (parts.length === 3) {
-    y = parseInt(parts[0], 10);
-    m = parseInt(parts[1], 10) - 1;
-    d = parseInt(parts[2], 10);
-  } else if (parts.length === 2) {
+    if (parts[0].length === 4) { // 格式: YYYY/MM/DD
+      y = parseInt(parts[0], 10);
+      m = parseInt(parts[1], 10) - 1;
+      d = parseInt(parts[2], 10);
+    } else if (parts[2].length === 4) { // 格式: MM/DD/YYYY 或 DD/MM/YYYY
+      m = parseInt(parts[0], 10) - 1;
+      d = parseInt(parts[1], 10);
+      y = parseInt(parts[2], 10);
+    }
+  } else if (parts.length === 2) { // 格式: MM/DD
     m = parseInt(parts[0], 10) - 1;
     d = parseInt(parts[1], 10);
+  } else {
+     let t = new Date(ds).getTime();
+     return isNaN(t) ? 0 : t;
   }
   return new Date(y, m, d).getTime();
 }
@@ -416,8 +426,23 @@ async function fetchSheetData(cat) {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
-    allCatRecords = rows.slice(1).map(l => l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
     
+    // 🎯 霸道去重術：強制綁定精準時間戳記
+    const uniqueRecords = new Map();
+    rows.slice(1).forEach(l => {
+      const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
+      if (cols[0]) {
+        const timeKey = parseDateString(cols[0]);
+        if (timeKey > 0) {
+          // 因為 Google 預設新的資料在下面，所以迴圈跑到後面會自然把舊的覆蓋掉
+          uniqueRecords.set(timeKey, cols);
+        }
+      }
+    });
+
+    allCatRecords = Array.from(uniqueRecords.values());
+    
+    // 🎯 正確的降序排列：從最新排到最舊
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     
     renderHistoryTable();
@@ -462,7 +487,6 @@ function renderHistoryTable() {
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
   }
   
-  // 🎯 按鈕狀態動態更新：依據是否為「全部顯示」狀態來決定文案
   const showBtn = document.getElementById('show-all-btn');
   if (filtered.length > 10) {
     showBtn.style.display = 'block';
@@ -495,7 +519,8 @@ async function submitForm() {
   if (!password) { showMsg('請輸入密碼', 'warn'); return; }
 
   btn.disabled = true; btn.textContent = '寫入中...';
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
+  // 請確認你的這串 GAS URL 是正確最新、有效的那一串喔！
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbx3KwQ8W1PaCF3U_K8ttbzJaoi91CLMbYyViZGriCbpNVmY_6Av5zexWdTmx5mmMsHw_g/exec';
   const payload = {
     password, cat: currentCat,
     date: document.getElementById('date-active').value,
@@ -532,7 +557,6 @@ function showMsg(text, type) {
     el.style.color = '#1f5c30';
     el.style.border = '1px solid #4a8c5c';
   } else {
-    /* 🎯 讓錯誤提示底色符合主題，但保留紅色邊框與文字提醒 */
     el.style.background = 'var(--theme-bg-block)';
     el.style.color = 'var(--accent-red)';
     el.style.border = '1.5px solid var(--accent-red)';
