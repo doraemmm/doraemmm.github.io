@@ -329,7 +329,7 @@
       <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
       <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
       <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
-      <button class="filter-btn" onclick="filterLogs('nail')">剪趾甲</button>
+      <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
     </div>
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
@@ -477,10 +477,10 @@ function renderHistoryTable() {
 
   /* 💉 歷史紀錄表頭與內容，加入全新「疫苗」欄位！ */
   if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪趾甲</th><th>疫苗</th></tr>';
+    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`);
   } else {
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪趾甲</th><th>疫苗</th></tr>';
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`);
   }
   
@@ -526,4 +526,38 @@ async function submitForm() {
   };
 
   if (currentCat === 'xile') {
-    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0
+    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
+    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-xile').value : "";
+    payload.kidneyDrug = document.getElementById('kidney-drug').checked;
+    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
+  } else {
+    payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
+    payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
+    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-ping').value : "";
+  }
+
+  try {
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (result.ok) { showMsg('✅ 已寫入', 'ok'); fetchSheetData(currentCat); }
+    else { showMsg('❌ ' + result.msg, 'err'); }
+  } catch(e) { showMsg('❌ 連線失敗', 'err'); }
+  btn.disabled = false; btn.textContent = '送出紀錄';
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('submit-msg');
+  el.textContent = text; el.style.display = 'block';
+  if (type === 'ok') {
+    el.style.background = '#eef6f0';
+    el.style.color = '#1f5c30';
+    el.style.border = '1px solid #4a8c5c';
+  } else {
+    el.style.background = 'var(--theme-bg-block)';
+    el.style.color = 'var(--accent-red)';
+    el.style.border = '1.5px solid var(--accent-red)';
+  }
+}
+</script>
+</body>
+</html>
