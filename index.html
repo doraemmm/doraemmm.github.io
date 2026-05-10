@@ -150,7 +150,6 @@
     border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
     transition:all 0.3s ease;
   }
-  /* 💉 為塞下新疫苗欄位，稍微拉寬 min-width 避免字太擠 */
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:720px}
   thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
@@ -470,12 +469,16 @@ function renderHistoryTable() {
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
   tbody.innerHTML = '';
   
+  /* 🎯 終極神救援：手打文字原封不動顯示邏輯 */
   const rc = (val, type) => {
-    if (type === 'check') return val === 'TRUE' ? '✅' : '—';
+    if (type === 'check') {
+      if (val === 'TRUE') return '✅';
+      if (!val || val === 'FALSE' || val === '') return '—';
+      return val; /* 抓到手寫小作文直接印出來 */
+    }
     return (!val || val === "0" || val === "") ? '—' : val + '次';
   };
 
-  /* 💉 歷史紀錄表頭與內容，加入全新「疫苗」欄位！ */
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`);
