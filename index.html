@@ -150,7 +150,8 @@
     border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
     transition:all 0.3s ease;
   }
-  table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:640px}
+  /* 💉 為塞下新疫苗欄位，稍微拉寬 min-width 避免字太擠 */
+  table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:720px}
   thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
@@ -328,7 +329,7 @@
       <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
       <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
       <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
-      <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
+      <button class="filter-btn" onclick="filterLogs('nail')">剪趾甲</button>
     </div>
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
@@ -354,7 +355,6 @@ const csvUrls = {
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
-// 🎯 終極時間校正回歸器：專治 Google 表單格式不一的壞毛病
 function parseDateString(ds) {
   if (!ds) return 0;
   let s = ds.replace(/-/g, '/').trim();
@@ -362,16 +362,16 @@ function parseDateString(ds) {
   
   let y = new Date().getFullYear(), m = 0, d = 1;
   if (parts.length === 3) {
-    if (parts[0].length === 4) { // 格式: YYYY/MM/DD
+    if (parts[0].length === 4) { 
       y = parseInt(parts[0], 10);
       m = parseInt(parts[1], 10) - 1;
       d = parseInt(parts[2], 10);
-    } else if (parts[2].length === 4) { // 格式: MM/DD/YYYY 或 DD/MM/YYYY
+    } else if (parts[2].length === 4) { 
       m = parseInt(parts[0], 10) - 1;
       d = parseInt(parts[1], 10);
       y = parseInt(parts[2], 10);
     }
-  } else if (parts.length === 2) { // 格式: MM/DD
+  } else if (parts.length === 2) { 
     m = parseInt(parts[0], 10) - 1;
     d = parseInt(parts[1], 10);
   } else {
@@ -421,32 +421,28 @@ function selectCat(cat) {
 
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;">⏳ 載入中...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;">⏳ 載入中...</td></tr>`;
   try {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
     
-    // 🎯 霸道去重術：強制綁定精準時間戳記
     const uniqueRecords = new Map();
     rows.slice(1).forEach(l => {
       const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
       if (cols[0]) {
         const timeKey = parseDateString(cols[0]);
         if (timeKey > 0) {
-          // 因為 Google 預設新的資料在下面，所以迴圈跑到後面會自然把舊的覆蓋掉
           uniqueRecords.set(timeKey, cols);
         }
       }
     });
 
     allCatRecords = Array.from(uniqueRecords.values());
-    
-    // 🎯 正確的降序排列：從最新排到最舊
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     
     renderHistoryTable();
-  } catch (e) { tbody.innerHTML = `<tr><td colspan="6">讀取失敗</td></tr>`; }
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗</td></tr>`; }
 }
 
 function filterLogs(type) {
@@ -476,15 +472,16 @@ function renderHistoryTable() {
   
   const rc = (val, type) => {
     if (type === 'check') return val === 'TRUE' ? '✅' : '—';
-    return (!val || val === "0") ? '—' : val + '次';
+    return (!val || val === "0" || val === "") ? '—' : val + '次';
   };
 
+  /* 💉 歷史紀錄表頭與內容，加入全新「疫苗」欄位！ */
   if (currentCat === 'xile') {
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td></tr>`);
+    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪趾甲</th><th>疫苗</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`);
   } else {
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td></tr>`);
+    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪趾甲</th><th>疫苗</th></tr>';
+    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`);
   }
   
   const showBtn = document.getElementById('show-all-btn');
@@ -519,7 +516,6 @@ async function submitForm() {
   if (!password) { showMsg('請輸入密碼', 'warn'); return; }
 
   btn.disabled = true; btn.textContent = '寫入中...';
-  // 請確認你的這串 GAS URL 是正確最新、有效的那一串喔！
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
   const payload = {
     password, cat: currentCat,
@@ -530,38 +526,4 @@ async function submitForm() {
   };
 
   if (currentCat === 'xile') {
-    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
-    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-xile').value : "";
-    payload.kidneyDrug = document.getElementById('kidney-drug').checked;
-    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
-  } else {
-    payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
-    payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
-    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-ping').value : "";
-  }
-
-  try {
-    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
-    const result = await res.json();
-    if (result.ok) { showMsg('✅ 已寫入', 'ok'); fetchSheetData(currentCat); }
-    else { showMsg('❌ ' + result.msg, 'err'); }
-  } catch(e) { showMsg('❌ 連線失敗', 'err'); }
-  btn.disabled = false; btn.textContent = '送出紀錄';
-}
-
-function showMsg(text, type) {
-  const el = document.getElementById('submit-msg');
-  el.textContent = text; el.style.display = 'block';
-  if (type === 'ok') {
-    el.style.background = '#eef6f0';
-    el.style.color = '#1f5c30';
-    el.style.border = '1px solid #4a8c5c';
-  } else {
-    el.style.background = 'var(--theme-bg-block)';
-    el.style.color = 'var(--accent-red)';
-    el.style.border = '1.5px solid var(--accent-red)';
-  }
-}
-</script>
-</body>
-</html>
+    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0
