@@ -52,8 +52,8 @@
   .dash-cat-name.xile{color:var(--xile-deep)}
   .dash-cat-name.ping{color:var(--ping-deep)}
   
-  .dash-cat.selected-xile{box-shadow:0 0 0 3px var(--xile-color); transform:translateY(-3px);}
-  .dash-cat.selected-ping{box-shadow:0 0 0 3px var(--ping-color); transform:translateY(-3px);}
+  .dash-cat.selected-xile{box-shadow:0 0 0 4px var(--xile-color); transform:translateY(-3px);}
+  .dash-cat.selected-ping{box-shadow:0 0 0 4px var(--ping-color); transform:translateY(-3px);}
 
   #card-ping { background: #f0f6fa; border-color: #cce0ec; }
   #card-ping .dash-cat-header { border-bottom-color: #cce0ec; }
@@ -105,20 +105,20 @@
     width: 100%;
   }
   
-  .form-field { min-width: 0; width: 100%; } 
+  .form-field { min-width: 0; width: 100%; margin-bottom: 12px; } 
   .form-field label{display:block;font-size:.85rem;font-weight:900;margin-bottom:6px;color:var(--ink-light);white-space:nowrap;}
   
-  .form-field input:not([type="checkbox"]),.form-field select,.form-field textarea{
+  .form-field input:not([type="checkbox"]):not(.stepper-val),.form-field select,.form-field textarea{
     width:100%; max-width:100%; padding:10px 12px; 
     background:var(--theme-bg-block); 
     border:1.5px solid var(--theme-border); 
     border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
   }
   .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:var(--theme-bg-card);
+    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:#fff;
   }
   input[type="checkbox"] {
-    accent-color: var(--theme-deep); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
+    accent-color: var(--theme-color); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
   }
   .form-field select{
     -webkit-appearance:none;appearance:none;
@@ -126,11 +126,27 @@
     background-repeat:no-repeat;background-position:right 8px center;background-size:20px;padding-right:28px;
   }
 
+  /* 步進器 (Stepper) 樣式 */
+  .stepper-group { display: flex; align-items: center; gap: 6px; }
+  .stepper-btn {
+    background: var(--theme-bg-block); border: 1.5px solid var(--theme-border); color: var(--theme-color);
+    font-size: 1.4rem; font-weight: 900; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s; user-select: none;
+  }
+  .stepper-btn:hover { background: var(--theme-table-header); }
+  .stepper-btn:active { transform: scale(0.92); }
+  .stepper-val {
+    width: 50px !important; height: 40px; text-align: center; font-size: 1.1rem !important; 
+    border: 1.5px solid var(--theme-border); border-radius: 6px; background: var(--theme-bg-card);
+    font-weight: 900; pointer-events: none; color: var(--ink); box-sizing: border-box;
+  }
+
   .btn-submit{
     width:100%; padding:14px; margin-top:12px; border:none; border-radius:8px; font-size:1.05rem; font-weight:900; 
-    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(26,20,16,0.15);
+    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(0,0,0,0.15);
   }
-  .btn-submit:hover{transform:translateY(-1px); filter: brightness(1.1); box-shadow:0 6px 16px rgba(26,20,16,0.2)}
+  .btn-submit:hover{transform:translateY(-2px); filter: brightness(1.1); box-shadow:0 6px 16px rgba(0,0,0,0.2)}
+  .btn-submit:disabled{background:var(--border); cursor:not-allowed; transform:none; box-shadow:none;}
 
   .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
   .filter-btn {
@@ -155,6 +171,9 @@
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
   tbody tr:hover td {background-color:rgba(0,0,0,0.04)}
+  
+  /* 異常紀錄高亮 */
+  .row-warn td { background-color: #fff2f0 !important; color: var(--accent-red) !important; font-weight: 900; }
   
   .show-all-btn{
     display:block;width:100%;padding:14px;margin-top:12px;
@@ -297,28 +316,49 @@
       <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
       
       <div id="xile-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-xile"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div class="form-field">
+            <label>嘔吐次數</label>
+            <div class="stepper-group">
+              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', -1)">-</button>
+              <input type="text" id="vomit-count-xile" value="0" class="stepper-val" readonly>
+              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', 1)">+</button>
+            </div>
+          </div>
           <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
         </div>
         <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
       </div>
       
       <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;width:100%">
-          <div class="form-field"><label>咳嗽次數</label><select id="cough-count-ping"><option value="0">0 次</option><option value="1">1 次</option><option value="2">2 次</option></select></div>
-          <div class="form-field"><label>嘔吐次數</label><select id="vomit-count-ping"><option value="0">0 次</option><option value="1">1 次</option></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;width:100%;margin-bottom:12px">
+          <div class="form-field">
+            <label>咳嗽次數</label>
+            <div class="stepper-group">
+              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', -1)">-</button>
+              <input type="text" id="cough-count-ping" value="0" class="stepper-val" readonly>
+              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', 1)">+</button>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>嘔吐次數</label>
+            <div class="stepper-group">
+              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', -1)">-</button>
+              <input type="text" id="vomit-count-ping" value="0" class="stepper-val" readonly>
+              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', 1)">+</button>
+            </div>
+          </div>
           <div class="form-field"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
         </div>
       </div>
       
       <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
       <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field"><label>密碼</label><input type="password" id="write-password"></div>
+      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="手動輸入當作鍛鍊手指..."></div>
       
       <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
       
-      <button class="btn-submit" id="submit-btn" onclick="submitForm()">送出紀錄</button>
+      <button class="btn-submit" id="submit-btn" onclick="submitForm()">🚀 送出紀錄</button>
     </div>
   </div>
 
@@ -353,6 +393,16 @@ const csvUrls = {
 };
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
+
+// 步進器邏輯
+function adjCount(id, delta) {
+  let el = document.getElementById(id);
+  let val = parseInt(el.value) || 0;
+  val += delta;
+  if(val < 0) val = 0;
+  if(val > 10) val = 10; // 給個上限防呆
+  el.value = val;
+}
 
 function parseDateString(ds) {
   if (!ds) return 0;
@@ -411,6 +461,11 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
   
+  // 重置表單狀態
+  document.getElementById('vomit-count-xile').value = 0;
+  document.getElementById('cough-count-ping').value = 0;
+  document.getElementById('vomit-count-ping').value = 0;
+  
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.filter-btn').classList.add('active');
 
@@ -420,7 +475,7 @@ function selectCat(cat) {
 
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;">⏳ 載入中...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
   try {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
@@ -441,7 +496,7 @@ async function fetchSheetData(cat) {
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     
     renderHistoryTable();
-  } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗</td></tr>`; }
+  } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`; }
 }
 
 function filterLogs(type) {
@@ -469,22 +524,29 @@ function renderHistoryTable() {
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
   tbody.innerHTML = '';
   
-  /* 🎯 終極神救援：手打文字原封不動顯示邏輯 */
   const rc = (val, type) => {
     if (type === 'check') {
       if (val === 'TRUE') return '✅';
       if (!val || val === 'FALSE' || val === '') return '—';
-      return val; /* 抓到手寫小作文直接印出來 */
+      return val; 
     }
     return (!val || val === "0" || val === "") ? '—' : val + '次';
   };
 
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`);
+    displayData.forEach(r => {
+      let isWarn = parseInt(r[3]) > 0; // 有嘔吐就亮紅燈
+      let rowClass = isWarn ? 'class="row-warn"' : '';
+      tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
+    });
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => tbody.innerHTML += `<tr><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`);
+    displayData.forEach(r => {
+      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0; // 咳嗽或嘔吐就亮紅燈
+      let rowClass = isWarn ? 'class="row-warn"' : '';
+      tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
+    });
   }
   
   const showBtn = document.getElementById('show-all-btn');
@@ -500,7 +562,7 @@ function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryT
 
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 找照片中...</div>`;
+  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 照片讀取中...</div>`;
   const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
@@ -509,16 +571,16 @@ async function renderPhotoWall(cat) {
       <div class="photo-link-block" onclick="document.getElementById('lightbox').style.display='flex';document.getElementById('lightbox-img').src='https://drive.google.com/thumbnail?id=${f.id}&sz=w1200'">
         <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;">
       </div>`).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">載入失敗</div>`; }
+  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; }
 }
 
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   const msg = document.getElementById('submit-msg');
   const password = document.getElementById('write-password').value.trim();
-  if (!password) { showMsg('請輸入密碼', 'warn'); return; }
+  if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
 
-  btn.disabled = true; btn.textContent = '寫入中...';
+  btn.disabled = true; btn.textContent = '⏳ 拼命寫入中...';
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
   const payload = {
     password, cat: currentCat,
@@ -542,10 +604,14 @@ async function submitForm() {
   try {
     const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
     const result = await res.json();
-    if (result.ok) { showMsg('✅ 已寫入', 'ok'); fetchSheetData(currentCat); }
-    else { showMsg('❌ ' + result.msg, 'err'); }
-  } catch(e) { showMsg('❌ 連線失敗', 'err'); }
-  btn.disabled = false; btn.textContent = '送出紀錄';
+    if (result.ok) { 
+      showMsg('✅ 已完美寫入 Google Sheet', 'ok'); 
+      fetchSheetData(currentCat); 
+    }
+    else { showMsg('❌ 寫入失敗: ' + result.msg, 'err'); }
+  } catch(e) { showMsg('❌ 伺服器連線失敗，請檢查網路', 'err'); }
+  
+  btn.disabled = false; btn.textContent = '🚀 送出紀錄';
 }
 
 function showMsg(text, type) {
@@ -554,7 +620,7 @@ function showMsg(text, type) {
   if (type === 'ok') {
     el.style.background = '#eef6f0';
     el.style.color = '#1f5c30';
-    el.style.border = '1px solid #4a8c5c';
+    el.style.border = '1.5px solid var(--accent-green)';
   } else {
     el.style.background = 'var(--theme-bg-block)';
     el.style.color = 'var(--accent-red)';
