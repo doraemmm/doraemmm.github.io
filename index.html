@@ -120,11 +120,6 @@
   input[type="checkbox"] {
     accent-color: var(--theme-color); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
   }
-  .form-field select{
-    -webkit-appearance:none;appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d3228'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 8px center;background-size:20px;padding-right:28px;
-  }
 
   /* 步進器 (Stepper) 樣式 */
   .stepper-group { display: flex; align-items: center; gap: 6px; }
@@ -139,6 +134,101 @@
     width: 50px !important; height: 40px; text-align: center; font-size: 1.1rem !important; 
     border: 1.5px solid var(--theme-border); border-radius: 6px; background: var(--theme-bg-card);
     font-weight: 900; pointer-events: none; color: var(--ink); box-sizing: border-box;
+  }
+
+  /* ─── 嘔吐物複選下拉 ─── */
+  .multi-select-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .multi-select-trigger {
+    width: 100%;
+    padding: 10px 32px 10px 12px;
+    background: var(--theme-bg-block);
+    border: 1.5px solid var(--theme-border);
+    border-radius: 6px;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    outline: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    user-select: none;
+    min-height: 42px;
+  }
+  .multi-select-trigger:hover,
+  .multi-select-trigger.open {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 0 3px var(--theme-pale);
+    background: #fff;
+  }
+  .multi-select-trigger-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--ink-light);
+  }
+  .multi-select-trigger-text.has-value {
+    color: var(--ink);
+  }
+  .multi-select-arrow {
+    flex-shrink: 0;
+    font-size: .75rem;
+    color: var(--ink-light);
+    transition: transform 0.2s ease;
+  }
+  .multi-select-trigger.open .multi-select-arrow {
+    transform: rotate(180deg);
+  }
+  .multi-select-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--theme-bg-card);
+    border: 1.5px solid var(--theme-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 100;
+    overflow: hidden;
+    animation: dropDown 0.15s ease;
+  }
+  .multi-select-dropdown.open {
+    display: block;
+  }
+  @keyframes dropDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .multi-select-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--ink);
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(0,0,0,.04);
+  }
+  .multi-select-option:last-child { border-bottom: none; }
+  .multi-select-option:hover { background: var(--theme-pale); }
+  .multi-select-option.selected { color: var(--theme-deep); }
+  .multi-select-option input[type="checkbox"] {
+    accent-color: var(--theme-color);
+    width: 1rem; height: 1rem;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: static;
+    top: auto;
+    margin: 0;
   }
 
   .btn-submit{
@@ -325,13 +415,28 @@
               <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', 1)">+</button>
             </div>
           </div>
-          <div class="form-field"><label>嘔吐物</label><select id="vomit-type-xile"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+          <div class="form-field">
+            <label>嘔吐物（可複選）</label>
+            <div class="multi-select-wrap" id="wrap-vomit-type-xile">
+              <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-xile')">
+                <span class="multi-select-trigger-text" id="label-vomit-type-xile">請選擇</span>
+                <span class="multi-select-arrow">▼</span>
+              </button>
+              <div class="multi-select-dropdown" id="vomit-type-xile">
+                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="罐頭">罐頭</label>
+                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="飼料">飼料</label>
+                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="膽汁">膽汁</label>
+                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="毛球">毛球</label>
+                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="透明液體">透明液體</label>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
       </div>
       
       <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;width:100%;margin-bottom:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
           <div class="form-field">
             <label>咳嗽次數</label>
             <div class="stepper-group">
@@ -348,7 +453,22 @@
               <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', 1)">+</button>
             </div>
           </div>
-          <div class="form-field"><label>嘔吐物</label><select id="vomit-type-ping"><option value="">無</option><option value="罐頭">罐頭</option><option value="飼料">飼料</option><option value="膽汁">膽汁</option><option value="毛球">毛球</option><option value="透明液體">透明液體</option></select></div>
+        </div>
+        <div class="form-field">
+          <label>嘔吐物（可複選）</label>
+          <div class="multi-select-wrap" id="wrap-vomit-type-ping">
+            <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-ping')">
+              <span class="multi-select-trigger-text" id="label-vomit-type-ping">請選擇</span>
+              <span class="multi-select-arrow">▼</span>
+            </button>
+            <div class="multi-select-dropdown" id="vomit-type-ping">
+              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="罐頭">罐頭</label>
+              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="飼料">飼料</label>
+              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="膽汁">膽汁</label>
+              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="毛球">毛球</label>
+              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="透明液體">透明液體</label>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -389,10 +509,81 @@ const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
 const csvUrls = {
   xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
-  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
+  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCG3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
+
+// ─── 複選下拉邏輯 ───
+function toggleDropdown(id) {
+  const dropdown = document.getElementById(id);
+  const trigger = dropdown.previousElementSibling;
+  const isOpen = dropdown.classList.contains('open');
+  // 關閉所有其他下拉
+  document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
+    d.classList.remove('open');
+    d.previousElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    dropdown.classList.add('open');
+    trigger.classList.add('open');
+  }
+}
+
+function selectOption(label, groupId) {
+  // 避免 label click 觸發兩次
+  setTimeout(() => {
+    const cb = label.querySelector('input[type="checkbox"]');
+    if (cb.checked) {
+      label.classList.add('selected');
+    } else {
+      label.classList.remove('selected');
+    }
+    updateTriggerLabel(groupId);
+  }, 0);
+}
+
+function updateTriggerLabel(groupId) {
+  const group = document.getElementById(groupId);
+  const checked = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
+  const labelEl = document.getElementById('label-' + groupId);
+  if (checked.length === 0) {
+    labelEl.textContent = '請選擇';
+    labelEl.classList.remove('has-value');
+  } else {
+    labelEl.textContent = checked.map(cb => cb.value).join('、');
+    labelEl.classList.add('has-value');
+  }
+}
+
+function getSelectedVomitTypes(groupId) {
+  const group = document.getElementById(groupId);
+  const checked = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
+  return checked.map(cb => cb.value).join('、');
+}
+
+function resetVomitChips(groupId) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.multi-select-option').forEach(opt => {
+    opt.classList.remove('selected');
+    opt.querySelector('input[type="checkbox"]').checked = false;
+  });
+  const labelEl = document.getElementById('label-' + groupId);
+  if (labelEl) { labelEl.textContent = '請選擇'; labelEl.classList.remove('has-value'); }
+  // 確保關閉
+  group.classList.remove('open');
+  if (group.previousElementSibling) group.previousElementSibling.classList.remove('open');
+}
+
+// 點外面關閉下拉
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.multi-select-wrap')) {
+    document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
+      d.classList.remove('open');
+      d.previousElementSibling.classList.remove('open');
+    });
+  }
+});
 
 // 步進器邏輯
 function adjCount(id, delta) {
@@ -400,7 +591,7 @@ function adjCount(id, delta) {
   let val = parseInt(el.value) || 0;
   val += delta;
   if(val < 0) val = 0;
-  if(val > 10) val = 10; // 給個上限防呆
+  if(val > 10) val = 10;
   el.value = val;
 }
 
@@ -465,6 +656,8 @@ function selectCat(cat) {
   document.getElementById('vomit-count-xile').value = 0;
   document.getElementById('cough-count-ping').value = 0;
   document.getElementById('vomit-count-ping').value = 0;
+  resetVomitChips('vomit-type-xile');
+  resetVomitChips('vomit-type-ping');
   
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.filter-btn').classList.add('active');
@@ -536,14 +729,14 @@ function renderHistoryTable() {
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
-      let isWarn = parseInt(r[3]) > 0; // 有嘔吐就亮紅燈
+      let isWarn = parseInt(r[3]) > 0;
       let rowClass = isWarn ? 'class="row-warn"' : '';
       tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
     });
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
-      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0; // 咳嗽或嘔吐就亮紅燈
+      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0;
       let rowClass = isWarn ? 'class="row-warn"' : '';
       tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
     });
@@ -592,13 +785,13 @@ async function submitForm() {
 
   if (currentCat === 'xile') {
     payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
-    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-xile').value : "";
+    payload.vomitType = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
     payload.kidneyDrug = document.getElementById('kidney-drug').checked;
     payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
   } else {
     payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
     payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
-    payload.vomitType = payload.vomitCount ? document.getElementById('vomit-type-ping').value : "";
+    payload.vomitType = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
   }
 
   try {
