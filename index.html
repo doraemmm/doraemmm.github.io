@@ -580,11 +580,12 @@
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
-const csvUrls = {
-  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
-  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
+const getCsvUrl = (cat) => {
+  const sheetId = '14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY';
+  const gid = cat === 'xile' ? '1731637259' : '1573452397';
+  return 'https://docs.google.com/spreadsheets/d/' + sheetId + '/export?format=csv&gid=' + gid + '&t=' + Date.now();
 };
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRfPaF8WQ3bIyqDP4iaXRr7DJe4ZUEA6zGt67xw3Es1iEJuBbFWHaraZovKHymKkVbjw/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
 
 // 本地存儲 key
 const CACHE_KEY_PREFIX = 'petlog_';
@@ -866,7 +867,14 @@ async function fetchSheetData(cat) {
   tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
   
   try {
-    const res = await fetch(csvUrls[cat]);
+    const csvUrl = getCsvUrl(cat);
+    console.log('Fetching CSV from:', csvUrl);
+    
+    const res = await fetch(csvUrl);
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+    }
+    
     const csv = await res.text();
     
     // 使用 PapaParse 取代正則
@@ -896,14 +904,26 @@ async function fetchSheetData(cat) {
     
     renderHistoryTable();
   } catch (e) {
-    console.error('CSV 讀取失敗:', e);
+    console.error('CSV 讀取失敗:', e.message);
     // 嘗試從緩存讀取
     const cached = loadFromCache(cat);
-    if (cached) {
+    if (cached && cached.length > 0) {
       allCatRecords = cached;
       renderHistoryTable();
+      console.log('使用本地緩存（' + cached.length + '筆記錄）');
     } else {
-      tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; text-align:center;">
+        <div style="color:var(--accent-red); font-weight:900;">
+          ❌ 讀取失敗<br><br>
+          <span style="font-size:0.9rem; color:var(--ink-light);">
+            可能原因：<br>
+            • Google Sheet 尚未公開分享<br>
+            • 網路連接有問題<br>
+            • Google 暫時無法存取<br><br>
+            提示：刷新頁面重試，或檢查本機 localStorage 是否有緩存
+          </span>
+        </div>
+      </td></tr>`;
     }
   }
 }
