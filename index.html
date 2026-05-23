@@ -10,6 +10,9 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
+<!-- PapaParse for robust CSV parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.4.1/papaparse.min.js"></script>
+
 <style>
   :root {
     --cream:#f5f0e8; --warm-white:#faf7f2; --ink:#1a1410; --ink-light:#3d3228;
@@ -121,6 +124,36 @@
     accent-color: var(--theme-color); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
   }
 
+  /* ─── 密碼欄位改進 ─── */
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-wrapper input {
+    flex: 1;
+    padding-right: 40px !important;
+  }
+  .password-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-light);
+    font-size: 1.2rem;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+  .password-toggle:hover {
+    color: var(--ink);
+  }
+
   /* 步進器 (Stepper) 樣式 */
   .stepper-group { display: flex; align-items: center; gap: 6px; }
   .stepper-btn {
@@ -229,6 +262,28 @@
     position: static;
     top: auto;
     margin: 0;
+  }
+
+  /* ─── 複選全選/反選按鈕 ─── */
+  .multi-select-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(0,0,0,.04);
+    font-size: 0.8rem;
+  }
+  .multi-select-header button {
+    background: none;
+    border: none;
+    color: var(--theme-color);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0;
+    transition: color 0.2s;
+  }
+  .multi-select-header button:hover {
+    color: var(--theme-deep);
   }
 
   .btn-submit{
@@ -411,9 +466,9 @@
           <div class="form-field">
             <label>嘔吐次數</label>
             <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', -1)">-</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('vomit-count-xile', -1)">-</button>
               <input type="text" id="vomit-count-xile" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', 1)">+</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('vomit-count-xile', 1)">+</button>
             </div>
           </div>
           <div class="form-field">
@@ -424,6 +479,10 @@
                 <span class="multi-select-arrow">▼</span>
               </button>
               <div class="multi-select-dropdown" id="vomit-type-xile">
+                <div class="multi-select-header">
+                  <button onclick="selectAllOptions('vomit-type-xile', true)">全選</button>
+                  <button onclick="selectAllOptions('vomit-type-xile', false)">反選</button>
+                </div>
                 <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="罐頭">罐頭</label>
                 <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="飼料">飼料</label>
                 <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="膽汁">膽汁</label>
@@ -441,17 +500,17 @@
           <div class="form-field">
             <label>咳嗽次數</label>
             <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', -1)">-</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('cough-count-ping', -1)">-</button>
               <input type="text" id="cough-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', 1)">+</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('cough-count-ping', 1)">+</button>
             </div>
           </div>
           <div class="form-field">
             <label>嘔吐次數</label>
             <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', -1)">-</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('vomit-count-ping', -1)">-</button>
               <input type="text" id="vomit-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', 1)">+</button>
+              <button type="button" class="stepper-btn" onclick="adjustCount('vomit-count-ping', 1)">+</button>
             </div>
           </div>
         </div>
@@ -463,6 +522,10 @@
               <span class="multi-select-arrow">▼</span>
             </button>
             <div class="multi-select-dropdown" id="vomit-type-ping">
+              <div class="multi-select-header">
+                <button onclick="selectAllOptions('vomit-type-ping', true)">全選</button>
+                <button onclick="selectAllOptions('vomit-type-ping', false)">反選</button>
+              </div>
               <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="罐頭">罐頭</label>
               <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="飼料">飼料</label>
               <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="膽汁">膽汁</label>
@@ -475,7 +538,13 @@
       
       <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
       <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="請輸入密碼"></div>
+      <div class="form-field">
+        <label>密碼</label>
+        <div class="password-wrapper">
+          <input type="password" id="write-password" placeholder="請輸入密碼">
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility()">👁️</button>
+        </div>
+      </div>
       
       <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
       
@@ -505,6 +574,9 @@
 <div class="page-end"></div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// 🔧 全局配置 & 常數
+// ═══════════════════════════════════════════════════════════
 document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
 const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
 const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
@@ -514,9 +586,77 @@ const csvUrls = {
 };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
 
+// 本地存儲 key
+const CACHE_KEY_PREFIX = 'petlog_';
+const DRAFT_KEY = 'petlog_draft_';
+
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
-// ─── 複選下拉邏輯 ───
+// ═══════════════════════════════════════════════════════════
+// 💾 離線緩存函數
+// ═══════════════════════════════════════════════════════════
+function saveToCache(cat, data) {
+  try {
+    localStorage.setItem(CACHE_KEY_PREFIX + cat, JSON.stringify(data));
+  } catch(e) {
+    console.warn('LocalStorage 已滿或禁用', e);
+  }
+}
+
+function loadFromCache(cat) {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY_PREFIX + cat);
+    return cached ? JSON.parse(cached) : null;
+  } catch(e) {
+    console.warn('讀取緩存失敗', e);
+    return null;
+  }
+}
+
+function saveDraft(cat, formData) {
+  try {
+    localStorage.setItem(DRAFT_KEY + cat, JSON.stringify(formData));
+  } catch(e) {
+    console.warn('保存草稿失敗', e);
+  }
+}
+
+function loadDraft(cat) {
+  try {
+    const draft = localStorage.getItem(DRAFT_KEY + cat);
+    return draft ? JSON.parse(draft) : null;
+  } catch(e) {
+    console.warn('讀取草稿失敗', e);
+    return null;
+  }
+}
+
+function clearDraft(cat) {
+  try {
+    localStorage.removeItem(DRAFT_KEY + cat);
+  } catch(e) {
+    console.warn('清除草稿失敗', e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🔐 密碼欄位顯示/隱藏
+// ═══════════════════════════════════════════════════════════
+function togglePasswordVisibility() {
+  const input = document.getElementById('write-password');
+  const btn = document.querySelector('.password-toggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 📋 複選邏輯（改進）
+// ═══════════════════════════════════════════════════════════
 function toggleDropdown(id) {
   const dropdown = document.getElementById(id);
   const trigger = dropdown.previousElementSibling;
@@ -538,6 +678,16 @@ function selectOption(label, groupId) {
     else label.classList.remove('selected');
     updateTriggerLabel(groupId);
   }, 0);
+}
+
+function selectAllOptions(groupId, selectAll) {
+  const group = document.getElementById(groupId);
+  const checkboxes = group.querySelectorAll('.multi-select-option input[type="checkbox"]');
+  checkboxes.forEach(cb => {
+    cb.checked = selectAll;
+    cb.closest('label').classList.toggle('selected', selectAll);
+  });
+  updateTriggerLabel(groupId);
 }
 
 function updateTriggerLabel(groupId) {
@@ -579,14 +729,19 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// ─── 步進器 ───
-function adjCount(id, delta) {
+// ═══════════════════════════════════════════════════════════
+// ➕ 步進器（重構）
+// ═══════════════════════════════════════════════════════════
+function adjustCount(id, delta) {
   let el = document.getElementById(id);
   let val = parseInt(el.value) || 0;
   val = Math.min(10, Math.max(0, val + delta));
   el.value = val;
 }
 
+// ═══════════════════════════════════════════════════════════
+// 📅 日期解析
+// ═══════════════════════════════════════════════════════════
 function parseDateString(ds) {
   if (!ds) return 0;
   let s = ds.replace(/-/g, '/').trim();
@@ -600,6 +755,9 @@ function parseDateString(ds) {
   return new Date(y, m, d).getTime();
 }
 
+// ═══════════════════════════════════════════════════════════
+// 🎨 主題切換
+// ═══════════════════════════════════════════════════════════
 function updateTheme(cat) {
   const root = document.documentElement;
   if (cat === 'xile') {
@@ -621,9 +779,15 @@ function updateTheme(cat) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+// 🐱 選擇寵物 + 初始化表單
+// ═══════════════════════════════════════════════════════════
 function selectCat(cat) {
-  currentCat = cat; showFullHistory = false; currentFilter = 'all';
+  currentCat = cat; 
+  showFullHistory = false; 
+  currentFilter = 'all';
   updateTheme(cat);
+  
   document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
   document.getElementById('card-' + cat).classList.add('selected-' + cat);
   document.getElementById('cat-content').style.display = 'block';
@@ -632,6 +796,23 @@ function selectCat(cat) {
   document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
   
   // 重置表單
+  resetForm(cat);
+  
+  // 加載草稿（如果存在）
+  const draft = loadDraft(cat);
+  if (draft) {
+    restoreDraft(cat, draft);
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+
+  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth'}), 100);
+  fetchSheetData(cat); 
+  renderPhotoWall(cat);
+}
+
+function resetForm(cat) {
   document.getElementById('vomit-count-xile').value = 0;
   document.getElementById('cough-count-ping').value = 0;
   document.getElementById('vomit-count-ping').value = 0;
@@ -640,36 +821,96 @@ function selectCat(cat) {
   document.getElementById('nail-cut').checked = false;
   document.getElementById('vaccine').checked = false;
   document.getElementById('note-text').value = '';
+  document.getElementById('write-password').value = '';
   document.getElementById('submit-msg').style.display = 'none';
-
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-
-  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth'}), 100);
-  fetchSheetData(cat); renderPhotoWall(cat);
+  
+  if (cat === 'xile') {
+    document.getElementById('kidney-drug').checked = true;
+    document.getElementById('pancreas-drug').checked = true;
+  }
 }
 
+function restoreDraft(cat, draft) {
+  document.getElementById('date-active').value = draft.date || new Date().toISOString().split('T')[0];
+  if (cat === 'xile') {
+    document.getElementById('vomit-count-xile').value = draft.vomitCount || 0;
+    if (draft.vomitType) setMultiSelectValues('vomit-type-xile', draft.vomitType.split('、'));
+    document.getElementById('kidney-drug').checked = draft.kidneyDrug || true;
+    document.getElementById('pancreas-drug').checked = draft.pancreasDrug || true;
+  } else {
+    document.getElementById('cough-count-ping').value = draft.coughCount || 0;
+    document.getElementById('vomit-count-ping').value = draft.vomitCount || 0;
+    if (draft.vomitType) setMultiSelectValues('vomit-type-ping', draft.vomitType.split('、'));
+  }
+  document.getElementById('nail-cut').checked = draft.nailCut || false;
+  document.getElementById('vaccine').checked = draft.vaccine || false;
+  document.getElementById('note-text').value = draft.note || '';
+}
+
+function setMultiSelectValues(groupId, values) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    if (values.includes(cb.value)) {
+      cb.checked = true;
+      cb.closest('label').classList.add('selected');
+    }
+  });
+  updateTriggerLabel(groupId);
+}
+
+// ═══════════════════════════════════════════════════════════
+// 📊 CSV 數據 (PapaParse)
+// ═══════════════════════════════════════════════════════════
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
   tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
+  
   try {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
-    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
+    
+    // 使用 PapaParse 取代正則
+    const parsed = Papa.parse(csv, {
+      header: false,
+      skipEmptyLines: true,
+      dynamicTyping: false
+    });
+    
+    const rows = parsed.data;
     const uniqueRecords = new Map();
-    rows.slice(1).forEach(l => {
-      const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
+    
+    rows.slice(1).forEach(cols => {
       if (cols[0]) {
         const timeKey = parseDateString(cols[0]);
-        if (timeKey > 0) uniqueRecords.set(timeKey, cols);
+        if (timeKey > 0) {
+          uniqueRecords.set(timeKey, cols);
+        }
       }
     });
+    
     allCatRecords = Array.from(uniqueRecords.values());
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
+    
+    // 儲存到緩存
+    saveToCache(cat, allCatRecords);
+    
     renderHistoryTable();
-  } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`; }
+  } catch (e) {
+    console.error('CSV 讀取失敗:', e);
+    // 嘗試從緩存讀取
+    const cached = loadFromCache(cat);
+    if (cached) {
+      allCatRecords = cached;
+      renderHistoryTable();
+    } else {
+      tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`;
+    }
+  }
 }
 
+// ═══════════════════════════════════════════════════════════
+// 🔍 篩選日誌
+// ═══════════════════════════════════════════════════════════
 function filterLogs(type) {
   currentFilter = type;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -681,6 +922,7 @@ function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
   let filtered = allCatRecords;
+  
   if (currentFilter === 'vomit') {
     const idx = (currentCat === 'xile') ? 3 : 2;
     filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
@@ -690,8 +932,10 @@ function renderHistoryTable() {
     const idx = (currentCat === 'xile') ? 5 : 4;
     filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
   }
+  
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
   tbody.innerHTML = '';
+  
   const rc = (val, type) => {
     if (type === 'check') {
       if (val === 'TRUE') return '✅';
@@ -700,6 +944,7 @@ function renderHistoryTable() {
     }
     return (!val || val === "0" || val === "") ? '—' : val + '次';
   };
+  
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
@@ -713,34 +958,53 @@ function renderHistoryTable() {
       tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
     });
   }
+  
   const showBtn = document.getElementById('show-all-btn');
   if (filtered.length > 10) {
     showBtn.style.display = 'block';
     showBtn.textContent = showFullHistory ? '向上收合 ↑' : '顯示全部 ↓';
-  } else { showBtn.style.display = 'none'; }
+  } else { 
+    showBtn.style.display = 'none'; 
+  }
 }
 
-function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
+function toggleAllRecords() { 
+  showFullHistory = !showFullHistory; 
+  renderHistoryTable(); 
+}
 
+// ═══════════════════════════════════════════════════════════
+// 📸 照片牆
+// ═══════════════════════════════════════════════════════════
 async function renderPhotoWall(cat) {
   const container = document.getElementById('photo-wall-container');
   container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 照片讀取中...</div>`;
   const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
   const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
   try {
-    const res = await fetch(url); const data = await res.json();
+    const res = await fetch(url); 
+    const data = await res.json();
     container.innerHTML = data.files.map(f => `
       <div class="photo-link-block" onclick="document.getElementById('lightbox').style.display='flex';document.getElementById('lightbox-img').src='https://drive.google.com/thumbnail?id=${f.id}&sz=w1200'">
         <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;">
       </div>`).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; }
+  } catch (e) { 
+    console.error('照片載入失敗:', e);
+    container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; 
+  }
 }
 
-// ─── 送出紀錄（修正 CORS 問題）───
+// ═══════════════════════════════════════════════════════════
+// 📨 送出紀錄 (改進的 CORS 處理)
+// ═══════════════════════════════════════════════════════════
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   const password = document.getElementById('write-password').value.trim();
-  if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
+  
+  if (!password) { 
+    showMsg('哈囉？密碼勒？', 'warn'); 
+    return; 
+  }
 
   btn.disabled = true;
   btn.textContent = '⏳ 拼命寫入中...';
@@ -766,8 +1030,10 @@ async function submitForm() {
   }
 
   try {
-    // ✅ 修正：改用 text/plain + no-cors 繞過 GAS CORS preflight 限制
-    // GAS 端的 e.postData.contents 仍可正常接收到 JSON 字串
+    // 保存為草稿（防止離線遺失）
+    saveDraft(currentCat, payload);
+
+    // 嘗試送出
     await fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -775,12 +1041,11 @@ async function submitForm() {
       body: JSON.stringify(payload)
     });
 
-    // no-cors 模式下無法讀取回應內容（opaque response），
-    // 改為等待 1.5 秒後重新拉取 CSV 驗證最新一筆是否寫入成功
+    // 等待同步
     await new Promise(r => setTimeout(r, 1500));
     await fetchSheetData(currentCat);
 
-    // 比對最新一筆日期是否符合剛才送出的日期
+    // 比對最新紀錄
     const targetDate = document.getElementById('date-active').value;
     const latestRecord = allCatRecords[0];
     const latestDateTs = latestRecord ? parseDateString(latestRecord[0]) : 0;
@@ -788,13 +1053,15 @@ async function submitForm() {
 
     if (latestDateTs === targetTs) {
       showMsg('✅ 已完美寫入 Google Sheet', 'ok');
+      clearDraft(currentCat);
+      resetForm(currentCat);
     } else {
-      // 可能還沒同步，給樂觀提示
       showMsg('📨 已送出，請稍後重整確認是否寫入', 'warn');
     }
 
   } catch(e) {
-    showMsg('❌ 送出失敗，請檢查網路連線', 'err');
+    console.error('提交錯誤:', e);
+    showMsg('❌ 送出失敗，但已保存為草稿。請檢查網路連線', 'err');
   }
 
   btn.disabled = false;
