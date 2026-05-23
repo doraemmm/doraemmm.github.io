@@ -475,7 +475,7 @@
       
       <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
       <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="手動輸入當作鍛鍊手指..."></div>
+      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="請輸入密碼"></div>
       
       <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
       
@@ -512,6 +512,7 @@ const csvUrls = {
   xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
   ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
 };
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
 
 let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
 
@@ -520,7 +521,6 @@ function toggleDropdown(id) {
   const dropdown = document.getElementById(id);
   const trigger = dropdown.previousElementSibling;
   const isOpen = dropdown.classList.contains('open');
-  // 關閉所有其他下拉
   document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
     d.classList.remove('open');
     d.previousElementSibling.classList.remove('open');
@@ -532,14 +532,10 @@ function toggleDropdown(id) {
 }
 
 function selectOption(label, groupId) {
-  // 避免 label click 觸發兩次
   setTimeout(() => {
     const cb = label.querySelector('input[type="checkbox"]');
-    if (cb.checked) {
-      label.classList.add('selected');
-    } else {
-      label.classList.remove('selected');
-    }
+    if (cb.checked) label.classList.add('selected');
+    else label.classList.remove('selected');
     updateTriggerLabel(groupId);
   }, 0);
 }
@@ -559,8 +555,7 @@ function updateTriggerLabel(groupId) {
 
 function getSelectedVomitTypes(groupId) {
   const group = document.getElementById(groupId);
-  const checked = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
-  return checked.map(cb => cb.value).join('、');
+  return Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join('、');
 }
 
 function resetVomitChips(groupId) {
@@ -571,12 +566,10 @@ function resetVomitChips(groupId) {
   });
   const labelEl = document.getElementById('label-' + groupId);
   if (labelEl) { labelEl.textContent = '請選擇'; labelEl.classList.remove('has-value'); }
-  // 確保關閉
   group.classList.remove('open');
   if (group.previousElementSibling) group.previousElementSibling.classList.remove('open');
 }
 
-// 點外面關閉下拉
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.multi-select-wrap')) {
     document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
@@ -586,13 +579,11 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// 步進器邏輯
+// ─── 步進器 ───
 function adjCount(id, delta) {
   let el = document.getElementById(id);
   let val = parseInt(el.value) || 0;
-  val += delta;
-  if(val < 0) val = 0;
-  if(val > 10) val = 10;
+  val = Math.min(10, Math.max(0, val + delta));
   el.value = val;
 }
 
@@ -600,25 +591,12 @@ function parseDateString(ds) {
   if (!ds) return 0;
   let s = ds.replace(/-/g, '/').trim();
   let parts = s.split('/');
-  
   let y = new Date().getFullYear(), m = 0, d = 1;
   if (parts.length === 3) {
-    if (parts[0].length === 4) { 
-      y = parseInt(parts[0], 10);
-      m = parseInt(parts[1], 10) - 1;
-      d = parseInt(parts[2], 10);
-    } else if (parts[2].length === 4) { 
-      m = parseInt(parts[0], 10) - 1;
-      d = parseInt(parts[1], 10);
-      y = parseInt(parts[2], 10);
-    }
-  } else if (parts.length === 2) { 
-    m = parseInt(parts[0], 10) - 1;
-    d = parseInt(parts[1], 10);
-  } else {
-     let t = new Date(ds).getTime();
-     return isNaN(t) ? 0 : t;
-  }
+    if (parts[0].length === 4) { y = parseInt(parts[0], 10); m = parseInt(parts[1], 10) - 1; d = parseInt(parts[2], 10); }
+    else if (parts[2].length === 4) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); y = parseInt(parts[2], 10); }
+  } else if (parts.length === 2) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); }
+  else { let t = new Date(ds).getTime(); return isNaN(t) ? 0 : t; }
   return new Date(y, m, d).getTime();
 }
 
@@ -653,13 +631,17 @@ function selectCat(cat) {
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
   
-  // 重置表單狀態
+  // 重置表單
   document.getElementById('vomit-count-xile').value = 0;
   document.getElementById('cough-count-ping').value = 0;
   document.getElementById('vomit-count-ping').value = 0;
   resetVomitChips('vomit-type-xile');
   resetVomitChips('vomit-type-ping');
-  
+  document.getElementById('nail-cut').checked = false;
+  document.getElementById('vaccine').checked = false;
+  document.getElementById('note-text').value = '';
+  document.getElementById('submit-msg').style.display = 'none';
+
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.filter-btn').classList.add('active');
 
@@ -674,21 +656,16 @@ async function fetchSheetData(cat) {
     const res = await fetch(csvUrls[cat]);
     const csv = await res.text();
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
-    
     const uniqueRecords = new Map();
     rows.slice(1).forEach(l => {
       const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
       if (cols[0]) {
         const timeKey = parseDateString(cols[0]);
-        if (timeKey > 0) {
-          uniqueRecords.set(timeKey, cols);
-        }
+        if (timeKey > 0) uniqueRecords.set(timeKey, cols);
       }
     });
-
     allCatRecords = Array.from(uniqueRecords.values());
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
-    
     renderHistoryTable();
   } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`; }
 }
@@ -703,7 +680,6 @@ function filterLogs(type) {
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
   const thead = document.getElementById('history-thead');
-  
   let filtered = allCatRecords;
   if (currentFilter === 'vomit') {
     const idx = (currentCat === 'xile') ? 3 : 2;
@@ -714,42 +690,34 @@ function renderHistoryTable() {
     const idx = (currentCat === 'xile') ? 5 : 4;
     filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
   }
-
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
   tbody.innerHTML = '';
-  
   const rc = (val, type) => {
     if (type === 'check') {
       if (val === 'TRUE') return '✅';
       if (!val || val === 'FALSE' || val === '') return '—';
-      return val; 
+      return val;
     }
     return (!val || val === "0" || val === "") ? '—' : val + '次';
   };
-
   if (currentCat === 'xile') {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
       let isWarn = parseInt(r[3]) > 0;
-      let rowClass = isWarn ? 'class="row-warn"' : '';
-      tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
+      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
     });
   } else {
     thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
       let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0;
-      let rowClass = isWarn ? 'class="row-warn"' : '';
-      tbody.innerHTML += `<tr ${rowClass}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
+      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
     });
   }
-  
   const showBtn = document.getElementById('show-all-btn');
   if (filtered.length > 10) {
     showBtn.style.display = 'block';
     showBtn.textContent = showFullHistory ? '向上收合 ↑' : '顯示全部 ↓';
-  } else {
-    showBtn.style.display = 'none';
-  }
+  } else { showBtn.style.display = 'none'; }
 }
 
 function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
@@ -768,16 +736,18 @@ async function renderPhotoWall(cat) {
   } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; }
 }
 
+// ─── 送出紀錄（修正 CORS 問題）───
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
-  const msg = document.getElementById('submit-msg');
   const password = document.getElementById('write-password').value.trim();
   if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
 
-  btn.disabled = true; btn.textContent = '⏳ 拼命寫入中...';
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbytPQ1INxHjfWDzx7BmmipiTGKn-HFl6Z35PEUmYdEomlkpL7Av9BBGWwy1Q-PVJZZ1KQ/exec';
+  btn.disabled = true;
+  btn.textContent = '⏳ 拼命寫入中...';
+
   const payload = {
-    password, cat: currentCat,
+    password,
+    cat: currentCat,
     date: document.getElementById('date-active').value,
     nailCut: document.getElementById('nail-cut').checked ? true : "",
     vaccine: document.getElementById('vaccine').checked ? true : "",
@@ -786,35 +756,63 @@ async function submitForm() {
 
   if (currentCat === 'xile') {
     payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
-    payload.vomitType = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
-    payload.kidneyDrug = document.getElementById('kidney-drug').checked;
+    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
+    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
     payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
   } else {
     payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
     payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
-    payload.vomitType = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
+    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
   }
 
   try {
-    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
-    const result = await res.json();
-    if (result.ok) { 
-      showMsg('✅ 已完美寫入 Google Sheet', 'ok'); 
-      fetchSheetData(currentCat); 
+    // ✅ 修正：改用 text/plain + no-cors 繞過 GAS CORS preflight 限制
+    // GAS 端的 e.postData.contents 仍可正常接收到 JSON 字串
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(payload)
+    });
+
+    // no-cors 模式下無法讀取回應內容（opaque response），
+    // 改為等待 1.5 秒後重新拉取 CSV 驗證最新一筆是否寫入成功
+    await new Promise(r => setTimeout(r, 1500));
+    await fetchSheetData(currentCat);
+
+    // 比對最新一筆日期是否符合剛才送出的日期
+    const targetDate = document.getElementById('date-active').value;
+    const latestRecord = allCatRecords[0];
+    const latestDateTs = latestRecord ? parseDateString(latestRecord[0]) : 0;
+    const targetTs = parseDateString(targetDate);
+
+    if (latestDateTs === targetTs) {
+      showMsg('✅ 已完美寫入 Google Sheet', 'ok');
+    } else {
+      // 可能還沒同步，給樂觀提示
+      showMsg('📨 已送出，請稍後重整確認是否寫入', 'warn');
     }
-    else { showMsg('❌ 寫入失敗: ' + result.msg, 'err'); }
-  } catch(e) { showMsg('❌ 伺服器連線失敗，請檢查網路', 'err'); }
-  
-  btn.disabled = false; btn.textContent = '🚀 送出紀錄';
+
+  } catch(e) {
+    showMsg('❌ 送出失敗，請檢查網路連線', 'err');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🚀 送出紀錄';
 }
 
 function showMsg(text, type) {
   const el = document.getElementById('submit-msg');
-  el.textContent = text; el.style.display = 'block';
+  el.textContent = text;
+  el.style.display = 'block';
   if (type === 'ok') {
     el.style.background = '#eef6f0';
     el.style.color = '#1f5c30';
     el.style.border = '1.5px solid var(--accent-green)';
+  } else if (type === 'warn') {
+    el.style.background = '#fff8ec';
+    el.style.color = 'var(--accent-warn)';
+    el.style.border = '1.5px solid var(--accent-warn)';
   } else {
     el.style.background = 'var(--theme-bg-block)';
     el.style.color = 'var(--accent-red)';
