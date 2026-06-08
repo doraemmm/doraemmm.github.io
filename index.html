@@ -258,9 +258,25 @@
   }
   table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:720px}
   thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
+  thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 11;
+    box-shadow: 2px 2px 0 var(--theme-border);
+  }
   tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
+  tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 9;
+    background: var(--theme-bg-card);
+    font-weight: 900;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+  }
   tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
+  tbody tr:nth-child(even) td:first-child {background-color:rgba(0,0,0,0.02)}
   tbody tr:hover td {background-color:rgba(0,0,0,0.04)}
+  tbody tr:hover td:first-child {background-color:rgba(0,0,0,0.06)}
   
   /* 異常紀錄高亮 */
   .row-warn td { background-color: #fff2f0 !important; color: var(--accent-red) !important; font-weight: 900; }
@@ -490,6 +506,7 @@
       <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
       <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
       <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
+      <button class="filter-btn" onclick="filterLogs('vaccine')">疫苗</button>
     </div>
     <div class="scroll-wrap">
       <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
@@ -688,6 +705,9 @@ function renderHistoryTable() {
     filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
   } else if (currentFilter === 'nail') {
     const idx = (currentCat === 'xile') ? 5 : 4;
+    filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
+  } else if (currentFilter === 'vaccine') {
+    const idx = (currentCat === 'xile') ? 6 : 5;
     filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
   }
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
