@@ -672,9 +672,22 @@ async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
   tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
   try {
-    const res = await fetch(csvUrls[cat]);
+    const url = csvUrls[cat];
+    console.log('📡 開始載入 CSV:', url);
+    
+    const res = await fetch(url);
+    console.log('📡 回應狀態:', res.status, res.statusText);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    
     const csv = await res.text();
+    console.log('📡 CSV 內容長度:', csv.length, '字節');
+    
     const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
+    console.log('📡 解析行數:', rows.length);
+    
     const uniqueRecords = new Map();
     rows.slice(1).forEach(l => {
       const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
@@ -684,9 +697,15 @@ async function fetchSheetData(cat) {
       }
     });
     allCatRecords = Array.from(uniqueRecords.values());
+    console.log('📡 去重後記錄數:', allCatRecords.length);
+    
     allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
     renderHistoryTable();
-  } catch (e) { tbody.innerHTML = `<tr><td colspan="7">讀取失敗，可能是 Google 又在搞事了。</td></tr>`; }
+    console.log('✅ 載入成功！');
+  } catch (e) { 
+    console.error('❌ 載入失敗:', e.message);
+    tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--accent-red); text-align:center;"><strong>讀取失敗</strong><br>${e.message}</td></tr>`; 
+  }
 }
 
 function filterLogs(type) {
@@ -701,19 +720,23 @@ function renderHistoryTable() {
   const thead = document.getElementById('history-thead');
   let filtered = allCatRecords;
   
-  // ✅ 疫苗過濾邏輯 - 對應各貓咪的疫苗欄位
+  // ✅ 檢查欄位是否不為空（只要有值就算）
+  const isNotEmpty = (val) => val && val.toString().trim() !== '';
+  
+  // ✅ 過濾邏輯
   if (currentFilter === 'vomit') {
     const idx = (currentCat === 'xile') ? 3 : 2;
     filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
   } else if (currentFilter === 'cough') {
     filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
   } else if (currentFilter === 'nail') {
+    // ✅ 剪甲欄位：喜樂 index 5，平安 index 4 - 只要不為空就篩選
     const idx = (currentCat === 'xile') ? 5 : 4;
-    filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
+    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
   } else if (currentFilter === 'vaccine') {
-    // ✅ 疫苗欄位：喜樂 index 6，平安 index 5
+    // ✅ 疫苗欄位：喜樂 index 6，平安 index 5 - 只要不為空就篩選
     const idx = (currentCat === 'xile') ? 6 : 5;
-    filtered = allCatRecords.filter(r => r[idx] === 'TRUE');
+    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
   }
   
   const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
