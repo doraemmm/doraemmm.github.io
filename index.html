@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>喜樂 × 平安 健康日誌</title>
+<title>老公情緒日誌</title>
 
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -12,311 +12,419 @@
 
 <style>
   :root {
-    --cream:#f5f0e8; --warm-white:#faf7f2; --ink:#1a1410; --ink-light:#3d3228;
-    --xile-color:#c17b4a; --xile-pale:#f0dfc8; --xile-deep:#8b4f1f;
-    --ping-color:#5b8fa8; --ping-pale:#cce0ec; --ping-deep:#2d607a;
-    --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
-    --border:#d4c9b5;
+    --cream: #f5f0e8;
+    --warm-white: #faf7f2;
+    --ink: #1a1410;
+    --ink-light: #3d3228;
+    --mood-color: #b8826b;
+    --mood-pale: #f5e8e0;
+    --mood-deep: #7a4a2e;
+    --border: #d4c9b5;
     
-    --theme-color: var(--ink);
-    --theme-pale: var(--cream);
-    --theme-deep: var(--ink-light);
-    --theme-border: var(--border);
-    --theme-bg-card: var(--warm-white);
-    --theme-bg-block: var(--cream);
-    --theme-table-header: #e6e0d3;
+    --accent-red: #c44b3a;
+    --accent-blue: #5b8fa8;
+    --accent-green: #4a8c5c;
+    --accent-warn: #c47a1a;
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle {
     font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
   }
-  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 700;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
   /* ─── HEADER ─── */
-  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);text-align:center}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
-  .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
-  .title-block h1 em{font-style:italic;color:var(--xile-color)}
-  .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+  header {
+    padding: 40px 48px 32px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
 
-  /* ─── DASHBOARD ─── */
-  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease both}
-  .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-  .dash-cat{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--warm-white);box-shadow:0 4px 12px rgba(0,0,0,0.04);transition:all 0.3s ease;}
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer}
-  .dash-cat-header.xile{background:var(--xile-pale)}
-  .dash-cat-header.ping{background:var(--ping-pale)}
-  .dash-cat-header-top{display:flex;align-items:center;gap:10px}
-  .dash-cat-name{font-size:1.25rem;font-weight:900}
-  .dash-cat-name.xile{color:var(--xile-deep)}
-  .dash-cat-name.ping{color:var(--ping-deep)}
-  
-  .dash-cat.selected-xile{box-shadow:0 0 0 4px var(--xile-color); transform:translateY(-3px);}
-  .dash-cat.selected-ping{box-shadow:0 0 0 4px var(--ping-color); transform:translateY(-3px);}
+  .title-block h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 900;
+  }
 
-  #card-ping { background: #f0f6fa; border-color: #cce0ec; }
-  #card-ping .dash-cat-header { border-bottom-color: #cce0ec; }
-  #card-ping .stat-box, 
-  #card-ping .medical-block, 
-  #card-ping .phos-table-wrap,  
-  #card-ping .dash-note { background: #e1edf5; border-color: #cce0ec; }
-  #card-ping .phos-table th { background: #dbe8f0; border-bottom-color: #cce0ec; } 
-  #card-ping .medical-block-title { background: rgba(91,143,168,0.08); border-bottom-color: #cce0ec; }
-  #card-ping .visit-row { border-top-color: #cce0ec; }
-  #card-ping .phos-table td { border-bottom-color: rgba(91,143,168,0.1); }
+  .title-block h1 em {
+    font-style: italic;
+    color: var(--mood-color);
+  }
 
-  .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
-
-  .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
-  .stat-icon{font-size:1.6rem;line-height:1}
-  .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
-
-  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
-  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
-  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
-  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
-  .visit-row .visit-items{color:var(--ink-light)}
-
-  .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
-  .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
-  .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
-  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center; transition:background 0.15s}
-  .phos-table tr:hover td {background-color:rgba(0,0,0,0.03)}
-  .phos-table tr:last-child td{border-bottom:none}
-  .phos-em{font-weight:900;font-size:.85rem}
-
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
-  .dash-note strong{color:var(--ink);font-weight:900}
-
-  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
-  .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--theme-border);transition:background 0.3s ease;}
-  .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
+  .title-block .subtitle {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+  }
 
   /* ─── FORM ─── */
-  .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
+  .form-container {
+    max-width: 900px;
+    margin: 32px auto 0;
+    padding: 0 48px;
+  }
+
   .form-card {
-    background:var(--theme-bg-card); 
-    border:2px solid var(--theme-border);
-    border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:all 0.3s ease;
+    background: var(--warm-white);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    padding: 28px 24px;
+    transition: all 0.3s ease;
     width: 100%;
-  }
-  
-  .form-field { min-width: 0; width: 100%; margin-bottom: 12px; } 
-  .form-field label{display:block;font-size:.85rem;font-weight:900;margin-bottom:6px;color:var(--ink-light);white-space:nowrap;}
-  
-  .form-field input:not([type="checkbox"]):not(.stepper-val),.form-field select,.form-field textarea{
-    width:100%; max-width:100%; padding:10px 12px; 
-    background:var(--theme-bg-block); 
-    border:1.5px solid var(--theme-border); 
-    border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
-  }
-  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:#fff;
-  }
-  input[type="checkbox"] {
-    accent-color: var(--theme-color); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
   }
 
-  /* 步進器 (Stepper) 樣式 */
-  .stepper-group { display: flex; align-items: center; gap: 6px; }
-  .stepper-btn {
-    background: var(--theme-bg-block); border: 1.5px solid var(--theme-border); color: var(--theme-color);
-    font-size: 1.4rem; font-weight: 900; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: all 0.2s; user-select: none;
-  }
-  .stepper-btn:hover { background: var(--theme-table-header); }
-  .stepper-btn:active { transform: scale(0.92); }
-  .stepper-val {
-    width: 50px !important; height: 40px; text-align: center; font-size: 1.1rem !important; 
-    border: 1.5px solid var(--theme-border); border-radius: 6px; background: var(--theme-bg-card);
-    font-weight: 900; pointer-events: none; color: var(--ink); box-sizing: border-box;
+  .form-field {
+    width: 100%;
+    margin-bottom: 18px;
   }
 
-  /* ─── 嘔吐物複選下拉 ─── */
-  .multi-select-wrap {
-    position: relative;
-    width: 100%;
+  .form-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
   }
-  .multi-select-trigger {
+
+  .form-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+
+  .form-field input[type="date"],
+  .form-field input[type="text"] {
     width: 100%;
-    padding: 10px 32px 10px 12px;
-    background: var(--theme-bg-block);
-    border: 1.5px solid var(--theme-border);
+    padding: 10px 12px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
     border-radius: 6px;
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--ink);
-    cursor: pointer;
-    text-align: left;
     outline: none;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    user-select: none;
-    min-height: 42px;
+    box-sizing: border-box;
   }
-  .multi-select-trigger:hover,
-  .multi-select-trigger.open {
-    border-color: var(--theme-color);
-    box-shadow: 0 0 0 3px var(--theme-pale);
+
+  .form-field input[type="date"]:focus,
+  .form-field input[type="text"]:focus {
+    border-color: var(--mood-color);
+    box-shadow: 0 0 0 3px var(--mood-pale);
     background: #fff;
   }
-  .multi-select-trigger-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--ink-light);
-  }
-  .multi-select-trigger-text.has-value {
-    color: var(--ink);
-  }
-  .multi-select-arrow {
-    flex-shrink: 0;
-    font-size: .75rem;
-    color: var(--ink-light);
-    transition: transform 0.2s ease;
-  }
-  .multi-select-trigger.open .multi-select-arrow {
-    transform: rotate(180deg);
-  }
-  .multi-select-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0; right: 0;
-    background: var(--theme-bg-card);
-    border: 1.5px solid var(--theme-color);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    z-index: 100;
-    overflow: hidden;
-    animation: dropDown 0.15s ease;
-  }
-  .multi-select-dropdown.open {
-    display: block;
-  }
-  @keyframes dropDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .multi-select-option {
+
+  /* ─── 滑塊樣式 ─── */
+  .slider-group {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
+    gap: 12px;
+  }
+
+  .slider-container {
+    flex: 1;
+    position: relative;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, #f0e8e0, var(--mood-color), #8b5a2b);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--mood-color);
     cursor: pointer;
-    font-size: .9rem;
+    transition: all 0.2s ease;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--mood-color);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+  }
+
+  input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .slider-value {
+    min-width: 40px;
+    padding: 6px 12px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--mood-deep);
+  }
+
+  /* ─── 密碼欄 ─── */
+  .form-field input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--ink);
-    transition: background 0.15s;
-    border-bottom: 1px solid rgba(0,0,0,.04);
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
   }
-  .multi-select-option:last-child { border-bottom: none; }
-  .multi-select-option:hover { background: var(--theme-pale); }
-  .multi-select-option.selected { color: var(--theme-deep); }
-  .multi-select-option input[type="checkbox"] {
-    accent-color: var(--theme-color);
-    width: 1rem; height: 1rem;
-    flex-shrink: 0;
+
+  .form-field input[type="password"]:focus {
+    border-color: var(--mood-color);
+    box-shadow: 0 0 0 3px var(--mood-pale);
+    background: #fff;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #fff;
+    background: var(--mood-color);
     cursor: pointer;
-    position: static;
-    top: auto;
-    margin: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .btn-submit{
-    width:100%; padding:14px; margin-top:12px; border:none; border-radius:8px; font-size:1.05rem; font-weight:900; 
-    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   }
-  .btn-submit:hover{transform:translateY(-2px); filter: brightness(1.1); box-shadow:0 6px 16px rgba(0,0,0,0.2)}
-  .btn-submit:disabled{background:var(--border); cursor:not-allowed; transform:none; box-shadow:none;}
 
-  .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
-  .filter-btn {
-    padding:6px 12px; border-radius:20px; border:1.5px solid var(--theme-border); 
-    background:var(--theme-bg-card); 
-    font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
+  .btn-submit:disabled {
+    background: var(--border);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
-  .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
 
-  .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .scroll-wrap{
-    max-height:400px; 
-    overflow:auto; 
-    -webkit-overflow-scrolling:touch;
-    border:2px solid var(--theme-border);
-    background:var(--theme-bg-card); 
-    border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
-    transition:all 0.3s ease;
+  #submit-msg {
+    display: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-weight: 900;
   }
-  table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:720px}
-  thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
-  /* ✅ 日期欄位凍結 - 左邊固定 + 更高的 z-index */
+
+  /* ─── 分隔線 & 小標題 ─── */
+  .section-head {
+    max-width: 900px;
+    margin: 40px auto 0;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .section-head::before,
+  .section-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    transition: background 0.3s ease;
+  }
+
+  .section-head h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  /* ─── 歷史紀錄表 ─── */
+  .log-container {
+    max-width: 900px;
+    margin: 16px auto 0;
+    padding: 0 48px;
+  }
+
+  .scroll-wrap {
+    max-height: 500px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 2px solid var(--border);
+    background: var(--warm-white);
+    border-radius: 8px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.85rem;
+    min-width: 750px; /* 增加寬度以包容備註欄位 */
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #e6e0d3;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 2px 0 var(--border);
+    transition: background 0.3s ease;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--ink-light);
+  }
+
   thead th:first-child {
     position: sticky;
     left: 0;
-    z-index: 11;
-    box-shadow: 2px 2px 0 var(--theme-border);
+    z-index: 12;
+    background: #e6e0d3 !important;
+    box-shadow: 2px 2px 0 var(--border);
   }
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
-  /* ✅ 日期欄位凍結 - tbody 對應 */
+
+  tbody td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    text-align: center;
+    transition: background 0.15s;
+    font-weight: 700;
+  }
+
   tbody td:first-child {
     position: sticky;
     left: 0;
     z-index: 9;
-    background: var(--theme-bg-card);
+    background-color: #faf7f2 !important;
     font-weight: 900;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
   }
-  tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
-  tbody tr:nth-child(even) td:first-child {background-color:rgba(0,0,0,0.02)}
-  tbody tr:hover td {background-color:rgba(0,0,0,0.04)}
-  tbody tr:hover td:first-child {background-color:rgba(0,0,0,0.06)}
-  
-  /* 異常紀錄高亮 */
-  .row-warn td { background-color: #fff2f0 !important; color: var(--accent-red) !important; font-weight: 900; }
-  
-  .show-all-btn{
-    display:block;width:100%;padding:14px;margin-top:12px;
-    background:var(--theme-bg-card); 
-    border:2px dashed var(--theme-border); 
-    border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
+
+  tbody tr:nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.015);
   }
-  .show-all-btn:hover{background:var(--theme-bg-block);border-color:var(--ink-light);color:var(--ink)}
 
-  .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .photo-link-block{
-    aspect-ratio:1; border-radius:12px; 
-    border:3px dashed var(--theme-border);
-    background:var(--theme-bg-card); 
-    cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
+  tbody tr:nth-child(even) td:first-child {
+    background-color: #f5f0e8 !important;
   }
-  .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
 
-  #lightbox{display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px)}
-  #lightbox-img{max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain; box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-  .page-end{height:calc(40px + env(safe-area-inset-bottom))}
-
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-  @media(max-width:640px){
-    .dashboard-grid{grid-template-columns:1fr}
-    header{padding:28px 20px 24px}
-    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 20px}
-    .form-card{padding:20px 16px;}
-    .dash-stats{grid-template-columns:repeat(3,1fr)}
+  tbody tr:hover td {
+    background-color: rgba(0, 0, 0, 0.04);
   }
-  @media(min-width:641px) and (max-width:900px){
-    .dashboard-grid{grid-template-columns:1fr}
-    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 32px}
-    .form-card{padding:24px;}
+
+  tbody tr:hover td:first-child {
+    background-color: #dad2c4 !important;
+  }
+
+  /* ─── 備註文字樣式：完全依照內容自動增減寬度，絕不卡死 ─── */
+  .td-note {
+    text-align: left !important;
+    white-space: nowrap; /* 確保文字不會自動換行，這樣才能把欄位寬度完美撐開 */
+  }
+
+  .toggle-container {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .btn-toggle-view {
+    background-color: #e6dfd3;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .btn-toggle-view:hover {
+    background-color: #dad2c4;
+    transform: translateY(-1px);
+  }
+
+  .page-end {
+    height: calc(40px + env(safe-area-inset-bottom));
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-card {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 28px 20px 24px; }
+    .form-container, .section-head, .log-container { padding: 0 20px; }
+    .form-card { padding: 20px 16px; }
+    .form-field-row { grid-template-columns: 1fr; gap: 12px; }
+    table { font-size: 0.75rem; min-width: 650px; }
+    thead th { padding: 8px 6px; }
+    tbody td { padding: 8px 6px; }
   }
 </style>
 </head>
@@ -325,547 +433,337 @@
 <header>
   <div class="header-inner">
     <div class="title-block">
-      <h1>喜樂 × 平安</h1>
-      <p class="subtitle">寵物健康日誌</p>
+      <h1>老公情緒日誌</h1>
+      <p class="subtitle">用心記錄每一天的情緒波動</p>
     </div>
   </div>
 </header>
 
-<div class="dashboard">
-  <div class="dashboard-grid">
-    <div class="dash-cat" id="card-xile">
-      <div class="dash-cat-header xile" onclick="selectCat('xile')">
-        <div class="dash-cat-header-top"><span>🟠</span><span class="dash-cat-name xile">喜樂</span></div>
-        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%<br>脫水警訊</div></div>
-              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>降回正常</div></div>
-              <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div></div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">2/9 就診</span>
-              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
-            </div>
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-field">
+      <label>日期</label>
+      <input type="date" id="date-active">
+    </div>
+
+    <div class="form-field-row">
+      <div class="form-field">
+        <label>😰 焦慮</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="anxiety" min="0" max="10" value="0" oninput="updateSliderLabel('anxiety')">
           </div>
+          <span class="slider-value" id="anxiety-val">0</span>
         </div>
-        
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受（與主食罐 1:2 混搭）</td></tr>
-            <tr><td class="phos-em">─超越汪喵主食罐─</td><td></td><td></td></tr>
-            <tr><td class="phos-em">法式鴨肉、深海鱈魚</td><td>0.51%</td><td>✅ 推薦（適口性極佳）</td></tr>
-            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦（適口性極佳）</td></tr>
-            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧（適口性極佳）</td></tr>
-            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議（適口性極佳但磷偏高）</td></tr>
-            <tr><td class="phos-em">Kattovit 全系列</td><td>—</td><td>❌ 禁購（適口性不佳）</td></tr>
-            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購（磷含量過高）</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
-          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
+      </div>
+
+      <div class="form-field">
+        <label>😤 煩躁</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="irritability" min="0" max="10" value="0" oninput="updateSliderLabel('irritability')">
+          </div>
+          <span class="slider-value" id="irritability-val">0</span>
         </div>
       </div>
     </div>
 
-    <div class="dash-cat" id="card-ping">
-      <div class="dash-cat-header ping" onclick="selectCat('ping')">
-        <div class="dash-cat-header-top"><span>🔵</span><span class="dash-cat-name ping">平安</span></div>
-        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div></div>
-              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div></div>
-              <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div></div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">1/27 就診</span>
-              <span class="visit-items">狂犬病疫苗</span>
-            </div>
+    <div class="form-field-row">
+      <div class="form-field">
+        <label>🔥 爆氣</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="angry" min="0" max="10" value="0" oninput="updateSliderLabel('angry')">
           </div>
+          <span class="slider-value" id="angry-val">0</span>
         </div>
-        
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
-            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
-          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
+      </div>
+
+      <div class="form-field">
+        <label>😤 客怨</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="complaint" min="0" max="10" value="0" oninput="updateSliderLabel('complaint')">
+          </div>
+          <span class="slider-value" id="complaint-val">0</span>
         </div>
       </div>
     </div>
+
+    <div class="form-field-row">
+      <div class="form-field">
+        <label>🍴 暴飲暴食</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="binge" min="0" max="10" value="0" oninput="updateSliderLabel('binge')">
+          </div>
+          <span class="slider-value" id="binge-val">0</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>✨ 情緒控制</label>
+        <div class="slider-group">
+          <div class="slider-container">
+            <input type="range" id="control" min="0" max="10" value="0" oninput="updateSliderLabel('control')">
+          </div>
+          <span class="slider-value" id="control-val">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>📝 備註</label>
+      <input type="text" id="note" placeholder="寫點今天發生了什麼事吧...">
+    </div>
+
+    <div class="form-field">
+      <label>密碼</label>
+      <input type="password" id="write-password" placeholder="請輸入密碼">
+    </div>
+
+    <div id="submit-msg"></div>
+
+    <button class="btn-submit" id="submit-btn" onclick="submitForm()">🚀 送出紀錄</button>
   </div>
 </div>
 
-<div id="cat-content" style="display:none">
-  <div class="section-head"><h2 id="form-title">今日紀錄</h2></div>
+<div class="section-head"><h2>📊 歷史紀錄</h2></div>
+<div class="log-container">
+  <div class="scroll-wrap">
+    <table>
+      <thead id="history-thead">
+        <tr>
+          <th>日期</th>
+          <th>焦慮</th>
+          <th>煩躁</th>
+          <th>爆氣</th>
+          <th>客怨</th>
+          <th>暴飲暴食</th>
+          <th>情緒控制</th>
+          <th>備註</th> </tr>
+      </thead>
+      <tbody id="history-tbody">
+        <tr><td colspan="8" style="padding: 40px; color: var(--mood-color);">⏳ 資料努力載入中...</td></tr>
+      </tbody>
+    </table>
+  </div>
   
-  <div class="form-container">
-    <div class="form-card">
-      <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
-      
-      <div id="xile-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div class="form-field">
-            <label>嘔吐次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', -1)">-</button>
-              <input type="text" id="vomit-count-xile" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', 1)">+</button>
-            </div>
-          </div>
-          <div class="form-field">
-            <label>嘔吐物（可複選）</label>
-            <div class="multi-select-wrap" id="wrap-vomit-type-xile">
-              <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-xile')">
-                <span class="multi-select-trigger-text" id="label-vomit-type-xile">請選擇</span>
-                <span class="multi-select-arrow">▼</span>
-              </button>
-              <div class="multi-select-dropdown" id="vomit-type-xile">
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="罐頭">罐頭</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="飼料">飼料</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="膽汁">膽汁</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="毛球">毛球</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="透明液體">透明液體</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
-      </div>
-      
-      <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div class="form-field">
-            <label>咳嗽次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', -1)">-</button>
-              <input type="text" id="cough-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', 1)">+</button>
-            </div>
-          </div>
-          <div class="form-field">
-            <label>嘔吐次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', -1)">-</button>
-              <input type="text" id="vomit-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', 1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>嘔吐物（可複選）</label>
-          <div class="multi-select-wrap" id="wrap-vomit-type-ping">
-            <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-ping')">
-              <span class="multi-select-trigger-text" id="label-vomit-type-ping">請選擇</span>
-              <span class="multi-select-arrow">▼</span>
-            </button>
-            <div class="multi-select-dropdown" id="vomit-type-ping">
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="罐頭">罐頭</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="飼料">飼料</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="膽汁">膽汁</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="毛球">毛球</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="透明液體">透明液體</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
-      <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="請輸入密碼"></div>
-      
-      <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
-      
-      <button class="btn-submit" id="submit-btn" onclick="submitForm()">🚀 送出紀錄</button>
-    </div>
+  <div class="toggle-container" id="toggle-box" style="display: none;">
+    <button class="btn-toggle-view" onclick="toggleShowAll()">
+      <span id="toggle-btn-text">顯示全部</span>
+    </button>
   </div>
-
-  <div class="section-head"><h2>歷史紀錄</h2></div>
-  <div class="log-container">
-    <div class="filter-bar" id="filter-bar">
-      <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
-      <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
-      <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
-      <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
-      <button class="filter-btn" onclick="filterLogs('vaccine')">疫苗</button>
-    </div>
-    <div class="scroll-wrap">
-      <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
-    </div>
-    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部 ↓</button>
-  </div>
-
-  <div class="section-head"><h2>最新照片</h2></div>
-  <div class="photo-wall" id="photo-wall-container"></div>
 </div>
 
-<div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
 <div class="page-end"></div>
 
 <script>
-document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
-const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
-const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
-const csvUrls = {
-  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
-  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
-};
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRfPaF8WQ3bIyqDP4iaXRr7DJe4ZUEA6zGt67xw3Es1iEJuBbFWHaraZovKHymKkVbjw/exec';
+  // ═══════════════════════════════════════════════════════════
+  // 配置區
+  // ═══════════════════════════════════════════════════════════
+  const SHEET_ID = '1yytw3nVfDP1HMDoLGNDR-fEepmkwDjjo6L6b5lUGka8';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbyRJUNZkS6QVnb5H4gue9Pn3jPOp1rnFT6iZ71n0HzHOdzv0wB-cQ3yFb84jbWIJxkw/exec'; 
 
-let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
+  let allRecords = [];
+  let showAll = false; 
 
-// ─── 複選下拉邏輯 ───
-function toggleDropdown(id) {
-  const dropdown = document.getElementById(id);
-  const trigger = dropdown.previousElementSibling;
-  const isOpen = dropdown.classList.contains('open');
-  document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
-    d.classList.remove('open');
-    d.previousElementSibling.classList.remove('open');
+  // 初始化日期為今天
+  document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
+
+  window.addEventListener('load', () => {
+    fetchSheetData();
   });
-  if (!isOpen) {
-    dropdown.classList.add('open');
-    trigger.classList.add('open');
-  }
-}
 
-function selectOption(label, groupId) {
-  setTimeout(() => {
-    const cb = label.querySelector('input[type="checkbox"]');
-    if (cb.checked) label.classList.add('selected');
-    else label.classList.remove('selected');
-    updateTriggerLabel(groupId);
-  }, 0);
-}
-
-function updateTriggerLabel(groupId) {
-  const group = document.getElementById(groupId);
-  const checked = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
-  const labelEl = document.getElementById('label-' + groupId);
-  if (checked.length === 0) {
-    labelEl.textContent = '請選擇';
-    labelEl.classList.remove('has-value');
-  } else {
-    labelEl.textContent = checked.map(cb => cb.value).join('、');
-    labelEl.classList.add('has-value');
-  }
-}
-
-function getSelectedVomitTypes(groupId) {
-  const group = document.getElementById(groupId);
-  return Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join('、');
-}
-
-function resetVomitChips(groupId) {
-  const group = document.getElementById(groupId);
-  group.querySelectorAll('.multi-select-option').forEach(opt => {
-    opt.classList.remove('selected');
-    opt.querySelector('input[type="checkbox"]').checked = false;
-  });
-  const labelEl = document.getElementById('label-' + groupId);
-  if (labelEl) { labelEl.textContent = '請選擇'; labelEl.classList.remove('has-value'); }
-  group.classList.remove('open');
-  if (group.previousElementSibling) group.previousElementSibling.classList.remove('open');
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.multi-select-wrap')) {
-    document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
-      d.classList.remove('open');
-      d.previousElementSibling.classList.remove('open');
-    });
-  }
-});
-
-// ─── 步進器 ───
-function adjCount(id, delta) {
-  let el = document.getElementById(id);
-  let val = parseInt(el.value) || 0;
-  val = Math.min(10, Math.max(0, val + delta));
-  el.value = val;
-}
-
-function parseDateString(ds) {
-  if (!ds) return 0;
-  let s = ds.replace(/-/g, '/').trim();
-  let parts = s.split('/');
-  let y = new Date().getFullYear(), m = 0, d = 1;
-  if (parts.length === 3) {
-    if (parts[0].length === 4) { y = parseInt(parts[0], 10); m = parseInt(parts[1], 10) - 1; d = parseInt(parts[2], 10); }
-    else if (parts[2].length === 4) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); y = parseInt(parts[2], 10); }
-  } else if (parts.length === 2) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); }
-  else { let t = new Date(ds).getTime(); return isNaN(t) ? 0 : t; }
-  return new Date(y, m, d).getTime();
-}
-
-function updateTheme(cat) {
-  const root = document.documentElement;
-  if (cat === 'xile') {
-    root.style.setProperty('--theme-color', 'var(--xile-color)');
-    root.style.setProperty('--theme-pale', 'var(--xile-pale)');
-    root.style.setProperty('--theme-deep', 'var(--xile-deep)');
-    root.style.setProperty('--theme-border', 'var(--border)'); 
-    root.style.setProperty('--theme-bg-card', 'var(--warm-white)');
-    root.style.setProperty('--theme-bg-block', 'var(--cream)');
-    root.style.setProperty('--theme-table-header', '#e6e0d3');
-  } else {
-    root.style.setProperty('--theme-color', 'var(--ping-color)');
-    root.style.setProperty('--theme-pale', 'var(--ping-pale)');
-    root.style.setProperty('--theme-deep', 'var(--ping-deep)');
-    root.style.setProperty('--theme-border', '#cce0ec'); 
-    root.style.setProperty('--theme-bg-card', '#f0f6fa'); 
-    root.style.setProperty('--theme-bg-block', '#e1edf5'); 
-    root.style.setProperty('--theme-table-header', '#dbe8f0');
-  }
-}
-
-function selectCat(cat) {
-  currentCat = cat; showFullHistory = false; currentFilter = 'all';
-  updateTheme(cat);
-  document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
-  document.getElementById('card-' + cat).classList.add('selected-' + cat);
-  document.getElementById('cat-content').style.display = 'block';
-  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
-  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
-  document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
-  
-  // 重置表單
-  document.getElementById('vomit-count-xile').value = 0;
-  document.getElementById('cough-count-ping').value = 0;
-  document.getElementById('vomit-count-ping').value = 0;
-  resetVomitChips('vomit-type-xile');
-  resetVomitChips('vomit-type-ping');
-  document.getElementById('nail-cut').checked = false;
-  document.getElementById('vaccine').checked = false;
-  document.getElementById('note-text').value = '';
-  document.getElementById('submit-msg').style.display = 'none';
-
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-
-  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth'}), 100);
-  fetchSheetData(cat); renderPhotoWall(cat);
-}
-
-async function fetchSheetData(cat) {
-  const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
-  try {
-    const url = csvUrls[cat];
-    console.log('📡 開始載入 CSV:', url);
-    
-    const res = await fetch(url);
-    console.log('📡 回應狀態:', res.status, res.statusText);
-    
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  // 滑塊即時更新顯示值
+  function updateSliderLabel(id) {
+    const slider = document.getElementById(id);
+    const valDisplay = document.getElementById(id + '-val');
+    if (slider && valDisplay) {
+      valDisplay.textContent = slider.value;
     }
-    
-    const csv = await res.text();
-    console.log('📡 CSV 內容長度:', csv.length, '字節');
-    
-    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
-    console.log('📡 解析行數:', rows.length);
-    
-    const uniqueRecords = new Map();
-    rows.slice(1).forEach(l => {
-      const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
-      if (cols[0]) {
-        const timeKey = parseDateString(cols[0]);
-        if (timeKey > 0) uniqueRecords.set(timeKey, cols);
-      }
-    });
-    allCatRecords = Array.from(uniqueRecords.values());
-    console.log('📡 去重後記錄數:', allCatRecords.length);
-    
-    allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
-    renderHistoryTable();
-    console.log('✅ 載入成功！');
-  } catch (e) { 
-    console.error('❌ 載入失敗:', e.message);
-    tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--accent-red); text-align:center;"><strong>讀取失敗</strong><br>${e.message}</td></tr>`; 
-  }
-}
-
-function filterLogs(type) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  renderHistoryTable();
-}
-
-function renderHistoryTable() {
-  const tbody = document.getElementById('history-tbody');
-  const thead = document.getElementById('history-thead');
-  let filtered = allCatRecords;
-  
-  // ✅ 檢查欄位是否不為空（只要有值就算）
-  const isNotEmpty = (val) => val && val.toString().trim() !== '';
-  
-  // ✅ 過濾邏輯
-  if (currentFilter === 'vomit') {
-    const idx = (currentCat === 'xile') ? 3 : 2;
-    filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
-  } else if (currentFilter === 'cough') {
-    filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
-  } else if (currentFilter === 'nail') {
-    // ✅ 剪甲欄位：喜樂 index 5，平安 index 4 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 5 : 4;
-    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
-  } else if (currentFilter === 'vaccine') {
-    // ✅ 疫苗欄位：喜樂 index 6，平安 index 5 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 6 : 5;
-    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
-  }
-  
-  const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
-  tbody.innerHTML = '';
-  const rc = (val, type) => {
-    if (type === 'check') {
-      if (val === 'TRUE') return '✅';
-      if (!val || val === 'FALSE' || val === '') return '—';
-      return val;
-    }
-    return (!val || val === "0" || val === "") ? '—' : val + '次';
-  };
-  
-  if (currentCat === 'xile') {
-    // 喜樂：日期、腎臟藥、胰臟藥、嘔吐、嘔吐物、剪甲、疫苗
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => {
-      let isWarn = parseInt(r[3]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
-    });
-  } else {
-    // 平安：日期、咳嗽、嘔吐、嘔吐物、剪甲、疫苗
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => {
-      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
-    });
-  }
-  
-  const showBtn = document.getElementById('show-all-btn');
-  if (filtered.length > 10) {
-    showBtn.style.display = 'block';
-    showBtn.textContent = showFullHistory ? '向上收合 ↑' : '顯示全部 ↓';
-  } else { showBtn.style.display = 'none'; }
-}
-
-function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
-
-async function renderPhotoWall(cat) {
-  const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 照片讀取中...</div>`;
-  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
-  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
-  try {
-    const res = await fetch(url); const data = await res.json();
-    container.innerHTML = data.files.map(f => `
-      <div class="photo-link-block" onclick="document.getElementById('lightbox').style.display='flex';document.getElementById('lightbox-img').src='https://drive.google.com/thumbnail?id=${f.id}&sz=w1200'">
-        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;">
-      </div>`).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; }
-}
-
-// ─── 送出紀錄 ───
-async function submitForm() {
-  const btn = document.getElementById('submit-btn');
-  const password = document.getElementById('write-password').value.trim();
-  if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ 拼命寫入中...';
-
-  const payload = {
-    password,
-    cat: currentCat,
-    date: document.getElementById('date-active').value,
-    nailCut: document.getElementById('nail-cut').checked ? true : "",
-    vaccine: document.getElementById('vaccine').checked ? true : "",
-    note: document.getElementById('note-text').value.trim(),
-  };
-
-  if (currentCat === 'xile') {
-    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
-    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
-    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
-    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
-  } else {
-    payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
-    payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
-    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
   }
 
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body: JSON.stringify(payload)
-    });
-
-    await new Promise(r => setTimeout(r, 1500));
-    await fetchSheetData(currentCat);
-
-    const targetDate = document.getElementById('date-active').value;
-    const latestRecord = allCatRecords[0];
-    const latestDateTs = latestRecord ? parseDateString(latestRecord[0]) : 0;
-    const targetTs = parseDateString(targetDate);
-
-    if (latestDateTs === targetTs) {
-      showMsg('✅ 已完美寫入 Google Sheet', 'ok');
+  // 日期解析
+  function parseDateString(ds) {
+    if (!ds) return 0;
+    let s = ds.replace(/-/g, '/').trim();
+    let parts = s.split('/');
+    let y = new Date().getFullYear(), m = 0, d = 1;
+    if (parts.length === 3) {
+      if (parts[0].length === 4) { y = parseInt(parts[0], 10); m = parseInt(parts[1], 10) - 1; d = parseInt(parts[2], 10); }
+      else if (parts[2].length === 4) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); y = parseInt(parts[2], 10); }
+    } else if (parts.length === 2) {
+      m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10);
     } else {
-      showMsg('📨 已送出，請稍後重整確認是否寫入', 'warn');
+      let t = new Date(ds).getTime();
+      return isNaN(t) ? 0 : t;
+    }
+    return new Date(y, m, d).getTime();
+  }
+
+  // 紅綠燈背景顏色
+  function getColorStyle(valStr) {
+    const val = parseInt(valStr);
+    if (isNaN(val)) return '';
+    let bg = '';
+    let text = '#1a1410'; 
+
+    if (val === 0) { bg = '#00ff00'; }
+    else if (val >= 1 && val <= 3) { bg = '#b6d7a8'; }
+    else if (val >= 4 && val <= 6) { bg = '#ffff00'; }
+    else if (val >= 7 && val <= 9) { bg = '#e06666'; text = '#ffffff'; }
+    else if (val === 10) { bg = '#ff0000'; text = '#ffffff'; }
+
+    return `style="background-color: ${bg} !important; color: ${text} !important;"`;
+  }
+
+  // 撈取後端資料
+  async function fetchSheetData() {
+    const tbody = document.getElementById('history-tbody');
+    try {
+      const res = await fetch(GAS_URL, { method: 'GET' });
+      if (!res.ok) throw new Error('網路回應不成功');
+      const data = await res.json();
+      
+      if (data.error) throw new Error(data.error);
+
+      allRecords = data;
+      allRecords.sort((a, b) => parseDateString(a[0]) - parseDateString(b[0]));
+      
+      renderHistoryTable();
+    } catch (e) {
+      console.error('資料載入失敗:', e);
+      tbody.innerHTML = `<tr><td colspan="8" style="padding: 40px; color: var(--accent-red);">❌ 歷史紀錄載入失敗，請確認後端部署狀態！</td></tr>`;
+    }
+  }
+
+  // 渲染歷史紀錄表
+  function renderHistoryTable() {
+    const tbody = document.getElementById('history-tbody');
+    tbody.innerHTML = '';
+    
+    if (allRecords.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="padding:40px; color:var(--ink-light);">還沒有紀錄呢～</td></tr>`;
+      return;
     }
 
-  } catch(e) {
-    showMsg('❌ 送出失敗，請檢查網路連線', 'err');
+    let recordsToRender = allRecords;
+    if (!showAll && allRecords.length > 10) {
+      recordsToRender = allRecords.slice(0, 10);
+    }
+    
+    recordsToRender.forEach(record => {
+      const date = record[0] || '—';
+      const anxiety = record[1] || '0';
+      const irritability = record[2] || '0';
+      const angry = record[3] || '0';
+      const complaint = record[4] || '0';
+      const binge = record[5] || '0';
+      const control = record[6] || '0';
+      const note = record[7] || ''; // 📝 讀取第 8 欄備註資料
+      
+      tbody.innerHTML += `
+        <tr>
+          <td>${date}</td>
+          <td ${getColorStyle(anxiety)}>${anxiety}</td>
+          <td ${getColorStyle(irritability)}>${irritability}</td>
+          <td ${getColorStyle(angry)}>${angry}</td>
+          <td ${getColorStyle(complaint)}>${complaint}</td>
+          <td ${getColorStyle(binge)}>${binge}</td>
+          <td ${getColorStyle(control)}>${control}</td>
+          <td class="td-note" title="${note}">${note}</td> </tr>
+      `;
+    });
+
+    const toggleBox = document.getElementById('toggle-box');
+    const toggleBtnText = document.getElementById('toggle-btn-text');
+    
+    if (allRecords.length > 10) {
+      toggleBox.style.display = 'block';
+      toggleBtnText.textContent = showAll ? '隱藏全部' : '顯示全部';
+    } else {
+      toggleBox.style.display = 'none';
+    }
   }
 
-  btn.disabled = false;
-  btn.textContent = '🚀 送出紀錄';
-}
-
-function showMsg(text, type) {
-  const el = document.getElementById('submit-msg');
-  el.textContent = text;
-  el.style.display = 'block';
-  if (type === 'ok') {
-    el.style.background = '#eef6f0';
-    el.style.color = '#1f5c30';
-    el.style.border = '1.5px solid var(--accent-green)';
-  } else if (type === 'warn') {
-    el.style.background = '#fff8ec';
-    el.style.color = 'var(--accent-warn)';
-    el.style.border = '1.5px solid var(--accent-warn)';
-  } else {
-    el.style.background = 'var(--theme-bg-block)';
-    el.style.color = 'var(--accent-red)';
-    el.style.border = '1.5px solid var(--accent-red)';
+  function toggleShowAll() {
+    showAll = !showAll;
+    renderHistoryTable();
   }
-}
+
+  // 送出表單 (包含備註欄位)
+  async function submitForm() {
+    const password = document.getElementById('write-password').value.trim();
+    if (!password) {
+      showMsg('請輸入密碼', 'warn');
+      return;
+    }
+    
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ 拼命寫入中...';
+
+    const payload = {
+      password: password,
+      date: document.getElementById('date-active').value,
+      anxiety: parseInt(document.getElementById('anxiety').value) || 0,
+      irritability: parseInt(document.getElementById('irritability').value) || 0,
+      angry: parseInt(document.getElementById('angry').value) || 0,
+      complaint: parseInt(document.getElementById('complaint').value) || 0,
+      binge: parseInt(document.getElementById('binge').value) || 0,
+      control: parseInt(document.getElementById('control').value) || 0,
+      note: document.getElementById('note').value.trim() // 📝 【新核心】打包備註文字送出
+    };
+
+    try {
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('伺服器無回應');
+      
+      const result = await res.json(); 
+
+      if (result.ok === true) {
+        showMsg('✅ 寫入成功！歷史紀錄已同步更新', 'ok');
+        resetForm();
+        await fetchSheetData(); 
+      } else {
+        showMsg(`❌ 送出失敗：${result.msg || '密碼錯誤！'}`, 'err');
+      }
+
+    } catch (e) {
+      console.error('送出失敗:', e);
+      showMsg('❌ 網路傳輸異常或密碼錯誤，請檢查後端 GAS 是否部署正確！', 'err');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '🚀 送出紀錄';
+  }
+
+  function resetForm() {
+    ['anxiety', 'irritability', 'angry', 'complaint', 'binge', 'control'].forEach(id => {
+      document.getElementById(id).value = 0;
+      updateSliderLabel(id);
+    });
+    document.getElementById('note').value = ''; // 📝 重置清空備註框
+    document.getElementById('write-password').value = '';
+    document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
+  }
+
+  function showMsg(text, type) {
+    const el = document.getElementById('submit-msg');
+    el.textContent = text;
+    el.style.display = 'block';
+    if (type === 'ok') {
+      el.style.background = '#eef6f0'; el.style.color = '#1f5c30'; el.style.border = '1.5px solid var(--accent-green)';
+    } else if (type === 'warn') {
+      el.style.background = '#fff8ec'; el.style.color = 'var(--accent-warn)'; el.style.border = '1.5px solid var(--accent-warn)';
+    } else {
+      el.style.background = '#f5f0e8'; el.style.color = 'var(--accent-red)'; el.style.border = '1.5px solid var(--accent-red)';
+    }
+  }
 </script>
-</body>
-</html>
