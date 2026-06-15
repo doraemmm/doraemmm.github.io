@@ -1,871 +1,837 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>喜樂 × 平安 健康日誌</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物健康日誌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="shortcut icon" href="favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<style>
-  :root {
-    --cream:#f5f0e8; --warm-white:#faf7f2; --ink:#1a1410; --ink-light:#3d3228;
-    --xile-color:#c17b4a; --xile-pale:#f0dfc8; --xile-deep:#8b4f1f;
-    --ping-color:#5b8fa8; --ping-pale:#cce0ec; --ping-deep:#2d607a;
-    --accent-red:#c44b3a; --accent-green:#4a8c5c; --accent-warn:#c47a1a;
-    --border:#d4c9b5;
-    
-    --theme-color: var(--ink);
-    --theme-pale: var(--cream);
-    --theme-deep: var(--ink-light);
-    --theme-border: var(--border);
-    --theme-bg-card: var(--warm-white);
-    --theme-bg-block: var(--cream);
-    --theme-table-header: #e6e0d3;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body, button, input, select, textarea, h1, h2, h3, .sel-btn, .selector-label, .subtitle, a {
-    font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif !important;
-  }
-  body{background:var(--cream);color:var(--ink);font-weight:700;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
 
-  /* ─── HEADER ─── */
-  header{padding:40px 48px 32px;border-bottom:1px solid var(--border);text-align:center}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center}
-  .title-block h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;letter-spacing:-.02em;font-weight:900}
-  .title-block h1 em{font-style:italic;color:var(--xile-color)}
-  .title-block .subtitle{margin-top:10px;font-size:1rem;letter-spacing:.1em;color:var(--ink-light)}
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
 
-  /* ─── DASHBOARD ─── */
-  .dashboard{max-width:1100px;margin:32px auto 0;padding:0 48px 8px;animation:fadeUp .5s ease both}
-  .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
 
-  .dash-cat{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--warm-white);box-shadow:0 4px 12px rgba(0,0,0,0.04);transition:all 0.3s ease;}
-  .dash-cat-header{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 20px;border-bottom:2px solid var(--border);text-align:center;cursor:pointer}
-  .dash-cat-header.xile{background:var(--xile-pale)}
-  .dash-cat-header.ping{background:var(--ping-pale)}
-  .dash-cat-header-top{display:flex;align-items:center;gap:10px}
-  .dash-cat-name{font-size:1.25rem;font-weight:900}
-  .dash-cat-name.xile{color:var(--xile-deep)}
-  .dash-cat-name.ping{color:var(--ping-deep)}
-  
-  .dash-cat.selected-xile{box-shadow:0 0 0 4px var(--xile-color); transform:translateY(-3px);}
-  .dash-cat.selected-ping{box-shadow:0 0 0 4px var(--ping-color); transform:translateY(-3px);}
+        .cat-tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
 
-  #card-ping { background: #f0f6fa; border-color: #cce0ec; }
-  #card-ping .dash-cat-header { border-bottom-color: #cce0ec; }
-  #card-ping .stat-box, 
-  #card-ping .medical-block, 
-  #card-ping .phos-table-wrap,  
-  #card-ping .dash-note { background: #e1edf5; border-color: #cce0ec; }
-  #card-ping .phos-table th { background: #dbe8f0; border-bottom-color: #cce0ec; } 
-  #card-ping .medical-block-title { background: rgba(91,143,168,0.08); border-bottom-color: #cce0ec; }
-  #card-ping .visit-row { border-top-color: #cce0ec; }
-  #card-ping .phos-table td { border-bottom-color: rgba(91,143,168,0.1); }
+        .cat-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+        }
 
-  .dash-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+        .cat-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
 
-  .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat-box{background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center}
-  .stat-icon{font-size:1.6rem;line-height:1}
-  .stat-icon-label{font-size:.72rem;color:var(--ink-light);margin-top:6px;font-weight:700;line-height:1.3}
+        .cat-tab:hover {
+            background: #fafafa;
+        }
 
-  .medical-block{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
-  .medical-block-title{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:var(--ink-light);padding:7px 14px;background:rgba(0,0,0,.04);border-bottom:1px solid var(--border)}
-  .medical-block-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-  .visit-row{font-size:.82rem;line-height:1.7;padding:6px 0;border-top:1px solid var(--border)}
-  .visit-row .visit-date{font-weight:900;color:var(--ink);margin-right:8px}
-  .visit-row .visit-items{color:var(--ink-light)}
+        .page-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
 
-  .phos-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--border);border-radius:6px}
-  .phos-table{width:100%;min-width:320px;border-collapse:collapse;font-size:.8rem}
-  .phos-table th{text-align:center;padding:7px 12px;background:var(--cream);border-bottom:1.5px solid var(--border);font-size:.75rem;color:var(--ink-light);white-space:nowrap}
-  .phos-table td{padding:7px 12px;border-bottom:1px solid rgba(0,0,0,.05);text-align:center; transition:background 0.15s}
-  .phos-table tr:hover td {background-color:rgba(0,0,0,0.03)}
-  .phos-table tr:last-child td{border-bottom:none}
-  .phos-em{font-weight:900;font-size:.85rem}
+        .page-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            background: white;
+            font-size: 14px;
+            color: #666;
+        }
 
-  .dash-note{font-size:.82rem;color:var(--ink-light);padding:10px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;line-height:1.6}
-  .dash-note strong{color:var(--ink);font-weight:900}
+        .page-tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
 
-  .section-head{max-width:1100px;margin:40px auto 0;padding:0 48px;display:flex;align-items:center;justify-content:center;gap:16px}
-  .section-head::before, .section-head::after {content:'';flex:1;height:1px;background:var(--theme-border);transition:background 0.3s ease;}
-  .section-head h2{font-size:1.5rem;font-weight:900;white-space:nowrap}
+        .page-tab:hover {
+            background: #f9f9f9;
+        }
 
-  /* ─── FORM ─── */
-  .form-container { max-width:1100px; margin:16px auto 0; padding:0 48px; }
-  .form-card {
-    background:var(--theme-bg-card); 
-    border:2px solid var(--theme-border);
-    border-radius:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.05); padding:28px 24px; transition:all 0.3s ease;
-    width: 100%;
-  }
-  
-  .form-field { min-width: 0; width: 100%; margin-bottom: 12px; } 
-  .form-field label{display:block;font-size:.85rem;font-weight:900;margin-bottom:6px;color:var(--ink-light);white-space:nowrap;}
-  
-  .form-field input:not([type="checkbox"]):not(.stepper-val),.form-field select,.form-field textarea{
-    width:100%; max-width:100%; padding:10px 12px; 
-    background:var(--theme-bg-block); 
-    border:1.5px solid var(--theme-border); 
-    border-radius:6px; font-size:.9rem; font-weight:700; outline:none; transition:all 0.2s ease; box-sizing:border-box;
-  }
-  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-    border-color: var(--theme-color); box-shadow: 0 0 0 3px var(--theme-pale); background:#fff;
-  }
-  input[type="checkbox"] {
-    accent-color: var(--theme-color); width: 1.1rem; height: 1.1rem; cursor: pointer; vertical-align: middle; margin-right: 6px; position: relative; top: -2px;
-  }
+        .content {
+            padding: 30px 20px;
+        }
 
-  /* 步進器 (Stepper) 樣式 */
-  .stepper-group { display: flex; align-items: center; gap: 6px; }
-  .stepper-btn {
-    background: var(--theme-bg-block); border: 1.5px solid var(--theme-border); color: var(--theme-color);
-    font-size: 1.4rem; font-weight: 900; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: all 0.2s; user-select: none;
-  }
-  .stepper-btn:hover { background: var(--theme-table-header); }
-  .stepper-btn:active { transform: scale(0.92); }
-  .stepper-val {
-    width: 50px !important; height: 40px; text-align: center; font-size: 1.1rem !important; 
-    border: 1.5px solid var(--theme-border); border-radius: 6px; background: var(--theme-bg-card);
-    font-weight: 900; pointer-events: none; color: var(--ink); box-sizing: border-box;
-  }
+        .page {
+            display: none;
+        }
 
-  /* ─── 嘔吐物複選下拉 ─── */
-  .multi-select-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .multi-select-trigger {
-    width: 100%;
-    padding: 10px 32px 10px 12px;
-    background: var(--theme-bg-block);
-    border: 1.5px solid var(--theme-border);
-    border-radius: 6px;
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--ink);
-    cursor: pointer;
-    text-align: left;
-    outline: none;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    user-select: none;
-    min-height: 42px;
-  }
-  .multi-select-trigger:hover,
-  .multi-select-trigger.open {
-    border-color: var(--theme-color);
-    box-shadow: 0 0 0 3px var(--theme-pale);
-    background: #fff;
-  }
-  .multi-select-trigger-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--ink-light);
-  }
-  .multi-select-trigger-text.has-value {
-    color: var(--ink);
-  }
-  .multi-select-arrow {
-    flex-shrink: 0;
-    font-size: .75rem;
-    color: var(--ink-light);
-    transition: transform 0.2s ease;
-  }
-  .multi-select-trigger.open .multi-select-arrow {
-    transform: rotate(180deg);
-  }
-  .multi-select-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0; right: 0;
-    background: var(--theme-bg-card);
-    border: 1.5px solid var(--theme-color);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    z-index: 100;
-    overflow: hidden;
-    animation: dropDown 0.15s ease;
-  }
-  .multi-select-dropdown.open {
-    display: block;
-  }
-  @keyframes dropDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .multi-select-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--ink);
-    transition: background 0.15s;
-    border-bottom: 1px solid rgba(0,0,0,.04);
-  }
-  .multi-select-option:last-child { border-bottom: none; }
-  .multi-select-option:hover { background: var(--theme-pale); }
-  .multi-select-option.selected { color: var(--theme-deep); }
-  .multi-select-option input[type="checkbox"] {
-    accent-color: var(--theme-color);
-    width: 1rem; height: 1rem;
-    flex-shrink: 0;
-    cursor: pointer;
-    position: static;
-    top: auto;
-    margin: 0;
-  }
+        .page.active {
+            display: block;
+        }
 
-  .btn-submit{
-    width:100%; padding:14px; margin-top:12px; border:none; border-radius:8px; font-size:1.05rem; font-weight:900; 
-    color:#fff; background:var(--theme-color); cursor:pointer; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(0,0,0,0.15);
-  }
-  .btn-submit:hover{transform:translateY(-2px); filter: brightness(1.1); box-shadow:0 6px 16px rgba(0,0,0,0.2)}
-  .btn-submit:disabled{background:var(--border); cursor:not-allowed; transform:none; box-shadow:none;}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-  .filter-bar {display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
-  .filter-btn {
-    padding:6px 12px; border-radius:20px; border:1.5px solid var(--theme-border); 
-    background:var(--theme-bg-card); 
-    font-size:0.8rem; cursor:pointer; transition:all 0.2s; font-weight:900; color:var(--ink-light);
-  }
-  .filter-btn.active {background:var(--theme-color); color:#fff; border-color:var(--theme-color);}
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
 
-  .log-container {max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .scroll-wrap{
-    max-height:400px; 
-    overflow:auto; 
-    -webkit-overflow-scrolling:touch;
-    border:2px solid var(--theme-border);
-    background:var(--theme-bg-card); 
-    border-radius:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02);
-    transition:all 0.3s ease;
-  }
-  table{width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; min-width:720px}
-  thead th{position:sticky; top:0; z-index:10; background:var(--theme-table-header); padding:12px 14px; text-align:center; box-shadow:0 2px 0 var(--theme-border); transition:background 0.3s ease;}
-  /* ✅ 日期欄位凍結 - 左邊固定 + 更高的 z-index */
-  thead th:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 11;
-    box-shadow: 2px 2px 0 var(--theme-border);
-  }
-  tbody td{border-bottom:1px solid rgba(0,0,0,.05); padding:10px 14px; text-align:center; transition:background 0.15s}
-  /* ✅ 日期欄位凍結 - tbody 對應 */
-  tbody td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 9;
-    background: var(--theme-bg-card);
-    font-weight: 900;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.06);
-  }
-  tbody tr:nth-child(even) td {background-color:rgba(0,0,0,0.015)}
-  tbody tr:nth-child(even) td:first-child {background-color:rgba(0,0,0,0.02)}
-  tbody tr:hover td {background-color:rgba(0,0,0,0.04)}
-  tbody tr:hover td:first-child {background-color:rgba(0,0,0,0.06)}
-  
-  /* 異常紀錄高亮 */
-  .row-warn td { background-color: #fff2f0 !important; color: var(--accent-red) !important; font-weight: 900; }
-  
-  .show-all-btn{
-    display:block;width:100%;padding:14px;margin-top:12px;
-    background:var(--theme-bg-card); 
-    border:2px dashed var(--theme-border); 
-    border-radius:8px;cursor:pointer;font-weight:900;color:var(--ink-light);transition:all .3s ease;
-  }
-  .show-all-btn:hover{background:var(--theme-bg-block);border-color:var(--ink-light);color:var(--ink)}
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
 
-  .photo-wall {display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; max-width: 1100px; margin: 16px auto 0; padding: 0 48px;}
-  .photo-link-block{
-    aspect-ratio:1; border-radius:12px; 
-    border:3px dashed var(--theme-border);
-    background:var(--theme-bg-card); 
-    cursor:pointer; overflow:hidden; transition:all .3s ease; box-shadow:0 2px 8px rgba(0,0,0,0.04)
-  }
-  .photo-link-block:hover{transform:translateY(-5px); border-style:solid; box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+        .form-group input[type="date"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="password"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-  #lightbox{display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.92); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px)}
-  #lightbox-img{max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain; box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-  .page-end{height:calc(40px + env(safe-area-inset-bottom))}
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
 
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
 
-  @media(max-width:640px){
-    .dashboard-grid{grid-template-columns:1fr}
-    header{padding:28px 20px 24px}
-    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 20px}
-    .form-card{padding:20px 16px;}
-    .dash-stats{grid-template-columns:repeat(3,1fr)}
-  }
-  @media(min-width:641px) and (max-width:900px){
-    .dashboard-grid{grid-template-columns:1fr}
-    .dashboard, .section-head, .log-container, .photo-wall, .form-container {padding:0 32px}
-    .form-card{padding:24px;}
-  }
-</style>
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .counter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .counter-button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-button:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+
+        .counter-display {
+            width: 60px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #eee;
+        }
+
+        /* 歷史紀錄相關樣式 */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: #f5f5f5;
+        }
+
+        /* 粘性日期列 */
+        th:first-child,
+        td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background-color: white;
+            box-shadow: 1px 0 3px rgba(0,0,0,0.1);
+        }
+
+        thead th:first-child {
+            background-color: #f5f5f5;
+            z-index: 11;
+        }
+
+        tbody tr:nth-child(even) td:first-child {
+            background-color: #fafafa;
+        }
+
+        tbody tr:hover td:first-child {
+            background-color: #f5f5f5;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🐱 寵物健康日誌</h1>
+        </div>
 
-<header>
-  <div class="header-inner">
-    <div class="title-block">
-      <h1>喜樂 × 平安</h1>
-      <p class="subtitle">寵物健康日誌</p>
+        <div class="cat-tabs">
+            <button class="cat-tab active" data-cat="xile">喜樂 🧡</button>
+            <button class="cat-tab" data-cat="ping">平安 💙</button>
+        </div>
+
+        <div class="page-tabs">
+            <button class="page-tab active" data-page="today">今日紀錄</button>
+            <button class="page-tab" data-page="history">歷史紀錄</button>
+        </div>
+
+        <div class="content">
+            <!-- 喜樂 - 今日紀錄 -->
+            <div class="page active" id="xile-today">
+                <h2 style="margin-bottom: 20px;">今日紀錄 - 喜樂</h2>
+                <div id="xile-message" class="message"></div>
+
+                <div class="form-group">
+                    <label>日期</label>
+                    <input type="date" id="xile-date" />
+                </div>
+
+                <div class="form-group">
+                    <label>腎臟藥</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="xile-kidney-drug" />
+                            <label for="xile-kidney-drug">已服用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>胰臟藥</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="xile-pancreas-drug" />
+                            <label for="xile-pancreas-drug">已服用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>嘔吐次數</label>
+                    <div class="counter-group">
+                        <button class="counter-button" onclick="decrementCounter('xile-vomit-count')">−</button>
+                        <div class="counter-display" id="xile-vomit-count">0</div>
+                        <button class="counter-button" onclick="incrementCounter('xile-vomit-count')">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>嘔吐物（可複選）</label>
+                    <select id="xile-vomit-type">
+                        <option value="">請選擇</option>
+                        <option value="毛球">毛球</option>
+                        <option value="飼料">飼料</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>修剪指甲</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="xile-nail-cut" />
+                            <label for="xile-nail-cut">已修剪</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>施打疫苗</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="xile-vaccine" />
+                            <label for="xile-vaccine">已施打</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>備註</label>
+                    <textarea id="xile-note" placeholder="補充說明..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>密碼</label>
+                    <input type="password" id="xile-password" placeholder="請輸入密碼" />
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="submitForm('xile')">🚀 送出紀錄</button>
+                    <button class="btn btn-secondary" onclick="resetForm('xile')">重置</button>
+                </div>
+            </div>
+
+            <!-- 平安 - 今日紀錄 -->
+            <div class="page" id="ping-today">
+                <h2 style="margin-bottom: 20px;">今日紀錄 - 平安</h2>
+                <div id="ping-message" class="message"></div>
+
+                <div class="form-group">
+                    <label>日期</label>
+                    <input type="date" id="ping-date" />
+                </div>
+
+                <div class="form-group">
+                    <label>心臟藥</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ping-heart-drug" />
+                            <label for="ping-heart-drug">已服用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>咳嗽次數</label>
+                    <div class="counter-group">
+                        <button class="counter-button" onclick="decrementCounter('ping-cough-count')">−</button>
+                        <div class="counter-display" id="ping-cough-count">0</div>
+                        <button class="counter-button" onclick="incrementCounter('ping-cough-count')">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>嘔吐次數</label>
+                    <div class="counter-group">
+                        <button class="counter-button" onclick="decrementCounter('ping-vomit-count')">−</button>
+                        <div class="counter-display" id="ping-vomit-count">0</div>
+                        <button class="counter-button" onclick="incrementCounter('ping-vomit-count')">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>嘔吐物（可複選）</label>
+                    <select id="ping-vomit-type">
+                        <option value="">請選擇</option>
+                        <option value="毛球">毛球</option>
+                        <option value="飼料">飼料</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>修剪指甲</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ping-nail-cut" />
+                            <label for="ping-nail-cut">已修剪</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>備註</label>
+                    <textarea id="ping-note" placeholder="補充說明..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>密碼</label>
+                    <input type="password" id="ping-password" placeholder="請輸入密碼" />
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="submitForm('ping')">🚀 送出紀錄</button>
+                    <button class="btn btn-secondary" onclick="resetForm('ping')">重置</button>
+                </div>
+            </div>
+
+            <!-- 喜樂 - 歷史紀錄 -->
+            <div class="page" id="xile-history">
+                <h2 style="margin-bottom: 20px;">歷史紀錄 - 喜樂</h2>
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterHistory('xile', 'all')">全部紀錄</button>
+                    <button class="filter-btn" onclick="filterHistory('xile', 'vomit')">嘔吐</button>
+                    <button class="filter-btn" onclick="filterHistory('xile', 'kidney')">腎臟藥</button>
+                    <button class="filter-btn" onclick="filterHistory('xile', 'pancreas')">胰臟藥</button>
+                    <button class="filter-btn" onclick="filterHistory('xile', 'nail')">指甲修剪</button>
+                    <button class="filter-btn" onclick="filterHistory('xile', 'vaccine')">疫苗</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="xile-history-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>腎臟藥</th>
+                                <th>胰臟藥</th>
+                                <th>嘔吐次數</th>
+                                <th>嘔吐物</th>
+                                <th>修剪指甲</th>
+                                <th>疫苗</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 平安 - 歷史紀錄 -->
+            <div class="page" id="ping-history">
+                <h2 style="margin-bottom: 20px;">歷史紀錄 - 平安</h2>
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterHistory('ping', 'all')">全部紀錄</button>
+                    <button class="filter-btn" onclick="filterHistory('ping', 'heart')">心臟藥</button>
+                    <button class="filter-btn" onclick="filterHistory('ping', 'cough')">咳嗽</button>
+                    <button class="filter-btn" onclick="filterHistory('ping', 'vomit')">嘔吐</button>
+                    <button class="filter-btn" onclick="filterHistory('ping', 'nail')">指甲修剪</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="ping-history-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>心臟藥</th>
+                                <th>咳嗽次數</th>
+                                <th>嘔吐次數</th>
+                                <th>嘔吐物</th>
+                                <th>修剪指甲</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</header>
 
-<div class="dashboard">
-  <div class="dashboard-grid">
-    <div class="dash-cat" id="card-xile">
-      <div class="dash-cat-header xile" onclick="selectCat('xile')">
-        <div class="dash-cat-header-top"><span>🟠</span><span class="dash-cat-name xile">喜樂</span></div>
-        <span class="dash-cat-meta">10歲 · 母 · 4.65 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box"><div class="stat-icon">💧</div><div class="stat-icon-label" style="color:var(--accent-warn)">HCT 54.1%<br>脫水警訊</div></div>
-              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">CREA 1.7<br>降回正常</div></div>
-              <div class="stat-box"><div class="stat-icon">💊</div><div class="stat-icon-label" style="color:var(--ping-deep)">腎臟藥<br>胰臟藥</div></div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">2/9 就診</span>
-              <span class="visit-items">狂犬病疫苗・止吐針・退燒針・營養針</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食 / 主食罐</th><th>磷 DM</th><th>評估</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>—</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>—</td><td>✅ 接受（與主食罐 1:2 混搭）</td></tr>
-            <tr><td class="phos-em">─超越汪喵主食罐─</td><td></td><td></td></tr>
-            <tr><td class="phos-em">法式鴨肉、深海鱈魚</td><td>0.51%</td><td>✅ 推薦（適口性極佳）</td></tr>
-            <tr><td class="phos-em">紐西蘭鹿肉</td><td>0.52%</td><td>✅ 推薦（適口性極佳）</td></tr>
-            <tr><td class="phos-em">野生鱸魚</td><td>0.54%</td><td>⚠️ 需搭配處方糧（適口性極佳）</td></tr>
-            <tr><td class="phos-em">草飼牛肉</td><td>0.65%</td><td>❌ 不建議（適口性極佳但磷偏高）</td></tr>
-            <tr><td class="phos-em">Kattovit 全系列</td><td>—</td><td>❌ 禁購（適口性不佳）</td></tr>
-            <tr><td class="phos-em">Sparkles 全系列</td><td>0.80%</td><td>💀 禁購（磷含量過高）</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          混搭比例：<strong>惜時零食罐 × 超越汪喵主食罐 = 1:2</strong><br>
-          鱸魚、鴨肉、鹿肉適口性極佳。Kattovit 不吃 / Sparkles 磷過高，兩者皆禁購。
-        </div>
-      </div>
-    </div>
+    <script>
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRfPaF8WQ3bIyqDP4iaXRr7DJe4ZUEA6zGt67xw3Es1iEJuBbFWHaraZovKHymKkVbjw/exec';
+        let currentCat = 'xile';
+        let currentPage = 'today';
+        let historyData = { xile: [], ping: [] };
+        let filters = { xile: 'all', ping: 'all' };
 
-    <div class="dash-cat" id="card-ping">
-      <div class="dash-cat-header ping" onclick="selectCat('ping')">
-        <div class="dash-cat-header-top"><span>🔵</span><span class="dash-cat-name ping">平安</span></div>
-        <span class="dash-cat-meta">10歲 · 公 · 5.4 kg</span>
-      </div>
-      <div class="dash-body">
-        <div class="medical-block">
-          <div class="medical-block-title">🏥 健康狀況 ＆ 就診紀錄</div>
-          <div class="medical-block-body">
-            <div class="dash-stats">
-              <div class="stat-box"><div class="stat-icon">❤️‍🩹</div><div class="stat-icon-label" style="color:var(--accent-red)">心臟肥大<br>持續追蹤</div></div>
-              <div class="stat-box"><div class="stat-icon">🫘</div><div class="stat-icon-label" style="color:var(--accent-green)">腎臟數值<br>正常</div></div>
-              <div class="stat-box"><div class="stat-icon">🫁</div><div class="stat-icon-label" style="color:var(--accent-warn)">不定時咳嗽<br>持續觀察</div></div>
-            </div>
-            <div class="visit-row">
-              <span class="visit-date">1/27 就診</span>
-              <span class="visit-items">狂犬病疫苗</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="phos-table-wrap">
-        <table class="phos-table">
-          <thead><tr><th>飲食</th><th>狀況</th></tr></thead>
-          <tbody>
-            <tr><td class="phos-em">皇家 ER28 飼料</td><td>✅ 正常接受</td></tr>
-            <tr><td class="phos-em">惜時零食罐</td><td>✅ 唯一接受的罐頭</td></tr>
-            <tr><td class="phos-em">主食罐（任何品牌）</td><td>❌ 完全不接受</td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="dash-note">
-          食物偏好固定，<strong>主食罐一律拒絕</strong>。<br>
-          心臟問題需持續觀察咳嗽頻率，偶爾嘔吐飼料／罐頭。
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        // 初始化日期為今天
+        document.addEventListener('DOMContentLoaded', function() {
+            setTodayDate('xile');
+            setTodayDate('ping');
+            loadHistoryFromLocalStorage();
+        });
 
-<div id="cat-content" style="display:none">
-  <div class="section-head"><h2 id="form-title">今日紀錄</h2></div>
-  
-  <div class="form-container">
-    <div class="form-card">
-      <div class="form-field"><label>日期</label><input type="date" id="date-active"></div>
-      
-      <div id="xile-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div class="form-field">
-            <label>嘔吐次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', -1)">-</button>
-              <input type="text" id="vomit-count-xile" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-xile', 1)">+</button>
-            </div>
-          </div>
-          <div class="form-field">
-            <label>嘔吐物（可複選）</label>
-            <div class="multi-select-wrap" id="wrap-vomit-type-xile">
-              <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-xile')">
-                <span class="multi-select-trigger-text" id="label-vomit-type-xile">請選擇</span>
-                <span class="multi-select-arrow">▼</span>
-              </button>
-              <div class="multi-select-dropdown" id="vomit-type-xile">
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="罐頭">罐頭</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="飼料">飼料</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="膽汁">膽汁</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="毛球">毛球</label>
-                <label class="multi-select-option" onclick="selectOption(this,'vomit-type-xile')"><input type="checkbox" value="透明液體">透明液體</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-field"><label>今日用藥</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="kidney-drug" checked> 腎臟藥</label><label><input type="checkbox" id="pancreas-drug" checked> 胰臟藥</label></div></div>
-      </div>
-      
-      <div id="ping-fields" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div class="form-field">
-            <label>咳嗽次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', -1)">-</button>
-              <input type="text" id="cough-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('cough-count-ping', 1)">+</button>
-            </div>
-          </div>
-          <div class="form-field">
-            <label>嘔吐次數</label>
-            <div class="stepper-group">
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', -1)">-</button>
-              <input type="text" id="vomit-count-ping" value="0" class="stepper-val" readonly>
-              <button type="button" class="stepper-btn" onclick="adjCount('vomit-count-ping', 1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>嘔吐物（可複選）</label>
-          <div class="multi-select-wrap" id="wrap-vomit-type-ping">
-            <button type="button" class="multi-select-trigger" onclick="toggleDropdown('vomit-type-ping')">
-              <span class="multi-select-trigger-text" id="label-vomit-type-ping">請選擇</span>
-              <span class="multi-select-arrow">▼</span>
-            </button>
-            <div class="multi-select-dropdown" id="vomit-type-ping">
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="罐頭">罐頭</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="飼料">飼料</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="膽汁">膽汁</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="毛球">毛球</label>
-              <label class="multi-select-option" onclick="selectOption(this,'vomit-type-ping')"><input type="checkbox" value="透明液體">透明液體</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
-      <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
-      <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="請輸入密碼"></div>
-      
-      <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
-      
-      <button class="btn-submit" id="submit-btn" onclick="submitForm()">🚀 送出紀錄</button>
-    </div>
-  </div>
+        // 分頁和貓咪切換
+        document.querySelectorAll('.cat-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                currentCat = this.dataset.cat;
+                document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                updatePageDisplay();
+            });
+        });
 
-  <div class="section-head"><h2>歷史紀錄</h2></div>
-  <div class="log-container">
-    <div class="filter-bar" id="filter-bar">
-      <button class="filter-btn active" onclick="filterLogs('all')">全部</button>
-      <button class="filter-btn" id="filter-vomit-btn" onclick="filterLogs('vomit')">嘔吐</button>
-      <button class="filter-btn" id="filter-cough-btn" onclick="filterLogs('cough')">咳嗽</button>
-      <button class="filter-btn" onclick="filterLogs('nail')">剪指甲</button>
-      <button class="filter-btn" onclick="filterLogs('vaccine')">疫苗</button>
-    </div>
-    <div class="scroll-wrap">
-      <table><thead id="history-thead"></thead><tbody id="history-tbody"></tbody></table>
-    </div>
-    <button id="show-all-btn" class="show-all-btn" onclick="toggleAllRecords()" style="display:none;">顯示全部 ↓</button>
-  </div>
+        document.querySelectorAll('.page-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                currentPage = this.dataset.page;
+                document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                updatePageDisplay();
+            });
+        });
 
-  <div class="section-head"><h2>最新照片</h2></div>
-  <div class="photo-wall" id="photo-wall-container"></div>
-</div>
+        function updatePageDisplay() {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            const pageId = `${currentCat}-${currentPage}`;
+            document.getElementById(pageId).classList.add('active');
+        }
 
-<div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
-<div class="page-end"></div>
+        function setTodayDate(cat) {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById(`${cat}-date`).value = today;
+        }
 
-<script>
-document.getElementById('date-active').value = new Date().toISOString().split('T')[0];
-const API_KEY = 'AIzaSyBqKEybNiIj625YahYIufEgWEQyiIpiH5E';
-const folderIds = { xile: "1egON9b5hDQYqfnRRihuf5FYRSV4IFbnK", ping: "1n6GjR4i4hIS8VmCnjXUyP1EHF1qTUMRO" };
-const csvUrls = {
-  xile: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1731637259",
-  ping: "https://docs.google.com/spreadsheets/d/14MHtM51PP5x5EK-0dfWCE3zVOuWC3-cg-HsfL3kncXY/export?format=csv&gid=1573452397"
-};
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRfPaF8WQ3bIyqDP4iaXRr7DJe4ZUEA6zGt67xw3Es1iEJuBbFWHaraZovKHymKkVbjw/exec';
+        function incrementCounter(id) {
+            const element = document.getElementById(id);
+            element.textContent = parseInt(element.textContent) + 1;
+        }
 
-let currentCat = null, allCatRecords = [], showFullHistory = false, currentFilter = 'all';
+        function decrementCounter(id) {
+            const element = document.getElementById(id);
+            const current = parseInt(element.textContent);
+            if (current > 0) {
+                element.textContent = current - 1;
+            }
+        }
 
-// ─── 複選下拉邏輯 ───
-function toggleDropdown(id) {
-  const dropdown = document.getElementById(id);
-  const trigger = dropdown.previousElementSibling;
-  const isOpen = dropdown.classList.contains('open');
-  document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
-    d.classList.remove('open');
-    d.previousElementSibling.classList.remove('open');
-  });
-  if (!isOpen) {
-    dropdown.classList.add('open');
-    trigger.classList.add('open');
-  }
-}
+        async function submitForm(cat) {
+            const date = document.getElementById(`${cat}-date`).value;
+            const password = document.getElementById(`${cat}-password`).value;
 
-function selectOption(label, groupId) {
-  setTimeout(() => {
-    const cb = label.querySelector('input[type="checkbox"]');
-    if (cb.checked) label.classList.add('selected');
-    else label.classList.remove('selected');
-    updateTriggerLabel(groupId);
-  }, 0);
-}
+            if (!date || !password) {
+                showMessage(cat, '請填入日期和密碼', 'error');
+                return;
+            }
 
-function updateTriggerLabel(groupId) {
-  const group = document.getElementById(groupId);
-  const checked = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'));
-  const labelEl = document.getElementById('label-' + groupId);
-  if (checked.length === 0) {
-    labelEl.textContent = '請選擇';
-    labelEl.classList.remove('has-value');
-  } else {
-    labelEl.textContent = checked.map(cb => cb.value).join('、');
-    labelEl.classList.add('has-value');
-  }
-}
+            let data = {
+                cat: cat,
+                date: date,
+                password: password,
+                note: document.getElementById(`${cat}-note`).value || ''
+            };
 
-function getSelectedVomitTypes(groupId) {
-  const group = document.getElementById(groupId);
-  return Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join('、');
-}
+            if (cat === 'xile') {
+                data.kidneyDrug = document.getElementById('xile-kidney-drug').checked;
+                data.pancreasDrug = document.getElementById('xile-pancreas-drug').checked;
+                data.vomitCount = parseInt(document.getElementById('xile-vomit-count').textContent);
+                data.vomitType = document.getElementById('xile-vomit-type').value;
+                data.nailCut = document.getElementById('xile-nail-cut').checked;
+                data.vaccine = document.getElementById('xile-vaccine').checked;
+            } else {
+                data.heartDrug = document.getElementById('ping-heart-drug').checked;
+                data.coughCount = parseInt(document.getElementById('ping-cough-count').textContent);
+                data.vomitCount = parseInt(document.getElementById('ping-vomit-count').textContent);
+                data.vomitType = document.getElementById('ping-vomit-type').value;
+                data.nailCut = document.getElementById('ping-nail-cut').checked;
+            }
 
-function resetVomitChips(groupId) {
-  const group = document.getElementById(groupId);
-  group.querySelectorAll('.multi-select-option').forEach(opt => {
-    opt.classList.remove('selected');
-    opt.querySelector('input[type="checkbox"]').checked = false;
-  });
-  const labelEl = document.getElementById('label-' + groupId);
-  if (labelEl) { labelEl.textContent = '請選擇'; labelEl.classList.remove('has-value'); }
-  group.classList.remove('open');
-  if (group.previousElementSibling) group.previousElementSibling.classList.remove('open');
-}
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
 
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.multi-select-wrap')) {
-    document.querySelectorAll('.multi-select-dropdown.open').forEach(d => {
-      d.classList.remove('open');
-      d.previousElementSibling.classList.remove('open');
-    });
-  }
-});
+                const result = await response.json();
 
-// ─── 步進器 ───
-function adjCount(id, delta) {
-  let el = document.getElementById(id);
-  let val = parseInt(el.value) || 0;
-  val = Math.min(10, Math.max(0, val + delta));
-  el.value = val;
-}
+                if (result.ok) {
+                    showMessage(cat, '✅ 紀錄已成功送出！', 'success');
+                    addToLocalHistory(cat, data);
+                    resetForm(cat);
+                    setTimeout(() => showMessage(cat, '', ''), 3000);
+                } else {
+                    showMessage(cat, `❌ 錯誤：${result.msg}`, 'error');
+                }
+            } catch (error) {
+                showMessage(cat, `❌ 送出失敗：${error.message}`, 'error');
+                // 本地備份
+                addToLocalHistory(cat, data);
+            }
+        }
 
-function parseDateString(ds) {
-  if (!ds) return 0;
-  let s = ds.replace(/-/g, '/').trim();
-  let parts = s.split('/');
-  let y = new Date().getFullYear(), m = 0, d = 1;
-  if (parts.length === 3) {
-    if (parts[0].length === 4) { y = parseInt(parts[0], 10); m = parseInt(parts[1], 10) - 1; d = parseInt(parts[2], 10); }
-    else if (parts[2].length === 4) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); y = parseInt(parts[2], 10); }
-  } else if (parts.length === 2) { m = parseInt(parts[0], 10) - 1; d = parseInt(parts[1], 10); }
-  else { let t = new Date(ds).getTime(); return isNaN(t) ? 0 : t; }
-  return new Date(y, m, d).getTime();
-}
+        function resetForm(cat) {
+            setTodayDate(cat);
+            document.getElementById(`${cat}-password`).value = '';
+            document.getElementById(`${cat}-note`).value = '';
+            document.querySelectorAll(`#${cat}-today input[type="checkbox"]`).forEach(cb => cb.checked = false);
+            document.querySelectorAll(`#${cat}-today select`).forEach(sel => sel.value = '');
+            document.getElementById(`${cat}-vomit-count`).textContent = '0';
+            if (cat === 'ping') {
+                document.getElementById('ping-cough-count').textContent = '0';
+            }
+        }
 
-function updateTheme(cat) {
-  const root = document.documentElement;
-  if (cat === 'xile') {
-    root.style.setProperty('--theme-color', 'var(--xile-color)');
-    root.style.setProperty('--theme-pale', 'var(--xile-pale)');
-    root.style.setProperty('--theme-deep', 'var(--xile-deep)');
-    root.style.setProperty('--theme-border', 'var(--border)'); 
-    root.style.setProperty('--theme-bg-card', 'var(--warm-white)');
-    root.style.setProperty('--theme-bg-block', 'var(--cream)');
-    root.style.setProperty('--theme-table-header', '#e6e0d3');
-  } else {
-    root.style.setProperty('--theme-color', 'var(--ping-color)');
-    root.style.setProperty('--theme-pale', 'var(--ping-pale)');
-    root.style.setProperty('--theme-deep', 'var(--ping-deep)');
-    root.style.setProperty('--theme-border', '#cce0ec'); 
-    root.style.setProperty('--theme-bg-card', '#f0f6fa'); 
-    root.style.setProperty('--theme-bg-block', '#e1edf5'); 
-    root.style.setProperty('--theme-table-header', '#dbe8f0');
-  }
-}
+        function showMessage(cat, message, type) {
+            const messageEl = document.getElementById(`${cat}-message`);
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+        }
 
-function selectCat(cat) {
-  currentCat = cat; showFullHistory = false; currentFilter = 'all';
-  updateTheme(cat);
-  document.querySelectorAll('.dash-cat').forEach(c => c.classList.remove('selected-xile','selected-ping'));
-  document.getElementById('card-' + cat).classList.add('selected-' + cat);
-  document.getElementById('cat-content').style.display = 'block';
-  document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
-  document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
-  document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
-  
-  // 重置表單
-  document.getElementById('vomit-count-xile').value = 0;
-  document.getElementById('cough-count-ping').value = 0;
-  document.getElementById('vomit-count-ping').value = 0;
-  resetVomitChips('vomit-type-xile');
-  resetVomitChips('vomit-type-ping');
-  document.getElementById('nail-cut').checked = false;
-  document.getElementById('vaccine').checked = false;
-  document.getElementById('note-text').value = '';
-  document.getElementById('submit-msg').style.display = 'none';
+        function addToLocalHistory(cat, data) {
+            if (!historyData[cat]) historyData[cat] = [];
+            historyData[cat].push(data);
+            saveHistoryToLocalStorage();
+            if (currentPage === 'history' && currentCat === cat) {
+                renderHistoryTable(cat);
+            }
+        }
 
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
+        function saveHistoryToLocalStorage() {
+            localStorage.setItem('petHealthHistory', JSON.stringify(historyData));
+        }
 
-  setTimeout(() => document.getElementById('cat-content').scrollIntoView({behavior:'smooth'}), 100);
-  fetchSheetData(cat); renderPhotoWall(cat);
-}
+        function loadHistoryFromLocalStorage() {
+            const stored = localStorage.getItem('petHealthHistory');
+            if (stored) {
+                historyData = JSON.parse(stored);
+            }
+        }
 
-async function fetchSheetData(cat) {
-  const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
-  try {
-    const url = csvUrls[cat];
-    console.log('📡 開始載入 CSV:', url);
-    
-    const res = await fetch(url);
-    console.log('📡 回應狀態:', res.status, res.statusText);
-    
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-    }
-    
-    const csv = await res.text();
-    console.log('📡 CSV 內容長度:', csv.length, '字節');
-    
-    const rows = csv.split('\n').map(r => r.trim()).filter(r => r);
-    console.log('📡 解析行數:', rows.length);
-    
-    const uniqueRecords = new Map();
-    rows.slice(1).forEach(l => {
-      const cols = l.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').trim());
-      if (cols[0]) {
-        const timeKey = parseDateString(cols[0]);
-        if (timeKey > 0) uniqueRecords.set(timeKey, cols);
-      }
-    });
-    allCatRecords = Array.from(uniqueRecords.values());
-    console.log('📡 去重後記錄數:', allCatRecords.length);
-    
-    allCatRecords.sort((a, b) => parseDateString(b[0]) - parseDateString(a[0]));
-    renderHistoryTable();
-    console.log('✅ 載入成功！');
-  } catch (e) { 
-    console.error('❌ 載入失敗:', e.message);
-    tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--accent-red); text-align:center;"><strong>讀取失敗</strong><br>${e.message}</td></tr>`; 
-  }
-}
+        function filterHistory(cat, filter) {
+            filters[cat] = filter;
+            document.querySelectorAll(`#${cat}-history .filter-btn`).forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderHistoryTable(cat);
+        }
 
-function filterLogs(type) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  renderHistoryTable();
-}
+        function renderHistoryTable(cat) {
+            const table = document.getElementById(`${cat}-history-table`);
+            const tbody = table.querySelector('tbody');
+            const filter = filters[cat];
+            let data = historyData[cat] || [];
 
-function renderHistoryTable() {
-  const tbody = document.getElementById('history-tbody');
-  const thead = document.getElementById('history-thead');
-  let filtered = allCatRecords;
-  
-  // ✅ 檢查欄位是否不為空（只要有值就算）
-  const isNotEmpty = (val) => val && val.toString().trim() !== '';
-  
-  // ✅ 過濾邏輯
-  if (currentFilter === 'vomit') {
-    const idx = (currentCat === 'xile') ? 3 : 2;
-    filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
-  } else if (currentFilter === 'cough') {
-    filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
-  } else if (currentFilter === 'nail') {
-    // ✅ 剪甲欄位：喜樂 index 5，平安 index 4 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 5 : 4;
-    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
-  } else if (currentFilter === 'vaccine') {
-    // ✅ 疫苗欄位：喜樂 index 6，平安 index 5 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 6 : 5;
-    filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
-  }
-  
-  const displayData = showFullHistory ? filtered : filtered.slice(0, 10);
-  tbody.innerHTML = '';
-  const rc = (val, type) => {
-    if (type === 'check') {
-      if (val === 'TRUE') return '✅';
-      if (!val || val === 'FALSE' || val === '') return '—';
-      return val;
-    }
-    return (!val || val === "0" || val === "") ? '—' : val + '次';
-  };
-  
-  if (currentCat === 'xile') {
-    // 喜樂：日期、腎臟藥、胰臟藥、嘔吐、嘔吐物、剪甲、疫苗
-    thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => {
-      let isWarn = parseInt(r[3]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
-    });
-  } else {
-    // 平安：日期、咳嗽、嘔吐、嘔吐物、剪甲、疫苗
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
-    displayData.forEach(r => {
-      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
-    });
-  }
-  
-  const showBtn = document.getElementById('show-all-btn');
-  if (filtered.length > 10) {
-    showBtn.style.display = 'block';
-    showBtn.textContent = showFullHistory ? '向上收合 ↑' : '顯示全部 ↓';
-  } else { showBtn.style.display = 'none'; }
-}
+            // 過濾資料
+            if (filter !== 'all') {
+                data = data.filter(record => {
+                    if (cat === 'xile') {
+                        if (filter === 'vomit') return record.vomitCount > 0;
+                        if (filter === 'kidney') return record.kidneyDrug;
+                        if (filter === 'pancreas') return record.pancreasDrug;
+                        if (filter === 'nail') return record.nailCut;
+                        if (filter === 'vaccine') return record.vaccine;
+                    } else {
+                        if (filter === 'heart') return record.heartDrug;
+                        if (filter === 'cough') return record.coughCount > 0;
+                        if (filter === 'vomit') return record.vomitCount > 0;
+                        if (filter === 'nail') return record.nailCut;
+                    }
+                });
+            }
 
-function toggleAllRecords() { showFullHistory = !showFullHistory; renderHistoryTable(); }
+            // 按日期倒序排列
+            data = data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-async function renderPhotoWall(cat) {
-  const container = document.getElementById('photo-wall-container');
-  container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;">🐈 照片讀取中...</div>`;
-  const q = `'${folderIds[cat]}' in parents and mimeType contains 'image/' and trashed = false`;
-  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&key=${API_KEY}&fields=files(id,name)&orderBy=createdTime%20desc&pageSize=5`;
-  try {
-    const res = await fetch(url); const data = await res.json();
-    container.innerHTML = data.files.map(f => `
-      <div class="photo-link-block" onclick="document.getElementById('lightbox').style.display='flex';document.getElementById('lightbox-img').src='https://drive.google.com/thumbnail?id=${f.id}&sz=w1200'">
-        <img src="https://drive.google.com/thumbnail?id=${f.id}&sz=w500" style="width:100%;height:100%;object-fit:cover;">
-      </div>`).join('');
-  } catch (e) { container.innerHTML = `<div style="text-align:center;padding:40px;">照片載入失敗</div>`; }
-}
+            tbody.innerHTML = '';
 
-// ─── 送出紀錄 ───
-async function submitForm() {
-  const btn = document.getElementById('submit-btn');
-  const password = document.getElementById('write-password').value.trim();
-  if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
+            if (data.length === 0) {
+                const row = tbody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = cat === 'xile' ? 8 : 7;
+                cell.style.textAlign = 'center';
+                cell.style.color = '#999';
+                cell.style.padding = '40px 20px';
+                cell.textContent = '尚無紀錄';
+                return;
+            }
 
-  btn.disabled = true;
-  btn.textContent = '⏳ 拼命寫入中...';
+            data.forEach(record => {
+                const row = tbody.insertRow();
 
-  const payload = {
-    password,
-    cat: currentCat,
-    date: document.getElementById('date-active').value,
-    nailCut: document.getElementById('nail-cut').checked ? true : "",
-    vaccine: document.getElementById('vaccine').checked ? true : "",
-    note: document.getElementById('note-text').value.trim(),
-  };
-
-  if (currentCat === 'xile') {
-    payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
-    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
-    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
-    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
-  } else {
-    payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
-    payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
-    payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
-  }
-
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body: JSON.stringify(payload)
-    });
-
-    await new Promise(r => setTimeout(r, 1500));
-    await fetchSheetData(currentCat);
-
-    const targetDate = document.getElementById('date-active').value;
-    const latestRecord = allCatRecords[0];
-    const latestDateTs = latestRecord ? parseDateString(latestRecord[0]) : 0;
-    const targetTs = parseDateString(targetDate);
-
-    if (latestDateTs === targetTs) {
-      showMsg('✅ 已完美寫入 Google Sheet', 'ok');
-    } else {
-      showMsg('📨 已送出，請稍後重整確認是否寫入', 'warn');
-    }
-
-  } catch(e) {
-    showMsg('❌ 送出失敗，請檢查網路連線', 'err');
-  }
-
-  btn.disabled = false;
-  btn.textContent = '🚀 送出紀錄';
-}
-
-function showMsg(text, type) {
-  const el = document.getElementById('submit-msg');
-  el.textContent = text;
-  el.style.display = 'block';
-  if (type === 'ok') {
-    el.style.background = '#eef6f0';
-    el.style.color = '#1f5c30';
-    el.style.border = '1.5px solid var(--accent-green)';
-  } else if (type === 'warn') {
-    el.style.background = '#fff8ec';
-    el.style.color = 'var(--accent-warn)';
-    el.style.border = '1.5px solid var(--accent-warn)';
-  } else {
-    el.style.background = 'var(--theme-bg-block)';
-    el.style.color = 'var(--accent-red)';
-    el.style.border = '1.5px solid var(--accent-red)';
-  }
-}
-</script>
+                if (cat === 'xile') {
+                    row.insertCell().textContent = record.date;
+                    row.insertCell().textContent = record.kidneyDrug ? '✓' : '-';
+                    row.insertCell().textContent = record.pancreasDrug ? '✓' : '-';
+                    row.insertCell().textContent = record.vomitCount || '-';
+                    row.insertCell().textContent = record.vomitType || '-';
+                    row.insertCell().textContent = record.nailCut ? '✓' : '-';
+                    row.insertCell().textContent = record.vaccine ? '✓' : '-';
+                    row.insertCell().textContent = record.note || '-';
+                } else {
+                    row.insertCell().textContent = record.date;
+                    row.insertCell().textContent = record.heartDrug ? '✓' : '-';
+                    row.insertCell().textContent = record.coughCount || '-';
+                    row.insertCell().textContent = record.vomitCount || '-';
+                    row.insertCell().textContent = record.vomitType || '-';
+                    row.insertCell().textContent = record.nailCut ? '✓' : '-';
+                    row.insertCell().textContent = record.note || '-';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
