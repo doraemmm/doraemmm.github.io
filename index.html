@@ -786,34 +786,35 @@ async function renderPhotoWall(cat) {
 async function submitForm() {
   const btn = document.getElementById('submit-btn');
   const password = document.getElementById('write-password').value.trim();
-  if (!password) { showMsg('哈囉？密碼勒？', 'warn'); return; }
+  if (!password) { showMsg('請輸入密碼', 'warn'); return; }
 
   btn.disabled = true;
   btn.textContent = '⏳ 拼命寫入中...';
 
+  // 🔴 終極大一統：把所有打勾 (checked) 直接在前端轉成 "TRUE" 或 "FALSE" 字串！
   const payload = {
-    password,
+    password: password,
     cat: currentCat,
     date: document.getElementById('date-active').value,
-    nailCut: document.getElementById('nail-cut').checked ? true : "",
-    vaccine: document.getElementById('vaccine-text').value.trim(),
+    nailCut: document.getElementById('nail-cut').checked ? "TRUE" : "FALSE",
+    vaccine: document.getElementById('vaccine-text').value.trim() // 確保這裡叫 vaccine
   };
 
   if (currentCat === 'xile') {
     payload.vomitCount = document.getElementById('vomit-count-xile').value === "0" ? "" : document.getElementById('vomit-count-xile').value;
     payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-xile') : "";
-    payload.kidneyDrug   = document.getElementById('kidney-drug').checked;
-    payload.pancreasDrug = document.getElementById('pancreas-drug').checked;
+    payload.kidneyDrug   = document.getElementById('kidney-drug').checked ? "TRUE" : "FALSE";
+    payload.pancreasDrug = document.getElementById('pancreas-drug').checked ? "TRUE" : "FALSE";
   } else {
-    // 🔴 關鍵修正：前端打包給 GAS 的鍵值統一為 heartDrug，且疫苗值直接取自上方共同欄位
     payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
     payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
     payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
-    payload.heartDrug = document.getElementById('heart-drug').checked;
+    payload.heartDrug  = document.getElementById('heart-drug').checked ? "TRUE" : "FALSE"; // 🔴 轉成強型別字串
   }
 
+  console.log("🚀 打包準備送出的資料:", payload);
+
   try {
-    // 🔴 移除 no-cors 改用普通 POST，這樣遇到密碼錯誤或 GAS 崩潰時網頁才會顯示警告，而不是假裝成功！
     const response = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
@@ -821,17 +822,17 @@ async function submitForm() {
     });
     
     const result = await response.json();
+    console.log("📡 GAS 後端回傳結果:", result);
     
     if (result.ok) {
       showMsg('✅ 已完美寫入 Google Sheet', 'ok');
-      await fetchSheetData(currentCat); // 成功後自動重新整理下方網頁表格，落實同步！
+      await fetchSheetData(currentCat); 
     } else {
       showMsg('❌ 寫入失敗: ' + (result.msg || '未知錯誤'), 'err');
     }
 
   } catch(e) {
-    // 如果因為跨網域阻擋 (CORS) 導致沒拿到 JSON，做一個安全的降級重整檢查
-    console.warn('CORS 預檢阻擋，啟動二次資料驗證...', e);
+    console.warn('⚡ 觸發 CORS 預檢或無回應，啟動二次資料比對...', e);
     await new Promise(r => setTimeout(r, 1500));
     await fetchSheetData(currentCat);
 
@@ -850,8 +851,7 @@ async function submitForm() {
   btn.disabled = false;
   btn.textContent = '🚀 送出紀錄';
 }
-
-function showMsg(text, type) {
+  function showMsg(text, type) {
   const el = document.getElementById('submit-msg');
   el.textContent = text;
   el.style.display = 'block';
