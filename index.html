@@ -491,8 +491,8 @@
         </div>
       </div>
       
-      <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label><input type="checkbox" id="vaccine"> 施打疫苗</label></div></div>
-      <div class="form-field"><label>備註</label><textarea id="note-text" placeholder="補充說明..."></textarea></div>
+      <div class="form-field"><label>其他事項</label><div style="display:flex;gap:20px"><label><input type="checkbox" id="nail-cut"> 剪趾甲</label><label id="heart-drug-label" style="display:none"><input type="checkbox" id="heart-drug"> 心臟藥</label></div></div>
+      <div class="form-field"><label>疫苗</label><textarea id="vaccine-text" placeholder="補充說明..."></textarea></div>
       <div class="form-field"><label>密碼</label><input type="password" id="write-password" placeholder="請輸入密碼"></div>
       
       <div id="submit-msg" style="display:none;padding:10px 14px;border-radius:6px;margin-top:8px;font-weight:900;"></div>
@@ -649,6 +649,7 @@ function selectCat(cat) {
   document.getElementById('xile-fields').style.display = cat === 'xile' ? 'block' : 'none';
   document.getElementById('ping-fields').style.display = cat === 'ping' ? 'block' : 'none';
   document.getElementById('filter-cough-btn').style.display = cat === 'ping' ? 'block' : 'none';
+  document.getElementById('heart-drug-label').style.display = cat === 'ping' ? 'block' : 'none';
   
   // 重置表單
   document.getElementById('vomit-count-xile').value = 0;
@@ -657,8 +658,8 @@ function selectCat(cat) {
   resetVomitChips('vomit-type-xile');
   resetVomitChips('vomit-type-ping');
   document.getElementById('nail-cut').checked = false;
-  document.getElementById('vaccine').checked = false;
-  document.getElementById('note-text').value = '';
+  document.getElementById('heart-drug').checked = false;
+  document.getElementById('vaccine-text').value = '';
   document.getElementById('submit-msg').style.display = 'none';
 
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -670,7 +671,7 @@ function selectCat(cat) {
 
 async function fetchSheetData(cat) {
   const tbody = document.getElementById('history-tbody');
-  tbody.innerHTML = `<tr><td colspan="7" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="8" style="padding:40px; color:var(--theme-color);">⏳ 資料努力載入中，不要催...</td></tr>`;
   try {
     const url = csvUrls[cat];
     console.log('📡 開始載入 CSV:', url);
@@ -704,7 +705,7 @@ async function fetchSheetData(cat) {
     console.log('✅ 載入成功！');
   } catch (e) { 
     console.error('❌ 載入失敗:', e.message);
-    tbody.innerHTML = `<tr><td colspan="7" style="padding:20px; color:var(--accent-red); text-align:center;"><strong>讀取失敗</strong><br>${e.message}</td></tr>`; 
+    tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; color:var(--accent-red); text-align:center;"><strong>讀取失敗</strong><br>${e.message}</td></tr>`; 
   }
 }
 
@@ -725,17 +726,17 @@ function renderHistoryTable() {
   
   // ✅ 過濾邏輯
   if (currentFilter === 'vomit') {
-    const idx = (currentCat === 'xile') ? 3 : 2;
+    const idx = (currentCat === 'xile') ? 3 : 3;
     filtered = allCatRecords.filter(r => parseInt(r[idx]) > 0);
   } else if (currentFilter === 'cough') {
-    filtered = allCatRecords.filter(r => parseInt(r[1]) > 0);
+    filtered = allCatRecords.filter(r => parseInt(r[2]) > 0);
   } else if (currentFilter === 'nail') {
-    // ✅ 剪甲欄位：喜樂 index 5，平安 index 4 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 5 : 4;
+    // ✅ 剪甲欄位：喜樂 index 5，平安 index 5 - 只要不為空就篩選
+    const idx = (currentCat === 'xile') ? 5 : 5;
     filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
   } else if (currentFilter === 'vaccine') {
-    // ✅ 疫苗欄位：喜樂 index 6，平安 index 5 - 只要不為空就篩選
-    const idx = (currentCat === 'xile') ? 6 : 5;
+    // ✅ 疫苗欄位：喜樂 index 6，平安 index 6 - 只要不為空就篩選
+    const idx = (currentCat === 'xile') ? 6 : 6;
     filtered = allCatRecords.filter(r => isNotEmpty(r[idx]));
   }
   
@@ -755,14 +756,14 @@ function renderHistoryTable() {
     thead.innerHTML = '<tr><th>日期</th><th>腎臟藥</th><th>胰臟藥</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
       let isWarn = parseInt(r[3]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${rc(r[6],'check')}</td></tr>`;
+      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2],'check')}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${r[6]||'—'}</td></tr>`;
     });
   } else {
-    // 平安：日期、咳嗽、嘔吐、嘔吐物、剪甲、疫苗
-    thead.innerHTML = '<tr><th>日期</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
+    // 平安：日期、心臟藥、咳嗽、嘔吐、嘔吐物、剪甲、疫苗
+    thead.innerHTML = '<tr><th>日期</th><th>心臟藥</th><th>咳嗽</th><th>嘔吐</th><th>嘔吐物</th><th>剪甲</th><th>疫苗</th></tr>';
     displayData.forEach(r => {
-      let isWarn = parseInt(r[1]) > 0 || parseInt(r[2]) > 0;
-      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1])}</td><td>${rc(r[2])}</td><td>${r[3]||'—'}</td><td>${rc(r[4],'check')}</td><td>${rc(r[5],'check')}</td></tr>`;
+      let isWarn = parseInt(r[2]) > 0 || parseInt(r[3]) > 0;
+      tbody.innerHTML += `<tr ${isWarn ? 'class="row-warn"' : ''}><td>${r[0]}</td><td>${rc(r[1],'check')}</td><td>${rc(r[2])}</td><td>${rc(r[3])}</td><td>${r[4]||'—'}</td><td>${rc(r[5],'check')}</td><td>${r[6]||'—'}</td></tr>`;
     });
   }
   
@@ -803,8 +804,7 @@ async function submitForm() {
     cat: currentCat,
     date: document.getElementById('date-active').value,
     nailCut: document.getElementById('nail-cut').checked ? true : "",
-    vaccine: document.getElementById('vaccine').checked ? true : "",
-    note: document.getElementById('note-text').value.trim(),
+    vaccine: document.getElementById('vaccine-text').value.trim(),
   };
 
   if (currentCat === 'xile') {
@@ -816,6 +816,7 @@ async function submitForm() {
     payload.coughCount = document.getElementById('cough-count-ping').value === "0" ? "" : document.getElementById('cough-count-ping').value;
     payload.vomitCount = document.getElementById('vomit-count-ping').value === "0" ? "" : document.getElementById('vomit-count-ping').value;
     payload.vomitType  = payload.vomitCount ? getSelectedVomitTypes('vomit-type-ping') : "";
+    payload.heartDrug = document.getElementById('heart-drug').checked;
   }
 
   try {
